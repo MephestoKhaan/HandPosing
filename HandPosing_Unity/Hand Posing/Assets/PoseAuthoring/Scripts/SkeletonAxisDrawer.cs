@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PoseAuthoring
 {
@@ -13,7 +11,6 @@ namespace PoseAuthoring
 
         private Transform[] axises;
 
-
         private void InitializeAxis(OVRSkeleton skeleton)
         {
             axises = new Transform[skeleton.Bones.Count];
@@ -22,7 +19,6 @@ namespace PoseAuthoring
                 axises[i] = Instantiate<Transform>(axisPrototype, this.transform);
             }
         }
-
 
         void Update()
         {
