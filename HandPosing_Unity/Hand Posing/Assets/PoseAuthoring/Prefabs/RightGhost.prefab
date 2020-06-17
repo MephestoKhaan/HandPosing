@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4690408778645788766}
   - component: {fileID: 7767306358548741773}
+  - component: {fileID: 9047096324589510945}
   m_Layer: 0
   m_Name: RightGhost
   m_TagString: Untagged
@@ -91,6 +92,23 @@ MonoBehaviour:
   - id: 18
     transform: {fileID: 6864759402216368301}
     rotationOffset: {x: 0, y: 0, z: 0}
+  isRightHand: 0
+--- !u!114 &9047096324589510945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4411028391264797850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01943e3692b5ed04fb45ec65e898cc44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puppet: {fileID: 7767306358548741773}
+  handRenderer: {fileID: 6826777416486088723}
+  highlightedColor: {r: 1, g: 0.59607846, b: 0.015686275, a: 1}
+  defaultColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &6868025230691533787
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,7 +5,14 @@ namespace PoseAuthoring
     [CreateAssetMenu(menuName = "PoseAuthoring/Hand Provider")]
     public class HandProvider : ScriptableObject
     {
-        public HandPuppet rightHand;
-        public HandPuppet leftHand;
+        [SerializeField]
+        private HandGhost rightHand;
+        [SerializeField]
+        private HandGhost leftHand;
+
+        public HandGhost GetHand(bool isRightHand)
+        {
+            return isRightHand ? rightHand : leftHand;
+        }
     }
 }

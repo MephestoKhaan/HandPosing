@@ -23,7 +23,7 @@ namespace PoseAuthoring
             }
         }
 
-        private List<HandPuppet> ghosts = new List<HandPuppet>();
+        private List<HandGhost> ghosts = new List<HandGhost>();
 
         private void Awake()
         {
@@ -40,7 +40,6 @@ namespace PoseAuthoring
 
         private void InitializeSnapPoints()
         {
-
             if (snapPoints == null
                 || snapPoints.Length == 0)
             {
@@ -52,17 +51,36 @@ namespace PoseAuthoring
             }
         }
 
-        public void AddPose(HandPuppet puppet)
+        public HandGhost AddPose(HandPuppet puppet)
         {
             HandPose pose = puppet.CurrentPose(this.transform);
-            AddPose(pose);
+            return AddPose(pose);
         }
 
-        public void AddPose(HandPose pose)
+        private HandGhost AddPose(HandPose pose)
         {
-            HandPuppet ghost = Instantiate(handProvider.rightHand, this.transform);
-            ghost.SetRecordedPose(pose, this.transform);
-            ghosts.Add(ghost);
+            HandGhost ghost = Instantiate(handProvider.GetHand(pose.isRightHand), this.transform);
+            ghost.SetPose(pose, this.transform);
+            this.ghosts.Add(ghost);
+            return ghost;
+        }
+
+
+        public HandGhost FindNearestPose(HandPuppet hand)
+        {
+            HandPose pose = hand.CurrentPose(this.transform);
+            float maxScore = 0f;
+            HandGhost nearestHand = null;
+            foreach(var ghost in this.ghosts)
+            {
+               float score = HandPose.Score(ghost.StoredPose, pose);
+                if(score > maxScore)
+                {
+                    nearestHand = ghost;
+                    maxScore = score;
+                }
+            }
+            return nearestHand;
         }
 
         public void LoadFromAsset()
@@ -78,7 +96,7 @@ namespace PoseAuthoring
             List<HandPose> poses = new List<HandPose>();
             foreach (var ghost in this.ghosts)
             {
-                poses.Add(ghost.CurrentPose(this.transform));
+                poses.Add(ghost.StoredPose);
             }
             posesCollection.StorePoses(poses);
         }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 917946369247698229}
   - component: {fileID: 3716376024304703511}
+  - component: {fileID: 3733909631544546195}
   m_Layer: 0
   m_Name: LeftGhost
   m_TagString: Untagged
@@ -91,6 +92,23 @@ MonoBehaviour:
   - id: 18
     transform: {fileID: 4844346231649718977}
     rotationOffset: {x: 0, y: 0, z: 0}
+  isRightHand: 0
+--- !u!114 &3733909631544546195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2290688692863846359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01943e3692b5ed04fb45ec65e898cc44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puppet: {fileID: 3716376024304703511}
+  handRenderer: {fileID: 4810356610481599951}
+  highlightedColor: {r: 1, g: 0.596, b: 0.015686275, a: 1}
+  defaultColor: {r: 0, g: 0, b: 1, a: 1}
 --- !u!1 &4839131105609167981
 GameObject:
   m_ObjectHideFlags: 0
@@ -1645,7 +1663,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3637b758ff163493f8bb8b6d7e96d7ae, type: 2}
+  - {fileID: 2100000, guid: 944feb076639a4d39b750e3cb5d7dfab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

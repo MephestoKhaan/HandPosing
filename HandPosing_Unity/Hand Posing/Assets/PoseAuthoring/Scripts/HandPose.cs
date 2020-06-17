@@ -28,8 +28,8 @@ namespace PoseAuthoring
                 return 0f;
             }
 
-            float rotationDifference = Quaternion.Dot(from.handRotation, to.handRotation);
-            float positionDifference = Mathf.Clamp01(Vector3.Distance(from.handPosition, to.handPosition) / maxDistance);
+            float rotationDifference = Quaternion.Dot(from.handRotation, to.handRotation) * 0.5f + 0.5f;
+            float positionDifference = 1f-Mathf.Clamp01(Vector3.Distance(from.handPosition, to.handPosition) / maxDistance);
 
             return rotationDifference * positionDifference;
         }
