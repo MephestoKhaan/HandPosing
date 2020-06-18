@@ -3,7 +3,6 @@ using UnityEngine;
 
 namespace PoseAuthoring
 {
-
     public class GrabbableDetector : MonoBehaviour
     {
         [SerializeField]
@@ -49,6 +48,7 @@ namespace PoseAuthoring
                 snappableCandidates.Remove(snappable);
             }
         }
+
 
         public SnappableObject NearsestSnappable()
         {

@@ -9,5 +9,6 @@ namespace PoseAuthoring
         public Transform transform;
         public Vector3 rotationOffset;
         public bool updatePosition;
+        public Vector3 positionOffset;
     }
 }

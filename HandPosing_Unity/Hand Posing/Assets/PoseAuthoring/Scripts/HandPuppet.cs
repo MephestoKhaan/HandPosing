@@ -9,6 +9,8 @@ namespace PoseAuthoring
         [SerializeField]
         private OVRSkeleton trackedHand;
         [SerializeField]
+        private Transform gripPoint;
+        [SerializeField]
         private List<BoneMap> boneMaps;
         [SerializeField]
         private bool isRightHand;
@@ -98,13 +100,13 @@ namespace PoseAuthoring
 
                     if (bonesCollection[boneId].updatePosition)
                     {
-                        boneTransform.position = skeleton.Bones[i].Transform.position;
+                        boneTransform.localPosition = bonesCollection[boneId].positionOffset +  skeleton.Bones[i].Transform.localPosition;
                     }
                 }
             }
         }
 
-        public void SetRecordedPose(HandPose pose, Transform relativeTo)
+        public void SetRecordedPose(HandPose pose, Transform relativeTo, float weight = 1f)
         {
             InitializeBones();
             foreach (var bone in pose.Bones)
@@ -118,17 +120,20 @@ namespace PoseAuthoring
             }
             if (relativeTo != null)
             {
-                this.transform.localPosition = pose.handPosition;
-                this.transform.localRotation = pose.handRotation;
+                Quaternion rotationDif = Quaternion.Inverse(this.gripPoint.rotation) * this.transform.rotation;
+                this.transform.rotation = rotationDif * (pose.handGripRotation * relativeTo.rotation);
+
+                Vector3 positionDif = this.gripPoint.position - this.transform.position;
+                this.transform.position = relativeTo.TransformPoint(pose.handGripPosition) - positionDif;
             }
             else
             {
-                this.transform.position = pose.handPosition;
-                this.transform.rotation = pose.handRotation;
+                this.transform.position = Vector3.Lerp(this.transform.position, pose.handGripPosition, weight);
+                this.transform.rotation = Quaternion.Lerp(this.transform.rotation, pose.handGripRotation, weight);
             }
         }
 
-        public HandPose CurrentPose(Transform respect)
+        public HandPose CurrentPose(Transform relativeTo)
         {
             HandPose pose = new HandPose();
             foreach (var bone in bonesCollection)
@@ -137,8 +142,9 @@ namespace PoseAuthoring
                 Quaternion rotation = boneMap.transform.localRotation;
                 pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
             }
-            pose.handPosition = respect != null ? respect.InverseTransformPoint(this.transform.position) : this.transform.position;
-            pose.handRotation = respect != null ? respect.rotation * this.transform.rotation : this.transform.rotation;
+
+            pose.handGripPosition = relativeTo != null ? relativeTo.InverseTransformPoint(this.gripPoint.position) : this.gripPoint.position;
+            pose.handGripRotation = relativeTo != null ? relativeTo.rotation * this.gripPoint.rotation : this.gripPoint.rotation;
             pose.isRightHand = isRightHand;
             return pose;
         }

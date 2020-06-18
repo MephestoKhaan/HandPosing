@@ -33,6 +33,11 @@ namespace PoseAuthoring
         [SerializeField]
         private OVRTouchSample.HandPose m_defaultGrabPose = null;
 
+        [SerializeField]
+        private GrabbableDetector snapDetector;
+        [SerializeField]
+        private HandPuppet puppet;
+
         private Collider[] m_colliders = null;
         private bool m_collisionEnabled = true;
         private OVRGrabber m_grabber;
@@ -116,6 +121,16 @@ namespace PoseAuthoring
                 {
                     Collider collider = m_colliders[i];
                     collider.transform.localScale = new Vector3(m_collisionScaleCurrent, m_collisionScaleCurrent, m_collisionScaleCurrent);
+                }
+            }
+
+            SnappableObject snappable = snapDetector.NearsestSnappable();
+            if (snappable != null)
+            {
+                HandGhost ghost = snappable.FindNearsetGhost(this.puppet);
+                if(ghost != null)
+                {
+                    this.puppet.SetRecordedPose(ghost.StoredPose, snappable.transform, 0.5f);
                 }
             }
         }

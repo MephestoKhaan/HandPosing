@@ -66,7 +66,7 @@ namespace PoseAuthoring
         }
 
 
-        public HandGhost FindNearestPose(HandPuppet hand)
+        public HandGhost FindNearsetGhost(HandPuppet hand)
         {
             HandPose pose = hand.CurrentPose(this.transform);
             float maxScore = 0f;

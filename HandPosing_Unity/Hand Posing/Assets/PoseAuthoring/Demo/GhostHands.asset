@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93590be07c671404ba24d67c85f58fa1, type: 3}
   m_Name: GhostHands
   m_EditorClassIdentifier: 
-  rightHand: {fileID: 3733909631544546195, guid: e0409f2563816434a9614f6075c24f47,
+  rightHand: {fileID: 7362165940787128986, guid: b4fc7edcec7832e4dbb22e9d5ddee148,
     type: 3}
-  leftHand: {fileID: 9047096324589510945, guid: b55841bb1ae8c2749b134f0eca48647a,
+  leftHand: {fileID: 3733909631544546195, guid: e0409f2563816434a9614f6075c24f47,
     type: 3}

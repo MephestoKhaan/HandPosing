@@ -26,7 +26,7 @@ namespace PoseAuthoring
             SnappableObject snappable = grabber.NearsestSnappable();
             if (snappable != null)
             {
-                HandGhost ghost = snappable.FindNearestPose(this.puppetHand);
+                HandGhost ghost = snappable.FindNearsetGhost(this.puppetHand);
                 if (ghost != previousGhost)
                 {
                     previousGhost?.Highlight(false);
