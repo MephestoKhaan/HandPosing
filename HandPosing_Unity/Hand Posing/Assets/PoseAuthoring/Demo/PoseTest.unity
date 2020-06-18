@@ -121,12 +121,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!4 &35000203 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4885569569827316, guid: ba1fa4a8c66106b4988c88fe4b8e8502,
-    type: 3}
-  m_PrefabInstance: {fileID: 698211580}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &54705581 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4999173628799950, guid: ba1fa4a8c66106b4988c88fe4b8e8502,
@@ -1253,7 +1247,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545573050}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f3d49be93727e7645bc247336d9da650, type: 3}
   m_Name: 
@@ -1262,10 +1256,10 @@ MonoBehaviour:
   gripPoint: {fileID: 252190531}
   boneMaps:
   - id: 0
-    transform: {fileID: 35000203}
-    rotationOffset: {x: -98.8, y: -223.9, z: -30.4}
+    transform: {fileID: 1013588942}
+    rotationOffset: {x: 6.3, y: 69.49, z: 4.83}
     updatePosition: 1
-    positionOffset: {x: 0.03, y: -0.07, z: -0.05}
+    positionOffset: {x: -0.09, y: -0.055, z: -0.04}
   - id: 2
     transform: {fileID: 642304150}
     rotationOffset: {x: 240, y: 20, z: -180}
