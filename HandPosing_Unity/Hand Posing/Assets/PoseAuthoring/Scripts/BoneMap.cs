@@ -8,5 +8,6 @@ namespace PoseAuthoring
         public OVRSkeleton.BoneId id;
         public Transform transform;
         public Vector3 rotationOffset;
+        public bool updatePosition;
     }
 }
