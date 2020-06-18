@@ -121,10 +121,14 @@ namespace PoseAuthoring
             if (relativeTo != null)
             {
                 Quaternion rotationDif = Quaternion.Inverse(this.gripPoint.rotation) * this.transform.rotation;
-                this.transform.rotation = rotationDif * (pose.handGripRotation * relativeTo.rotation);
+                this.transform.rotation = Quaternion.Lerp(this.transform.rotation,
+                    rotationDif * (pose.handGripRotation * relativeTo.rotation),
+                    weight);
 
-                Vector3 positionDif = this.gripPoint.position - this.transform.position;
-                this.transform.position = relativeTo.TransformPoint(pose.handGripPosition) - positionDif;
+                Vector3 positionDif =  this.transform.position - this.gripPoint.position;
+                this.transform.position = Vector3.Lerp(this.transform.position,
+                    relativeTo.TransformPoint(pose.handGripPosition) + positionDif, 
+                    weight);
             }
             else
             {
