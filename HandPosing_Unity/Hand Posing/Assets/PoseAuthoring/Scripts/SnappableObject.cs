@@ -32,10 +32,7 @@ namespace PoseAuthoring
 
         private void Start()
         {
-            foreach (var pose in posesCollection.SnapPoses)
-            {
-                AddPose(pose);
-            }
+            LoadFromAsset();
         }
 
         private void InitializeSnapPoints()

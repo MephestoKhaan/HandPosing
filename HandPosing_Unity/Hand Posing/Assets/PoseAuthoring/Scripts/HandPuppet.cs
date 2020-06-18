@@ -118,6 +118,7 @@ namespace PoseAuthoring
                     boneTransform.localRotation = bone.rotation;
                 }
             }
+
             if (relativeTo != null)
             {
                 Quaternion rotationDif = Quaternion.Inverse(this.gripPoint.rotation) * this.transform.rotation;
