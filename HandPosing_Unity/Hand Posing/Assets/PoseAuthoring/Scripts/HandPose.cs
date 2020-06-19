@@ -18,7 +18,6 @@ namespace PoseAuthoring
         public bool isRightHand;
         public List<BoneRotation> Bones = new List<BoneRotation>();
 
-
         public static float Score(HandPose from, HandPose to, float maxDistance = 0.2f)
         {
             if(from.isRightHand != to.isRightHand)

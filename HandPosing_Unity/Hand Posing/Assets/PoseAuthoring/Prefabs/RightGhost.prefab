@@ -661,7 +661,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackedHand: {fileID: 0}
+  handAnchor: {fileID: 0}
   gripPoint: {fileID: 6947336271118645116}
+  isRightHand: 0
   boneMaps:
   - id: 2
     transform: {fileID: 7164180164629477100}
@@ -738,7 +740,7 @@ MonoBehaviour:
     rotationOffset: {x: 0, y: 0, z: 0}
     updatePosition: 0
     positionOffset: {x: 0, y: 0, z: 0}
-  isRightHand: 0
+  axis: {fileID: 0}
 --- !u!114 &7362165940787128986
 MonoBehaviour:
   m_ObjectHideFlags: 0

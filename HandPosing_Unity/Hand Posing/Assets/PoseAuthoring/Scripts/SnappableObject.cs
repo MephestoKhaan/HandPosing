@@ -50,7 +50,7 @@ namespace PoseAuthoring
 
         public HandGhost AddPose(HandPuppet puppet)
         {
-            HandPose pose = puppet.CurrentPose(this.transform);
+            HandPose pose = puppet.CurrentPoseVisual(this.transform);
             return AddPose(pose);
         }
 
@@ -62,10 +62,9 @@ namespace PoseAuthoring
             return ghost;
         }
 
-
         public HandGhost FindNearsetGhost(HandPuppet hand, out float score)
         {
-            HandPose pose = hand.CurrentPose(this.transform);
+            HandPose pose = hand.CurrentPoseTracked(this.transform);
             float maxScore = 0f;
             HandGhost nearestHand = null;
             foreach(var ghost in this.ghosts)
