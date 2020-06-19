@@ -14,7 +14,7 @@ namespace PoseAuthoring
         [SerializeField]
         private string colorProperty = "_RimColor";
 
-        public HandPose StoredPose
+        public HandPose PoseToObject
         {
             get;
             private set;
@@ -33,7 +33,7 @@ namespace PoseAuthoring
         public void SetPose(HandPose pose, Transform relativeTo)
         {
             puppet.SetRecordedPose(pose, relativeTo);
-            StoredPose = pose;
+            PoseToObject = pose;
         }
 
         public void Highlight(bool highlight)

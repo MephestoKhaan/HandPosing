@@ -9,17 +9,26 @@ namespace PoseAuthoring
         [SerializeField]
         private GrabbableDetector snapDetector;
         [SerializeField]
+        private OVRGrabber grabber;
+        [SerializeField]
         private HandPuppet puppet;
+
+        private bool _isGrabbing;
 
         private void LateUpdate()
         {
-            SnappableObject snappable = snapDetector.NearsestSnappable();
-            if (snappable != null)
+            if(!_isGrabbing 
+                && grabber.grabbedObject != null)
             {
-                HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
-                if(ghost != null)
+                _isGrabbing = true;
+               
+                if (grabber.grabbedObject.TryGetComponent<SnappableObject>(out SnappableObject snappable))
                 {
-                    this.puppet.SetRecordedPose(ghost.StoredPose, snappable.transform, score);
+                    HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
+                    if (ghost != null)
+                    {
+                        this.puppet.SetRecordedPose(ghost.PoseToObject, snappable.transform, 1f);
+                    }
                 }
             }
         }

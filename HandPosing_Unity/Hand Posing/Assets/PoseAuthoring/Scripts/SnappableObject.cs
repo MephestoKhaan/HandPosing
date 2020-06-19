@@ -64,20 +64,26 @@ namespace PoseAuthoring
 
         public HandGhost FindNearsetGhost(HandPuppet hand, out float score)
         {
-            HandPose pose = hand.CurrentPoseTracked(this.transform);
+            HandPose handToObject = hand.CurrentPoseVisual(this.transform);
+
             float maxScore = 0f;
-            HandGhost nearestHand = null;
-            foreach(var ghost in this.ghosts)
+            HandGhost nearestGhost = null;
+
+            foreach (var ghost in this.ghosts)
             {
-               float poseScore = HandPose.Score(ghost.StoredPose, pose);
-                if(poseScore > maxScore)
+                float poseScore = HandPose.Score(ghost.PoseToObject, handToObject);
+
+                if (poseScore > maxScore)
                 {
-                    nearestHand = ghost;
+                    nearestGhost = ghost;
                     maxScore = poseScore;
                 }
             }
+
+
+
             score = maxScore;
-            return nearestHand;
+            return nearestGhost;
         }
 
         public void LoadFromAsset()
@@ -93,7 +99,7 @@ namespace PoseAuthoring
             List<HandPose> poses = new List<HandPose>();
             foreach (var ghost in this.ghosts)
             {
-                poses.Add(ghost.StoredPose);
+                poses.Add(ghost.PoseToObject);
             }
             posesCollection.StorePoses(poses);
         }
