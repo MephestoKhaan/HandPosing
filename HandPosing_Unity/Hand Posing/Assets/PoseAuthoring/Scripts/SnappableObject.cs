@@ -72,7 +72,7 @@ namespace PoseAuthoring
             foreach (var ghost in this.ghosts)
             {
                 float poseScore = HandPose.Score(ghost.PoseToObject, handToObject);
-
+                
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;

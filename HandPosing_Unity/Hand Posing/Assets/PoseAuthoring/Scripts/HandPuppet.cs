@@ -31,7 +31,7 @@ namespace PoseAuthoring
             {
                 (Vector3, Quaternion) offset =  _puppettedHand ? _pupettedGripOffset.Value : _originalGripOffset;
                 Vector3 trackedGripPosition = this.handAnchor.TransformPoint(offset.Item1);
-                Quaternion trackedGripRotation = this.handAnchor.rotation * offset.Item2;
+                Quaternion trackedGripRotation = offset.Item2 * this.handAnchor.rotation;
                 return (trackedGripPosition, trackedGripRotation);
             }
         }
@@ -169,23 +169,21 @@ namespace PoseAuthoring
                 }
             }
 
-            Quaternion rotationDif = Quaternion.Inverse(this.gripPoint.rotation) * this.transform.rotation;
-            this.transform.rotation = Quaternion.Lerp(this.transform.rotation,
-                rotationDif * (pose.handGripRotation * relativeTo.rotation),
-                weight);
+            Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
+            Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * (rotationDif);
+            this.transform.rotation = Quaternion.Lerp(this.transform.rotation,desiredRotation, weight);
 
             Vector3 positionDif = this.transform.position - this.gripPoint.position;
-            this.transform.position = Vector3.Lerp(this.transform.position,
-                relativeTo.TransformPoint(pose.handGripPosition) + positionDif,
-                weight);
+            Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
+            this.transform.position = Vector3.Lerp(this.transform.position, desiredPosition, weight);
 
         }
 
         public HandPose CurrentPoseVisual(Transform relativeTo)
         {
             HandPose pose = new HandPose();
-            pose.handGripPosition = relativeTo.InverseTransformPoint(this.gripPoint.position);
-            pose.handGripRotation = Quaternion.Inverse(this.gripPoint.rotation) * relativeTo.rotation;
+            pose.relativeGripPos = relativeTo.InverseTransformPoint(this.gripPoint.position);
+            pose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * this.gripPoint.rotation;
             pose.isRightHand = isRightHand;
 
             foreach (var bone in bonesCollection)
@@ -204,8 +202,8 @@ namespace PoseAuthoring
             Quaternion trackedGripRotation = gripPose.Item2;
 
             HandPose pose = new HandPose();
-            pose.handGripPosition = relativeTo.InverseTransformPoint(trackedGripPosition);
-            pose.handGripRotation = Quaternion.Inverse(trackedGripRotation ) * relativeTo.rotation;
+            pose.relativeGripPos = relativeTo.InverseTransformPoint(trackedGripPosition);
+            pose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * trackedGripRotation;
             pose.isRightHand = isRightHand;
             return pose;
         }

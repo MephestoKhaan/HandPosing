@@ -14,8 +14,8 @@ namespace PoseAuthoring
     [System.Serializable]
     public class HandPose
     {
-        public Vector3 handGripPosition;
-        public Quaternion handGripRotation;
+        public Vector3 relativeGripPos;
+        public Quaternion relativeGripRot;
         public bool isRightHand;
         public List<BoneRotation> Bones = new List<BoneRotation>();
 
@@ -26,8 +26,8 @@ namespace PoseAuthoring
                 return 0f;
             }
 
-            float rotationDifference = Math.Max(0f,Quaternion.Dot(from.handGripRotation, to.handGripRotation));
-            float positionDifference = 1f-Mathf.Clamp01(Vector3.Distance(from.handGripPosition, to.handGripPosition) / maxDistance);
+            float rotationDifference = Math.Max(0f,Quaternion.Dot(from.relativeGripRot, to.relativeGripRot));
+            float positionDifference = 1f-Mathf.Clamp01(Vector3.Distance(from.relativeGripPos, to.relativeGripPos) / maxDistance);
 
             return rotationDifference * positionDifference;
         }
