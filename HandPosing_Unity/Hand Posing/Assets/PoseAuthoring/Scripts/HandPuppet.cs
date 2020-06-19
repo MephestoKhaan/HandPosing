@@ -176,7 +176,6 @@ namespace PoseAuthoring
             Vector3 positionDif = this.transform.position - this.gripPoint.position;
             Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
             this.transform.position = Vector3.Lerp(this.transform.position, desiredPosition, weight);
-
         }
 
         public HandPose CurrentPoseVisual(Transform relativeTo)

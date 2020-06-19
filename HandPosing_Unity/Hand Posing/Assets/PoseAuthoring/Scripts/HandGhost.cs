@@ -36,6 +36,12 @@ namespace PoseAuthoring
             PoseToObject = pose;
         }
 
+        public void Highlight(float amount)
+        {
+            Color color = Color.Lerp(defaultColor, highlightedColor, amount);
+            handRenderer.material.SetColor(colorIndex, color);
+        }
+
         public void Highlight(bool highlight)
         {
             Color color = highlight ? highlightedColor : defaultColor;

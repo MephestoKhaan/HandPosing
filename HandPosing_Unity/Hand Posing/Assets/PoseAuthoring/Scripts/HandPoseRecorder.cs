@@ -30,9 +30,9 @@ namespace PoseAuthoring
                 if (ghost != previousGhost)
                 {
                     previousGhost?.Highlight(false);
-                    ghost?.Highlight(true);
                     previousGhost = ghost;
                 }
+                ghost?.Highlight(score);
             }
             else if (previousGhost != null)
             {

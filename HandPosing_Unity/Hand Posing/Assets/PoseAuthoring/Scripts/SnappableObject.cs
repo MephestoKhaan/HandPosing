@@ -12,6 +12,7 @@ namespace PoseAuthoring
         [InspectorButton("SaveToAsset")]
         public string StorePoses;
 
+
         [Space]
         [SerializeField]
         protected Collider[] snapPoints = null;
@@ -71,17 +72,13 @@ namespace PoseAuthoring
 
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = HandPose.Score(ghost.PoseToObject, handToObject);
-                
+                float poseScore = HandPose.Score(ghost.PoseToObject, handToObject, this.transform);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
                     maxScore = poseScore;
                 }
             }
-
-
-
             score = maxScore;
             return nearestGhost;
         }
