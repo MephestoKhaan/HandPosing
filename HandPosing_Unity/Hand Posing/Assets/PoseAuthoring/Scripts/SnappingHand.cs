@@ -19,7 +19,7 @@ namespace PoseAuthoring
                 HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
                 if(ghost != null)
                 {
-                    this.puppet.SetRecordedPose(ghost.StoredPose, snappable.transform, 1f);
+                    this.puppet.SetRecordedPose(ghost.StoredPose, snappable.transform, score);
                 }
             }
         }

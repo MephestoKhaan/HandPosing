@@ -29,7 +29,7 @@ namespace PoseAuthoring
             colorIndex = Shader.PropertyToID(colorProperty);
             Highlight(false);
         }
-
+        
         public void SetPose(HandPose pose, Transform relativeTo)
         {
             puppet.SetRecordedPose(pose, relativeTo);
