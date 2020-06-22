@@ -37,6 +37,7 @@ namespace PoseAuthoring
                 if (currentGhost != null)
                 {
                     this.puppet.SetRecordedPose(currentGhost.PoseToObject, snappable.transform, 1f, 1f);
+                    currentAmount = 1f;
                 }
             }
         }
@@ -50,7 +51,7 @@ namespace PoseAuthoring
         {
             if (currentGhost != null)
             {
-                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, 1f, 1f);
+                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, currentAmount, currentAmount);
             }
         }
 
@@ -59,13 +60,14 @@ namespace PoseAuthoring
         {
             if(grabbable == null)
             {
+                currentGhost = null;
                 return;
             }
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
                 currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
-                currentAmount = 1f;
+                currentAmount = amount;
             }
         }
     }

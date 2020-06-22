@@ -1811,6 +1811,11 @@ PrefabInstance:
       propertyPath: boneMaps.Array.data[14].transform
       value: 
       objectReference: {fileID: 4791871989720860}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: axis
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1442438993745604910, guid: 23b1fe0762145904ba4ff0b82e7de514, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 23b1fe0762145904ba4ff0b82e7de514, type: 3}

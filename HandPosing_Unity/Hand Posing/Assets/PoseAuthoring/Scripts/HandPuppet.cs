@@ -32,7 +32,7 @@ namespace PoseAuthoring
             {
                 (Vector3, Quaternion) offset = _puppettedHand ? _pupettedGripOffset.Value : _originalGripOffset;
                 Vector3 trackedGripPosition = this.handAnchor.TransformPoint(offset.Item1);
-                Quaternion trackedGripRotation = offset.Item2 * this.handAnchor.rotation;
+                Quaternion trackedGripRotation = this.handAnchor.rotation * offset.Item2;
                 return (trackedGripPosition, trackedGripRotation);
             }
         }
@@ -162,6 +162,7 @@ namespace PoseAuthoring
             
         }
 
+
         public void SetRecordedPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
             InitializeBones();
@@ -179,15 +180,21 @@ namespace PoseAuthoring
                 }
             }
 
-            if (positionWeight > 0f)
+            //if (positionWeight > 0f)
             {
+                (Vector3,Quaternion) worldGrip = WorldGripPose;
+
                 Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
-                Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * (rotationDif);
-                this.transform.rotation = Quaternion.Lerp(this.transform.rotation, desiredRotation, positionWeight);
+                Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
+                Quaternion trackedRot = worldGrip.Item2;
+
+                this.transform.rotation = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
 
                 Vector3 positionDif = this.transform.position - this.gripPoint.position;
                 Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
-                this.transform.position = Vector3.Lerp(this.transform.position, desiredPosition, positionWeight);
+                Vector3 trackedPosition = worldGrip.Item1 + positionDif;
+                this.transform.position = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
+
             }
 
         }
