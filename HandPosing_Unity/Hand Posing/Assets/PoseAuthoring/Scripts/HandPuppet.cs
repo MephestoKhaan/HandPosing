@@ -186,7 +186,7 @@ namespace PoseAuthoring
 
                 Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
                 Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
-                Quaternion trackedRot = worldGrip.Item2;
+                Quaternion trackedRot = rotationDif * worldGrip.Item2;
 
                 this.transform.rotation = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
 
