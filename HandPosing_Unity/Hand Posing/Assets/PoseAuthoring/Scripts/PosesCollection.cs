@@ -9,9 +9,9 @@ namespace PoseAuthoring
     public class PosesCollection : ScriptableObject
     {
         [SerializeField]
-        private List<HandPose> _snapPoses;
+        private List<HandSnapPose> _snapPoses;
 
-        public List<HandPose> SnapPoses
+        public List<HandSnapPose> SnapPoses
         {
             get
             {
@@ -19,7 +19,7 @@ namespace PoseAuthoring
             }
         }
 
-        public void StorePoses(List<HandPose> poses)
+        public void StorePoses(List<HandSnapPose> poses)
         {
             _snapPoses = poses;
 #if UNITY_EDITOR

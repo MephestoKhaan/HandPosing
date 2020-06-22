@@ -1,5 +1,5 @@
-
-
+using PoseAuthoring.Grabbing;
+using System;
 using UnityEngine;
 
 namespace PoseAuthoring
@@ -9,26 +9,67 @@ namespace PoseAuthoring
         [SerializeField]
         private GrabbableDetector snapDetector;
         [SerializeField]
-        private OVRGrabber grabber;
+        private Grabber grabber;
+        [SerializeField]
+        private GrabbableDetector detector;
         [SerializeField]
         private HandPuppet puppet;
 
-        private bool _isGrabbing;
+        private HandGhost currentGhost;
+        private float currentAmount;
+
+        private void OnEnable()
+        {
+            grabber.OnGrabAttemp += GrabAttemp;
+            grabber.OnGrabStarted += GrabStarted;
+            grabber.OnGrabEnded += GrabEnded;
+        }
+
+        private void OnDisable()
+        {
+            grabber.OnGrabAttemp -= GrabAttemp;
+            grabber.OnGrabStarted -= GrabStarted;
+            grabber.OnGrabEnded -= GrabEnded;
+        }
+
+
+        private void GrabStarted(Grabbable obj)
+        {
+            var snappable = grabber.GrabbedObject.Snappable;
+            if (snappable != null)
+            {
+                currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
+                if (currentGhost != null)
+                {
+                    this.puppet.SetRecordedPose(currentGhost.PoseToObject, snappable.transform, 1f, 1f);
+                }
+            }
+        }
+
+        private void GrabEnded(Grabbable obj)
+        {
+            currentGhost = null;
+        }
 
         private void LateUpdate()
         {
-            if(!_isGrabbing 
-                && grabber.grabbedObject != null)
+            if (currentGhost != null)
             {
-                _isGrabbing = true;
-               
-                if (grabber.grabbedObject.TryGetComponent<SnappableObject>(out SnappableObject snappable))
+                this.puppet.SetRecordedPose(currentGhost.PoseToObject, grabber.GrabbedObject.transform, 1f, 0f);
+            }
+        }
+
+
+        private void GrabAttemp(Grabbable grabbable, float amount)
+        {
+            var snappable = grabber.GrabbedObject.Snappable;
+            if (snappable != null)
+            {
+                HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
+                if (ghost != null)
                 {
-                    HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
-                    if (ghost != null)
-                    {
-                        this.puppet.SetRecordedPose(ghost.PoseToObject, snappable.transform, 1f);
-                    }
+                    currentAmount = amount;
+                    this.puppet.SetRecordedPose(ghost.PoseToObject, snappable.transform, amount, amount);
                 }
             }
         }

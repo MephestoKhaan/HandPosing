@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace PoseAuthoring
@@ -12,14 +11,14 @@ namespace PoseAuthoring
     }
 
     [System.Serializable]
-    public class HandPose
+    public class HandSnapPose
     {
         public Vector3 relativeGripPos;
         public Quaternion relativeGripRot;
         public bool isRightHand;
         public List<BoneRotation> Bones = new List<BoneRotation>();
 
-        public static float Score(HandPose from, HandPose to, Transform relativeTo, float maxDistance = 0.1f)
+        public static float Score(HandSnapPose from, HandSnapPose to, Transform relativeTo, float maxDistance = 0.1f)
         {
             if(from.isRightHand != to.isRightHand)
             {

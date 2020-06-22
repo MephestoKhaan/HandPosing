@@ -51,11 +51,11 @@ namespace PoseAuthoring
 
         public HandGhost AddPose(HandPuppet puppet)
         {
-            HandPose pose = puppet.CurrentPoseVisual(this.transform);
+            HandSnapPose pose = puppet.CurrentPoseVisual(this.transform);
             return AddPose(pose);
         }
 
-        private HandGhost AddPose(HandPose pose)
+        private HandGhost AddPose(HandSnapPose pose)
         {
             HandGhost ghost = Instantiate(handProvider.GetHand(pose.isRightHand), this.transform);
             ghost.SetPose(pose, this.transform);
@@ -65,14 +65,14 @@ namespace PoseAuthoring
 
         public HandGhost FindNearsetGhost(HandPuppet hand, out float score)
         {
-            HandPose handToObject = hand.CurrentPoseVisual(this.transform);
+            HandSnapPose handToObject = hand.CurrentPoseVisual(this.transform);
 
             float maxScore = 0f;
             HandGhost nearestGhost = null;
 
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = HandPose.Score(ghost.PoseToObject, handToObject, this.transform);
+                float poseScore = HandSnapPose.Score(ghost.PoseToObject, handToObject, this.transform);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
@@ -93,7 +93,7 @@ namespace PoseAuthoring
 
         public void SaveToAsset()
         {
-            List<HandPose> poses = new List<HandPose>();
+            List<HandSnapPose> poses = new List<HandSnapPose>();
             foreach (var ghost in this.ghosts)
             {
                 poses.Add(ghost.PoseToObject);

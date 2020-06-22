@@ -8,7 +8,14 @@ namespace PoseAuthoring
         public OVRSkeleton.BoneId id;
         public Transform transform;
         public Vector3 rotationOffset;
-        public bool updatePosition;
+    }
+
+    [System.Serializable]
+    public class HandMap
+    {
+        public OVRSkeleton.BoneId id;
+        public Transform transform;
+        public Vector3 rotationOffset;
         public Vector3 positionOffset;
     }
 }
