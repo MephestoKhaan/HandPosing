@@ -283,7 +283,7 @@ namespace PoseAuthoring.Grabbing
         }
 
 
-        private (Grabbable, Collider) FindClosestGrabbable()
+        public (Grabbable, Collider) FindClosestGrabbable()
         {
             float closestMagSq = float.MaxValue;
             Grabbable closestGrabbable = null;

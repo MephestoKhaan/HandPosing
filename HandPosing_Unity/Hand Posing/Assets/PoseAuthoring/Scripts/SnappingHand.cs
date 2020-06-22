@@ -7,11 +7,7 @@ namespace PoseAuthoring
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
-        private GrabbableDetector snapDetector;
-        [SerializeField]
         private Grabber grabber;
-        [SerializeField]
-        private GrabbableDetector detector;
         [SerializeField]
         private HandPuppet puppet;
 
@@ -33,9 +29,9 @@ namespace PoseAuthoring
         }
 
 
-        private void GrabStarted(Grabbable obj)
+        private void GrabStarted(Grabbable grabbable)
         {
-            var snappable = grabber.GrabbedObject.Snappable;
+            SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
                 currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
@@ -55,22 +51,22 @@ namespace PoseAuthoring
         {
             if (currentGhost != null)
             {
-                this.puppet.SetRecordedPose(currentGhost.PoseToObject, grabber.GrabbedObject.transform, 1f, 0f);
+                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, currentAmount, currentAmount);
             }
         }
 
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
-            var snappable = grabber.GrabbedObject.Snappable;
+            if(grabbable == null)
+            {
+                return;
+            }
+            SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                HandGhost ghost = snappable.FindNearsetGhost(this.puppet, out float score);
-                if (ghost != null)
-                {
-                    currentAmount = amount;
-                    this.puppet.SetRecordedPose(ghost.PoseToObject, snappable.transform, amount, amount);
-                }
+                currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
+                currentAmount = 1f;
             }
         }
     }

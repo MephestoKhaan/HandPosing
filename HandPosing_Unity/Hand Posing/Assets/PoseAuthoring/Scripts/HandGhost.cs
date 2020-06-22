@@ -20,6 +20,12 @@ namespace PoseAuthoring
             private set;
         }
 
+        public Transform RelativeTo
+        {
+            get;
+            private set;
+        }
+
         private HandPuppet puppet;
         private int colorIndex;
 
@@ -33,7 +39,7 @@ namespace PoseAuthoring
         public void SetPose(HandSnapPose pose, Transform relativeTo)
         {
             puppet.SetRecordedPose(pose, relativeTo);
-
+            RelativeTo = relativeTo;
             PoseToObject = pose;
         }
 

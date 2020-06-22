@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PoseAuthoring.Grabbing;
+using UnityEngine;
 
 namespace PoseAuthoring
 {
@@ -7,7 +8,7 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppetHand;
         [SerializeField]
-        private GrabbableDetector grabber;
+        private Grabber grabber;
 
         private HandGhost previousGhost;
 
@@ -23,10 +24,11 @@ namespace PoseAuthoring
 
         private void HighlightNearestPose()
         {
-            SnappableObject snappable = grabber.NearsestSnappable();
-            if (snappable != null)
+            Grabbable grabbable = grabber.FindClosestGrabbable().Item1;
+            
+            if (grabbable != null && grabbable.Snappable != null)
             {
-                HandGhost ghost = snappable.FindNearsetGhost(this.puppetHand, out float score);
+                HandGhost ghost = grabbable.Snappable.FindNearsetGhost(this.puppetHand, out float score);
                 if (ghost != previousGhost)
                 {
                     previousGhost?.Highlight(false);
@@ -43,8 +45,8 @@ namespace PoseAuthoring
 
         public void RecordPose()
         {
-            SnappableObject snappable = grabber.NearsestSnappable();
-            snappable?.AddPose(puppetHand);
+            Grabbable grabbable = grabber.FindClosestGrabbable().Item1;
+            grabbable?.Snappable?.AddPose(puppetHand);
         }
     }
 }
