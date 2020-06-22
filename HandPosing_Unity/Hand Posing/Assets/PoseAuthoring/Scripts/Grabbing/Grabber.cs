@@ -158,7 +158,7 @@ namespace PoseAuthoring.Grabbing
             allGrabbers.Remove(this);
         }
 
-        public void TriggerEnter(Collider otherCollider)
+        public void OnTriggerEnter(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)
@@ -171,7 +171,7 @@ namespace PoseAuthoring.Grabbing
             _grabCandidates[grabbable] = refCount + 1;
         }
 
-        public void TriggerExit(Collider otherCollider)
+        public void OnTriggerExit(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)

@@ -1,5 +1,4 @@
 using PoseAuthoring.Grabbing;
-using System;
 using UnityEngine;
 
 namespace PoseAuthoring
@@ -51,7 +50,7 @@ namespace PoseAuthoring
         {
             if (currentGhost != null)
             {
-                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, currentAmount, currentAmount);
+                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, 1f, 1f);
             }
         }
 

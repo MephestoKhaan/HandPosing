@@ -24,7 +24,7 @@ namespace PoseAuthoring
 
         private void HighlightNearestPose()
         {
-            Grabbable grabbable = grabber.FindClosestGrabbable().Item1;
+            var grabbable = grabber.FindClosestGrabbable().Item1;
             
             if (grabbable != null && grabbable.Snappable != null)
             {

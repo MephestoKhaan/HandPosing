@@ -69,7 +69,6 @@ namespace PoseAuthoring.Grabbing
         {
             Snappable = this.GetComponent<SnappableObject>();
 
-
             Collider collider = this.GetComponentInChildren<Collider>();
             if (collider == null)
             {
