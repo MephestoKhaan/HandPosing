@@ -10,12 +10,14 @@ namespace PoseAuthoring.Editor
     {
         private static readonly Color NONINTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.1f);
         private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.5f);
+        private const float DRAWSURFACE_RESOLUTION = 5f;
 
         private ArcHandle topArc = new ArcHandle();
+        private Vector3[] surfaceEdges;
 
         private void OnEnable()
         {
-            topArc.SetColorWithRadiusHandle(INTERACTABLE_COLOR, NONINTERACTABLE_COLOR.a);
+            topArc.SetColorWithRadiusHandle(INTERACTABLE_COLOR, 0f);
         }
 
         public void OnSceneGUI()
@@ -55,19 +57,38 @@ namespace PoseAuthoring.Editor
             Vector3 start = cylinder.StartPoint;
             Vector3 end = cylinder.EndPoint;
 
-            Handles.color = NONINTERACTABLE_COLOR;
-            Handles.DrawSolidArc(end,
+            Handles.DrawWireArc(end,
             cylinder.Direction,
             cylinder.StartAngleDir,
             cylinder.Angle,
             cylinder.radious);
-            Handles.DrawWireDisc(end, cylinder.Direction, cylinder.radious);
 
+            Handles.color = INTERACTABLE_COLOR;
             Handles.DrawLine(start,end);
-            Handles.DrawLine(start + cylinder.StartAngleDir * cylinder.radious,
-                end + cylinder.StartAngleDir * cylinder.radious);
-            Handles.DrawLine(start + cylinder.EndAngleDir * cylinder.radious,
-                end +  cylinder.EndAngleDir * cylinder.radious);
+            Handles.DrawLine(start, start + cylinder.StartAngleDir * cylinder.radious);
+            Handles.DrawLine(start, start + cylinder.EndAngleDir * cylinder.radious);
+            Handles.DrawLine(end,end + cylinder.StartAngleDir * cylinder.radious);
+            Handles.DrawLine(end, end + cylinder.EndAngleDir * cylinder.radious);
+
+            int edgePoints = Mathf.CeilToInt((2 * cylinder.Angle) / DRAWSURFACE_RESOLUTION) + 3;
+            if(surfaceEdges == null 
+                || surfaceEdges.Length != edgePoints)
+            {
+                surfaceEdges = new Vector3[edgePoints];
+            }
+
+            Handles.color = NONINTERACTABLE_COLOR;
+            int i = 0;
+            for(float angle = 0f; angle < cylinder.Angle; angle += DRAWSURFACE_RESOLUTION)
+            {
+                Vector3 direction = Quaternion.AngleAxis(angle, cylinder.Direction) * cylinder.StartAngleDir;
+                surfaceEdges[i++] = start + direction * cylinder.radious;
+                surfaceEdges[i++] = end + direction * cylinder.radious;
+            }
+            surfaceEdges[i++] = start + cylinder.EndAngleDir * cylinder.radious;
+            surfaceEdges[i++] = end + cylinder.EndAngleDir * cylinder.radious;
+            Handles.DrawPolyLine(surfaceEdges);
+
         }
 
         private void DrawArcEditor(HandGhost ghost)
@@ -85,7 +106,6 @@ namespace PoseAuthoring.Editor
                 EditorGUI.BeginChangeCheck();
 
                 Handles.color = Color.white;
-
                 topArc.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {

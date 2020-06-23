@@ -731,12 +731,11 @@ MonoBehaviour:
   highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColor: {r: 0, g: 0, b: 1, a: 1}
   colorProperty: _RimColor
-  axis: {fileID: 0}
   _cylinder:
-    _startPoint: {x: 0, y: 0.35, z: 0.014461353}
-    _endPoint: {x: 0, y: -0.23052914, z: 0.096883774}
-    _angle: 247.3
-    radious: 0.45214528
+    _startPoint: {x: 0, y: 0.15816864, z: 0.3692254}
+    _endPoint: {x: 0, y: -0.23052914, z: 0}
+    _angle: 290.4117
+    radious: 0.1
     _transform: {fileID: 7161748250141258252}
 --- !u!1 &7161748250141499802
 GameObject:
