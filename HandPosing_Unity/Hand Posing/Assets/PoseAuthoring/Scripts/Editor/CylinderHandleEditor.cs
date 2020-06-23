@@ -58,26 +58,26 @@ namespace PoseAuthoring.Editor
             Handles.color = NONINTERACTABLE_COLOR;
             Handles.DrawSolidArc(end,
             cylinder.Direction,
-            cylinder.Tangent,
-            cylinder.angle,
+            cylinder.StartAngleDir,
+            cylinder.Angle,
             cylinder.radious);
             Handles.DrawWireDisc(end, cylinder.Direction, cylinder.radious);
 
             Handles.DrawLine(start,end);
-            Handles.DrawLine(start + cylinder.Tangent * cylinder.radious,
-                end + cylinder.Tangent * cylinder.radious);
-            Handles.DrawLine(start + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious,
-                end + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious);
+            Handles.DrawLine(start + cylinder.StartAngleDir * cylinder.radious,
+                end + cylinder.StartAngleDir * cylinder.radious);
+            Handles.DrawLine(start + cylinder.EndAngleDir * cylinder.radious,
+                end +  cylinder.EndAngleDir * cylinder.radious);
         }
 
         private void DrawArcEditor(HandGhost ghost)
         {
             CylinderHandle cylinder = ghost.Cylinder;
-            topArc.angle = cylinder.angle;
+            topArc.angle = cylinder.Angle;
             topArc.radius = cylinder.radious;
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
                 cylinder.StartPoint,
-                Quaternion.LookRotation(cylinder.Tangent, cylinder.Direction),
+                Quaternion.LookRotation(cylinder.StartAngleDir, cylinder.Direction),
                 Vector3.one
             );
             using (new Handles.DrawingScope(handleMatrix))
@@ -90,7 +90,7 @@ namespace PoseAuthoring.Editor
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(ghost, "Change Cylinder Properties");
-                    cylinder.angle = topArc.angle;
+                    cylinder.Angle = topArc.angle;
                     cylinder.radious = topArc.radius;
                 }
             }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [System.Serializable]
 public class CylinderHandle 
@@ -7,8 +8,9 @@ public class CylinderHandle
     private Vector3 _startPoint;
     [SerializeField]
     private Vector3 _endPoint;
+    [SerializeField]
+    private float _angle = 230f;
 
-    public float angle = 230f;
     public float radious = 0.2f;
 
     [SerializeField]
@@ -24,11 +26,18 @@ public class CylinderHandle
         _endPoint = Vector3.down * radious;
     }
 
-    public Vector3 Tangent
+    public Vector3 StartAngleDir
     {
         get
         {
             return Vector3.Cross(Direction, Vector3.forward).normalized;
+        }
+    }
+    public Vector3 EndAngleDir
+    {
+        get
+        {
+            return Quaternion.AngleAxis(Angle, Direction) * StartAngleDir;
         }
     }
 
@@ -56,6 +65,18 @@ public class CylinderHandle
         }
     }
 
+    public float Angle
+    {
+        get
+        {
+            return _angle;
+        }
+        set
+        {
+            _angle = Mathf.Repeat(value, 360f);
+        }
+    }
+
     public float Height
     {
         get
@@ -77,6 +98,40 @@ public class CylinderHandle
         }
     }
 
+    public Vector3 NearestPointInSurface(Vector3 targetPosition)
+    {
+        Vector3 start = StartPoint;
+        Vector3 dir = Direction;
+        Vector3 projectedVector = Vector3.Project(targetPosition - start, dir);
+        
+        if(projectedVector.magnitude > Height)
+        {
+            projectedVector = projectedVector.normalized * Height;
+        }
+        if (Vector3.Dot(projectedVector, dir) < 0f)
+        {
+            projectedVector = Vector3.zero;
+        }
+
+        Vector3 projectedPoint = StartPoint + projectedVector;
+        Vector3 targetDirection = Vector3.ProjectOnPlane((targetPosition - projectedPoint), dir).normalized;
+        //clamp of the surface
+        float desiredAngle = Mathf.Repeat(Vector3.SignedAngle(StartAngleDir, targetDirection, dir),360f);
+        if(desiredAngle > Angle)
+        {
+            if(Mathf.Abs(desiredAngle - Angle) >= Mathf.Abs(360f - desiredAngle))
+            {
+                targetDirection = StartAngleDir;
+            }
+            else
+            {
+                targetDirection = EndAngleDir;
+            }
+        }
+
+        Vector3 surfacePoint = projectedPoint + targetDirection * radious;
+        return surfacePoint;
+    }
 
 
 }

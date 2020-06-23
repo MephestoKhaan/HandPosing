@@ -44,7 +44,6 @@ namespace PoseAuthoring
         private HandPuppet puppet;
         private int colorIndex;
 
-
         private void Awake()
         {
             puppet = this.GetComponent<HandPuppet>();
