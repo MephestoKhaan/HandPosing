@@ -2,36 +2,34 @@
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-[CustomEditor(typeof(CylinderHandle))]
-[CanEditMultipleObjects]
-public class CylinderHandleEditor : Editor
+namespace PoseAuthoring.Editor
 {
-    private static readonly Color NONINTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.3f);
-    private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 1f);
-
-
-    ArcHandle topArc = new ArcHandle();
-
-    public void OnSceneGUI()
+    [CustomEditor(typeof(CylinderHandle))]
+    [CanEditMultipleObjects]
+    public class CylinderHandleEditor : UnityEditor.Editor
     {
-        CylinderHandle cylinder = (target as CylinderHandle);
+        private static readonly Color NONINTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.1f);
+        private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.5f);
 
-        Handles.color = NONINTERACTABLE_COLOR;
 
+        ArcHandle topArc = new ArcHandle();
 
-        topArc.angle = cylinder.angle;
-        topArc.radius = cylinder.radious;
-        Matrix4x4 handleMatrix = Matrix4x4.TRS(
-            cylinder.StartPoint,
-            Quaternion.LookRotation(cylinder.Tangent, cylinder.Direction),
-            Vector3.one
-        );
-
-        if (Event.current.type == EventType.Repaint)
+        public void OnSceneGUI()
         {
-            topArc.SetColorWithRadiusHandle(INTERACTABLE_COLOR, 1f);
-            topArc.fillColor = NONINTERACTABLE_COLOR;
+            CylinderHandle cylinder = (target as CylinderHandle);
 
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                DrawCylinderVolume(cylinder);
+            }
+
+            DrawArcEditor(cylinder);
+        }
+
+        private void DrawCylinderVolume(CylinderHandle cylinder)
+        {
+            Handles.color = NONINTERACTABLE_COLOR;
             Handles.DrawSolidArc(cylinder.EndPoint,
             cylinder.Direction,
             cylinder.Tangent,
@@ -47,15 +45,28 @@ public class CylinderHandleEditor : Editor
             Handles.DrawLine(cylinder.StartPoint + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious,
                 cylinder.EndPoint + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious);
         }
-        using (new Handles.DrawingScope(handleMatrix))
+
+        private void DrawArcEditor(CylinderHandle cylinder)
         {
-            EditorGUI.BeginChangeCheck();
-            topArc.DrawHandle();
-            if (EditorGUI.EndChangeCheck())
+            topArc.angle = cylinder.angle;
+            topArc.radius = cylinder.radious;
+            Matrix4x4 handleMatrix = Matrix4x4.TRS(
+                cylinder.StartPoint,
+                Quaternion.LookRotation(cylinder.Tangent, cylinder.Direction),
+                Vector3.one
+            );
+            using (new Handles.DrawingScope(handleMatrix))
             {
-                Undo.RecordObject(cylinder, "Change Cylinder Properties");
-                cylinder.angle = topArc.angle;
-                cylinder.radious = topArc.radius;
+                EditorGUI.BeginChangeCheck();
+
+                Handles.color = INTERACTABLE_COLOR;
+                topArc.DrawHandle();
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(cylinder, "Change Cylinder Properties");
+                    cylinder.angle = topArc.angle;
+                    cylinder.radious = topArc.radius;
+                }
             }
         }
     }
