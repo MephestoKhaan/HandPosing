@@ -14,6 +14,21 @@ namespace PoseAuthoring
         [SerializeField]
         private string colorProperty = "_RimColor";
 
+        [SerializeField]
+        public CylinderHandle _cylinder;
+
+        public CylinderHandle Cylinder
+        {
+            get
+            {
+                if(_cylinder == null)
+                {
+                    _cylinder = new CylinderHandle(this.transform);
+                }
+                return _cylinder;
+            }
+        }
+
         public HandSnapPose PoseToObject
         {
             get;
@@ -28,6 +43,7 @@ namespace PoseAuthoring
 
         private HandPuppet puppet;
         private int colorIndex;
+
 
         private void Awake()
         {
@@ -53,6 +69,12 @@ namespace PoseAuthoring
         {
             Color color = highlight ? highlightedColor : defaultColor;
             handRenderer.material.SetColor(colorIndex, color);
+        }
+
+        private void Reset()
+        {
+            _cylinder = new CylinderHandle(this.transform);
+            handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
     }
 }

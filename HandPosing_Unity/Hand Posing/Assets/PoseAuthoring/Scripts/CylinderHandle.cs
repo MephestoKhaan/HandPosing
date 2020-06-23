@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
-public class CylinderHandle : MonoBehaviour
+[System.Serializable]
+public class CylinderHandle 
 {
     [SerializeField]
     private Vector3 _startPoint;
@@ -9,6 +10,19 @@ public class CylinderHandle : MonoBehaviour
 
     public float angle = 230f;
     public float radious = 0.2f;
+
+    [SerializeField]
+    [HideInInspector]
+    private Transform _transform;
+
+
+    public CylinderHandle(Transform transform)
+    {
+        this._transform = transform;
+
+        _startPoint = Vector3.up * radious;
+        _endPoint = Vector3.down * radious;
+    }
 
     public Vector3 Tangent
     {
@@ -22,11 +36,11 @@ public class CylinderHandle : MonoBehaviour
     {
         get
         {
-            return this.transform.TransformPoint(_startPoint);
+            return this._transform.TransformPoint(_startPoint);
         }
         set
         {
-            _startPoint = this.transform.InverseTransformPoint(value);
+            _startPoint = this._transform.InverseTransformPoint(value);
         }
     }
 
@@ -34,11 +48,11 @@ public class CylinderHandle : MonoBehaviour
     {
         get
         {
-            return this.transform.TransformPoint(_endPoint);
+            return this._transform.TransformPoint(_endPoint);
         }
         set
         {
-            _endPoint = this.transform.InverseTransformPoint(value);
+            _endPoint = this._transform.InverseTransformPoint(value);
         }
     }
 
@@ -57,16 +71,10 @@ public class CylinderHandle : MonoBehaviour
             Vector3 dir = (EndPoint - StartPoint);
             if(dir.sqrMagnitude == 0f)
             {
-                return this.transform.up;
+                return this._transform.up;
             }
             return dir.normalized;
         }
-    }
-
-    private void Reset()
-    {
-        _startPoint =  Vector3.up * radious;
-        _endPoint =   Vector3.down * radious;
     }
 
 

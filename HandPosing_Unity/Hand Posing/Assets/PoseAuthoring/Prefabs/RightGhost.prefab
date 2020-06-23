@@ -640,14 +640,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7161748250141489666}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7166070815929903276}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3041629361329141844
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,82 +664,57 @@ MonoBehaviour:
   handAnchor: {fileID: 7161748250141258252}
   gripPoint: {fileID: 6947336271118645116}
   isRightHand: 0
+  trackedHandOffset:
+    id: 0
+    transform: {fileID: 0}
+    rotationOffset: {x: 0, y: 0, z: 0}
+    positionOffset: {x: 0, y: 0, z: 0}
   boneMaps:
   - id: 2
     transform: {fileID: 7164180164629477100}
     rotationOffset: {x: 240, y: 20, z: -180}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 4
     transform: {fileID: 7164296433768481468}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 5
     transform: {fileID: 7164477314064904910}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 6
     transform: {fileID: 7164498366076339162}
     rotationOffset: {x: -90, y: 180, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 7
     transform: {fileID: 7164119800825959154}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 8
     transform: {fileID: 7164451739871274804}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 9
     transform: {fileID: 7164108969234105498}
     rotationOffset: {x: -90, y: 180, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 10
     transform: {fileID: 7164406978306318838}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 11
     transform: {fileID: 7164511554363597156}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 12
     transform: {fileID: 7164389691833429856}
     rotationOffset: {x: -90, y: 180, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 13
     transform: {fileID: 7165902854948334230}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 14
     transform: {fileID: 7164646113136286382}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 16
     transform: {fileID: 7164335203531819350}
     rotationOffset: {x: -180, y: 180, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 17
     transform: {fileID: 7164628736816548236}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
   - id: 18
     transform: {fileID: 7165968319813253816}
     rotationOffset: {x: 0, y: 0, z: 0}
-    updatePosition: 0
-    positionOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7362165940787128986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -753,9 +728,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handRenderer: {fileID: 7100964493634904582}
-  highlightedColor: {r: 1, g: 0.59607846, b: 0.015686275, a: 1}
+  highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColor: {r: 0, g: 0, b: 1, a: 1}
   colorProperty: _RimColor
+  _cylinder:
+    _startPoint: {x: 0, y: 0.2, z: 0}
+    _endPoint: {x: 0, y: -0.2, z: 0}
+    angle: 230
+    radious: 0.2
+    transform: {fileID: 7161748250141258252}
 --- !u!1 &7161748250141499802
 GameObject:
   m_ObjectHideFlags: 0
