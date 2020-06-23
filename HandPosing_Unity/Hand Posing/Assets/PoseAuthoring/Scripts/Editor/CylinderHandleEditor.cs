@@ -11,39 +11,64 @@ namespace PoseAuthoring.Editor
         private static readonly Color NONINTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.1f);
         private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.5f);
 
+        private static readonly int STARTHANDLE_HASH = "startHandle".GetHashCode();
 
-        ArcHandle topArc = new ArcHandle();
+
+        private ArcHandle topArc = new ArcHandle();
+
+        private void OnEnable()
+        {
+            topArc.SetColorWithRadiusHandle(INTERACTABLE_COLOR, NONINTERACTABLE_COLOR.a);
+        }
 
         public void OnSceneGUI()
         {
             CylinderHandle cylinder = (target as CylinderHandle);
 
-
+            DrawEndsCaps(cylinder);
+            DrawArcEditor(cylinder);
             if (Event.current.type == EventType.Repaint)
             {
                 DrawCylinderVolume(cylinder);
             }
+        }
 
-            DrawArcEditor(cylinder);
+        private void DrawEndsCaps(CylinderHandle cylinder)
+        {
+            EditorGUI.BeginChangeCheck();
+            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, Quaternion.identity);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
+                cylinder.StartPoint = startPosition;
+            }
+            EditorGUI.BeginChangeCheck();
+            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, Quaternion.identity);
+            if (EditorGUI.EndChangeCheck())
+            {
+                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
+                cylinder.EndPoint = endPosition;
+            }
         }
 
         private void DrawCylinderVolume(CylinderHandle cylinder)
         {
+            Vector3 start = cylinder.StartPoint;
+            Vector3 end = cylinder.EndPoint;
+
             Handles.color = NONINTERACTABLE_COLOR;
-            Handles.DrawSolidArc(cylinder.EndPoint,
+            Handles.DrawSolidArc(end,
             cylinder.Direction,
             cylinder.Tangent,
             cylinder.angle,
             cylinder.radious);
-            Handles.DrawWireDisc(cylinder.EndPoint, cylinder.Direction, cylinder.radious);
+            Handles.DrawWireDisc(end, cylinder.Direction, cylinder.radious);
 
-            Handles.DrawDottedLine(cylinder.StartPoint,
-                cylinder.EndPoint,
-                1f);
-            Handles.DrawLine(cylinder.StartPoint + cylinder.Tangent * cylinder.radious,
-                cylinder.EndPoint + cylinder.Tangent * cylinder.radious);
-            Handles.DrawLine(cylinder.StartPoint + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious,
-                cylinder.EndPoint + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious);
+            Handles.DrawLine(start,end);
+            Handles.DrawLine(start + cylinder.Tangent * cylinder.radious,
+                end + cylinder.Tangent * cylinder.radious);
+            Handles.DrawLine(start + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious,
+                end + Quaternion.AngleAxis(cylinder.angle, cylinder.Direction) * cylinder.Tangent * cylinder.radious);
         }
 
         private void DrawArcEditor(CylinderHandle cylinder)
@@ -59,7 +84,8 @@ namespace PoseAuthoring.Editor
             {
                 EditorGUI.BeginChangeCheck();
 
-                Handles.color = INTERACTABLE_COLOR;
+                Handles.color = Color.white;
+
                 topArc.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {

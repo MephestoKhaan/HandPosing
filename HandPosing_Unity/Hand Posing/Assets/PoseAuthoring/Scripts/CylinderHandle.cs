@@ -2,20 +2,13 @@
 
 public class CylinderHandle : MonoBehaviour
 {
-    public Vector3 StartPoint
-    {
-        get
-        {
-            return this.transform.position + Vector3.up * 0.5f;
-        }
-    }
-    public Vector3 EndPoint
-    {
-        get
-        {
-            return this.transform.position - Vector3.up * 0.5f;
-        }
-    }
+    [SerializeField]
+    private Vector3 _startPoint;
+    [SerializeField]
+    private Vector3 _endPoint;
+
+    public float angle = 230f;
+    public float radious = 0.2f;
 
     public Vector3 Tangent
     {
@@ -24,8 +17,38 @@ public class CylinderHandle : MonoBehaviour
             return Vector3.Cross(Direction, Vector3.forward).normalized;
         }
     }
-    public float angle = 270f;
-    public float radious;
+
+    public Vector3 StartPoint
+    {
+        get
+        {
+            return this.transform.TransformPoint(_startPoint);
+        }
+        set
+        {
+            _startPoint = this.transform.InverseTransformPoint(value);
+        }
+    }
+
+    public Vector3 EndPoint
+    {
+        get
+        {
+            return this.transform.TransformPoint(_endPoint);
+        }
+        set
+        {
+            _endPoint = this.transform.InverseTransformPoint(value);
+        }
+    }
+
+    public float Height
+    {
+        get
+        {
+            return (EndPoint - StartPoint).magnitude;
+        }
+    }
 
     public Vector3 Direction
     {
@@ -40,6 +63,12 @@ public class CylinderHandle : MonoBehaviour
         }
     }
 
-    
+    private void Reset()
+    {
+        _startPoint =  Vector3.up * radious;
+        _endPoint =   Vector3.down * radious;
+    }
+
+
 
 }
