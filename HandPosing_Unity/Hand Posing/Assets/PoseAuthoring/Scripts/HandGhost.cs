@@ -14,9 +14,11 @@ namespace PoseAuthoring
         [SerializeField]
         private string colorProperty = "_RimColor";
 
+        [InspectorButton("MakeStaticPose")]
+        public string StaticPose;
+
         [SerializeField]
         public CylinderHandle _cylinder;
-
         public CylinderHandle Cylinder
         {
             get
@@ -68,6 +70,11 @@ namespace PoseAuthoring
         {
             Color color = highlight ? highlightedColor : defaultColor;
             handRenderer.material.SetColor(colorIndex, color);
+        }
+
+        public void MakeStaticPose()
+        {
+            _cylinder?.MakeSinglePoint();
         }
 
         private void Reset()

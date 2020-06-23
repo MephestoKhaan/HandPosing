@@ -98,6 +98,13 @@ public class CylinderHandle
         }
     }
 
+    public void MakeSinglePoint()
+    {
+        _startPoint = _endPoint = Vector3.zero;
+        radious = 0f;
+        Angle = 0f;
+    }
+
     public Vector3 NearestPointInSurface(Vector3 targetPosition)
     {
         Vector3 start = StartPoint;

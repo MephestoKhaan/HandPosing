@@ -57,13 +57,13 @@ namespace PoseAuthoring.Editor
             Vector3 start = cylinder.StartPoint;
             Vector3 end = cylinder.EndPoint;
 
+            Handles.color = INTERACTABLE_COLOR;
             Handles.DrawWireArc(end,
             cylinder.Direction,
             cylinder.StartAngleDir,
             cylinder.Angle,
             cylinder.radious);
 
-            Handles.color = INTERACTABLE_COLOR;
             Handles.DrawLine(start,end);
             Handles.DrawLine(start, start + cylinder.StartAngleDir * cylinder.radious);
             Handles.DrawLine(start, start + cylinder.EndAngleDir * cylinder.radious);
