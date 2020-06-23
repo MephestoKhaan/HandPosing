@@ -12,7 +12,6 @@ namespace PoseAuthoring
         [InspectorButton("SaveToAsset")]
         public string StorePoses;
 
-
         [Space]
         [SerializeField]
         protected Collider[] snapPoints = null;
@@ -66,17 +65,17 @@ namespace PoseAuthoring
         public HandGhost FindNearsetGhost(HandPuppet hand, out float score)
         {
             HandSnapPose handToObject = hand.CurrentPoseVisual(this.transform);
-
             float maxScore = 0f;
+            (Vector3, Quaternion) bestSurfacePose;
             HandGhost nearestGhost = null;
-
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = HandSnapPose.Score(ghost.PoseToObject, handToObject, this.transform);
+                float poseScore = ghost.Score(handToObject, this.transform, out (Vector3, Quaternion) surfacePose);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
                     maxScore = poseScore;
+                    bestSurfacePose = surfacePose;
                 }
             }
             score = maxScore;

@@ -17,27 +17,6 @@ namespace PoseAuthoring
         public Quaternion relativeGripRot;
         public bool isRightHand;
         public List<BoneRotation> Bones = new List<BoneRotation>();
-
-        public static float Score(HandSnapPose from, HandSnapPose to, Transform relativeTo, float maxDistance = 0.1f)
-        {
-            if(from.isRightHand != to.isRightHand)
-            {
-                return 0f;
-            }
-
-            Quaternion globalRotFrom = relativeTo.rotation * from.relativeGripRot;
-            Quaternion globalRotTo = relativeTo.rotation * to.relativeGripRot;
-
-            Vector3 globalPosFrom = relativeTo.TransformPoint(from.relativeGripPos);
-            Vector3 globalPosTo = relativeTo.TransformPoint(to.relativeGripPos);
-
-            float forwardDifference = Vector3.Dot(globalRotFrom * Vector3.forward, globalRotTo * Vector3.forward) *0.5f+0.5f;
-            float upDifference = Vector3.Dot(globalRotFrom * Vector3.up, globalRotTo * Vector3.up) * 0.5f + 0.5f;
-            float positionDifference =  1f-Mathf.Clamp01(Vector3.Distance(globalPosFrom, globalPosTo) / maxDistance);
-
-            return forwardDifference * upDifference * positionDifference;
-        }
-
     }
 
 }
