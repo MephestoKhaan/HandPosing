@@ -733,11 +733,11 @@ MonoBehaviour:
   colorProperty: _RimColor
   StaticPose: 
   _cylinder:
-    _startPoint: {x: 0, y: 0.62, z: 0}
-    _endPoint: {x: 0, y: -0.43, z: 0}
-    _angle: 322.51596
-    radious: 0.5
+    _startPoint: {x: 0.3916768, y: -0.08569977, z: 0.11958842}
+    _endPoint: {x: -0.14516532, y: -0.06575459, z: 0.052335232}
+    _angle: 182.10953
     _transform: {fileID: 7161748250141258252}
+    _grip: {fileID: 6947336271118645116}
 --- !u!1 &7161748250141499802
 GameObject:
   m_ObjectHideFlags: 0

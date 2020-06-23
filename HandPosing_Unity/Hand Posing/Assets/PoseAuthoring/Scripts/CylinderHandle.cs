@@ -11,19 +11,22 @@ public class CylinderHandle
     [SerializeField]
     private float _angle = 230f;
 
-    public float radious = 0.2f;
 
     [SerializeField]
     [HideInInspector]
     private Transform _transform;
+    [SerializeField]
+    [HideInInspector]
+    private Transform _grip;
 
 
-    public CylinderHandle(Transform transform)
+    public CylinderHandle(Transform transform, Transform grip)
     {
         this._transform = transform;
+        this._grip = grip;
 
-        _startPoint = Vector3.up * radious;
-        _endPoint = Vector3.down * radious;
+        _startPoint = Vector3.up * 0.2f;
+        _endPoint = Vector3.down * 0.2f;
     }
 
     public Vector3 StartAngleDir
@@ -77,6 +80,16 @@ public class CylinderHandle
         }
     }
 
+    public float Radious
+    {
+        get
+        {
+            Vector3 start = StartPoint;
+            Vector3 projectedPoint = start + Vector3.Project(this._grip.position - start, Direction);
+            return Vector3.Distance(projectedPoint, this._grip.position);
+        }
+    }
+
     public float Height
     {
         get
@@ -101,7 +114,6 @@ public class CylinderHandle
     public void MakeSinglePoint()
     {
         _startPoint = _endPoint = Vector3.zero;
-        radious = 0f;
         Angle = 0f;
     }
 
@@ -136,7 +148,7 @@ public class CylinderHandle
             }
         }
 
-        Vector3 surfacePoint = projectedPoint + targetDirection * radious;
+        Vector3 surfacePoint = projectedPoint + targetDirection * Radious;
         return surfacePoint;
     }
 

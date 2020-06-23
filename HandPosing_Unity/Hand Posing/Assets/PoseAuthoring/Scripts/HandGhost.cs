@@ -13,7 +13,6 @@ namespace PoseAuthoring
         private Color defaultColor = Color.blue;
         [SerializeField]
         private string colorProperty = "_RimColor";
-
         [InspectorButton("MakeStaticPose")]
         public string StaticPose;
 
@@ -25,7 +24,7 @@ namespace PoseAuthoring
             {
                 if(_cylinder == null)
                 {
-                    _cylinder = new CylinderHandle(this.transform);
+                    _cylinder = new CylinderHandle(this.transform, this.puppet.Grip);
                 }
                 return _cylinder;
             }
@@ -48,7 +47,6 @@ namespace PoseAuthoring
 
         private void Awake()
         {
-            puppet = this.GetComponent<HandPuppet>();
             colorIndex = Shader.PropertyToID(colorProperty);
             Highlight(false);
         }
@@ -79,7 +77,8 @@ namespace PoseAuthoring
 
         private void Reset()
         {
-            _cylinder = new CylinderHandle(this.transform);
+            puppet = this.GetComponent<HandPuppet>();
+            _cylinder = new CylinderHandle(this.transform, this.puppet.Grip);
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
     }

@@ -56,19 +56,20 @@ namespace PoseAuthoring.Editor
             CylinderHandle cylinder = ghost.Cylinder;
             Vector3 start = cylinder.StartPoint;
             Vector3 end = cylinder.EndPoint;
+            float radious = cylinder.Radious;
 
             Handles.color = INTERACTABLE_COLOR;
             Handles.DrawWireArc(end,
             cylinder.Direction,
             cylinder.StartAngleDir,
             cylinder.Angle,
-            cylinder.radious);
+            radious);
 
             Handles.DrawLine(start,end);
-            Handles.DrawLine(start, start + cylinder.StartAngleDir * cylinder.radious);
-            Handles.DrawLine(start, start + cylinder.EndAngleDir * cylinder.radious);
-            Handles.DrawLine(end,end + cylinder.StartAngleDir * cylinder.radious);
-            Handles.DrawLine(end, end + cylinder.EndAngleDir * cylinder.radious);
+            Handles.DrawLine(start, start + cylinder.StartAngleDir * radious);
+            Handles.DrawLine(start, start + cylinder.EndAngleDir * radious);
+            Handles.DrawLine(end,end + cylinder.StartAngleDir * radious);
+            Handles.DrawLine(end, end + cylinder.EndAngleDir * radious);
 
             int edgePoints = Mathf.CeilToInt((2 * cylinder.Angle) / DRAWSURFACE_RESOLUTION) + 3;
             if(surfaceEdges == null 
@@ -82,11 +83,11 @@ namespace PoseAuthoring.Editor
             for(float angle = 0f; angle < cylinder.Angle; angle += DRAWSURFACE_RESOLUTION)
             {
                 Vector3 direction = Quaternion.AngleAxis(angle, cylinder.Direction) * cylinder.StartAngleDir;
-                surfaceEdges[i++] = start + direction * cylinder.radious;
-                surfaceEdges[i++] = end + direction * cylinder.radious;
+                surfaceEdges[i++] = start + direction * radious;
+                surfaceEdges[i++] = end + direction * radious;
             }
-            surfaceEdges[i++] = start + cylinder.EndAngleDir * cylinder.radious;
-            surfaceEdges[i++] = end + cylinder.EndAngleDir * cylinder.radious;
+            surfaceEdges[i++] = start + cylinder.EndAngleDir * radious;
+            surfaceEdges[i++] = end + cylinder.EndAngleDir * radious;
             Handles.DrawPolyLine(surfaceEdges);
 
         }
@@ -94,8 +95,9 @@ namespace PoseAuthoring.Editor
         private void DrawArcEditor(HandGhost ghost)
         {
             CylinderHandle cylinder = ghost.Cylinder;
+            float radious = cylinder.Radious;
             topArc.angle = cylinder.Angle;
-            topArc.radius = cylinder.radious;
+            topArc.radius = radious;
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
                 cylinder.StartPoint,
                 Quaternion.LookRotation(cylinder.StartAngleDir, cylinder.Direction),
@@ -111,7 +113,7 @@ namespace PoseAuthoring.Editor
                 {
                     Undo.RecordObject(ghost, "Change Cylinder Properties");
                     cylinder.Angle = topArc.angle;
-                    cylinder.radious = topArc.radius;
+                    radious = topArc.radius;
                 }
             }
         }

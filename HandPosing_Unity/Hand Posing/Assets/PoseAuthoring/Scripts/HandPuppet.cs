@@ -20,6 +20,15 @@ namespace PoseAuthoring
         private HandMap trackedHandOffset;
         [SerializeField]
         private List<BoneMap> boneMaps;
+        
+
+        public Transform Grip
+        {
+            get
+            {
+                return gripPoint;
+            }
+        }
 
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
