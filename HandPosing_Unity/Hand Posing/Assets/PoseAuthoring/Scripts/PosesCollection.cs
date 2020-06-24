@@ -1,32 +1,39 @@
-﻿using OVRSimpleJSON;
+﻿using System;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 namespace PoseAuthoring
 {
-    [CreateAssetMenu(menuName = "PoseAuthoring/PosesCollection")]
-    public class PosesCollection : ScriptableObject
+    [CreateAssetMenu(menuName = "PoseAuthoring/Volumetric Poses Collection")]
+    public class VolumetricPosesCollection : ScriptableObject
     {
         [SerializeField]
-        private List<HandSnapPose> _snapPoses;
+        private List<VolumetricPose> _poses;
 
-        public List<HandSnapPose> SnapPoses
+        public List<VolumetricPose> Poses
         {
             get
             {
-                return _snapPoses;
+                return _poses;
             }
         }
 
-        public void StorePoses(List<HandSnapPose> poses)
+        public void StorePoses(List<VolumetricPose> poses)
         {
-            _snapPoses = poses;
+            _poses = poses;
 #if UNITY_EDITOR
                 UnityEditor.AssetDatabase.Refresh();
                 UnityEditor.EditorUtility.SetDirty(this);
                 UnityEditor.AssetDatabase.SaveAssets();
 #endif
         }
+    }
+
+    [Serializable]
+    public struct VolumetricPose
+    {
+        public HandSnapPose pose;
+        public CylinderSurface volume;
     }
 }

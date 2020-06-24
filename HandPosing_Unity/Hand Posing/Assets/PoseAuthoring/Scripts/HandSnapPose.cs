@@ -11,12 +11,25 @@ namespace PoseAuthoring
     }
 
     [System.Serializable]
-    public class HandSnapPose
+    public struct HandSnapPose
     {
         public Vector3 relativeGripPos;
         public Quaternion relativeGripRot;
         public bool isRightHand;
-        public List<BoneRotation> Bones = new List<BoneRotation>();
+
+        [SerializeField]
+        private List<BoneRotation> _bones;
+        public List<BoneRotation> Bones
+        {
+            get
+            {
+                if(_bones == null)
+                {
+                    _bones = new List<BoneRotation>();
+                }
+                return _bones;
+            }
+        }
     }
 
 }

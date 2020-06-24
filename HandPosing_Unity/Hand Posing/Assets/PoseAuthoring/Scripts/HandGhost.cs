@@ -17,23 +17,31 @@ namespace PoseAuthoring
         public string StaticPose;
 
         [SerializeField]
-        public CylinderHandle _cylinder;
-        public CylinderHandle Cylinder
+        public CylinderSurface _cylinder;
+        public CylinderSurface Cylinder
         {
             get
             {
-                if(_cylinder == null)
-                {
-                    _cylinder = new CylinderHandle(this.transform, this.puppet.Grip);
-                }
                 return _cylinder;
             }
         }
 
-        public HandSnapPose PoseToObject
+        public HandSnapPose Pose
         {
             get;
             private set;
+        }
+
+        public VolumetricPose PoseVolume
+        {
+            get
+            {
+                return new VolumetricPose()
+                {
+                    pose = Pose,
+                    volume = Cylinder
+                }; 
+            }
         }
 
         public Transform RelativeTo
@@ -42,20 +50,40 @@ namespace PoseAuthoring
             private set;
         }
 
-        private HandPuppet puppet;
+        private HandPuppet _puppet;
+        private HandPuppet Puppet
+        {
+            get
+            {
+                if(_puppet == null)
+                {
+                    _puppet = this.GetComponent<HandPuppet>();
+                }
+                return _puppet;
+            }
+        }
         private int colorIndex;
 
         private void Awake()
         {
-            colorIndex = Shader.PropertyToID(colorProperty);
+            this.colorIndex = Shader.PropertyToID(colorProperty);
             Highlight(false);
         }
         
-        public void SetPose(HandSnapPose pose, Transform relativeTo)
+        public void SetPose(HandSnapPose userPose, Transform relativeTo)
         {
-            puppet.SetRecordedPose(pose, relativeTo);
+            Puppet.SetRecordedPose(userPose, relativeTo);
             RelativeTo = relativeTo;
-            PoseToObject = pose;
+            Pose = userPose;
+            _cylinder = new CylinderSurface(Puppet.Grip);
+            _cylinder.MakeSinglePoint();
+        }
+
+        public void SetPoseVolume(VolumetricPose poseVolume, Transform relativeTo)
+        {
+            SetPose(poseVolume.pose, relativeTo);
+            _cylinder = poseVolume.volume;
+            _cylinder.Grip = Puppet.Grip;
         }
 
         public void Highlight(float amount)
@@ -72,39 +100,49 @@ namespace PoseAuthoring
 
         public void MakeStaticPose()
         {
-            _cylinder?.MakeSinglePoint();
+            _cylinder.MakeSinglePoint();
         }
 
         private void Reset()
         {
-            puppet = this.GetComponent<HandPuppet>();
-            _cylinder = new CylinderHandle(this.transform, this.puppet.Grip);
+            _cylinder = new CylinderSurface(Puppet.Grip);
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public float Score(HandSnapPose desiredPose, Transform relativeTo, out (Vector3, Quaternion) surfacePose, float maxDistance = 0.1f)
+        public float Score(HandSnapPose userPose, float maxDistance = 0.1f)
         {
-            HandSnapPose snapPose = this.PoseToObject;
-            if (snapPose.isRightHand != desiredPose.isRightHand)
+            HandSnapPose snapPose = this.Pose;
+            if (snapPose.isRightHand != userPose.isRightHand)
             {
-                surfacePose = (Vector3.zero, Quaternion.identity);
                 return 0f;
             }
 
-            Vector3 globalPosDesired = relativeTo.TransformPoint(desiredPose.relativeGripPos);
+            Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
             Vector3 surfacePoint = Cylinder.NearestPointInSurface(globalPosDesired);
 
-            Quaternion globalRotDesired = relativeTo.rotation * desiredPose.relativeGripRot;
-            Quaternion surfaceRotation = Cylinder.TransformRotation(desiredPose, relativeTo, surfacePoint);
+            Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
+            Quaternion surfaceRotation = Cylinder.TransformRotation(userPose, RelativeTo, surfacePoint);
 
             float forwardDifference = Vector3.Dot(surfaceRotation * Vector3.forward, globalRotDesired * Vector3.forward) * 0.5f + 0.5f;
             float upDifference = Vector3.Dot(surfaceRotation * Vector3.up, globalRotDesired * Vector3.up) * 0.5f + 0.5f;
 
             float positionDifference = 1f - Mathf.Clamp01(Vector3.Distance(surfacePoint, globalPosDesired) / maxDistance);
 
-            surfacePose = (surfacePoint, surfaceRotation);
-
             return forwardDifference * upDifference * positionDifference;
+        }
+
+        public HandSnapPose AdjustPoseToVolume(HandSnapPose userPose)
+        {
+            HandSnapPose snapPose = this.Pose;
+
+            Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
+            Vector3 surfacePoint = Cylinder.NearestPointInSurface(globalPosDesired);
+            Quaternion surfaceRotation = Cylinder.TransformRotation(userPose, RelativeTo, surfacePoint);
+
+            snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(surfacePoint);
+            snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * surfaceRotation;
+
+            return snapPose;
         }
     }
 }

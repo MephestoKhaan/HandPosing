@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using OVRTouchSample;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PoseAuthoring
@@ -6,7 +7,7 @@ namespace PoseAuthoring
     public class SnappableObject : MonoBehaviour
     {
         [SerializeField]
-        private PosesCollection posesCollection;
+        private VolumetricPosesCollection volumetricPosesCollection;
         [SerializeField]
         public HandProvider handProvider;
         [InspectorButton("SaveToAsset")]
@@ -51,31 +52,31 @@ namespace PoseAuthoring
         public HandGhost AddPose(HandPuppet puppet)
         {
             HandSnapPose pose = puppet.CurrentPoseVisual(this.transform);
-            return AddPose(pose);
-        }
-
-        private HandGhost AddPose(HandSnapPose pose)
-        {
             HandGhost ghost = Instantiate(handProvider.GetHand(pose.isRightHand), this.transform);
             ghost.SetPose(pose, this.transform);
             this.ghosts.Add(ghost);
             return ghost;
         }
 
-        public HandGhost FindNearsetGhost(HandPuppet hand, out float score)
+        private HandGhost AddPose(VolumetricPose poseVolume)
         {
-            HandSnapPose handToObject = hand.CurrentPoseVisual(this.transform);
+            HandGhost ghost = Instantiate(handProvider.GetHand(poseVolume.pose.isRightHand), this.transform);
+            ghost.SetPoseVolume(poseVolume, this.transform);
+            this.ghosts.Add(ghost);
+            return ghost;
+        }
+
+        public HandGhost FindNearsetGhost(HandSnapPose userPose, out float score)
+        {
             float maxScore = 0f;
-            (Vector3, Quaternion) bestSurfacePose;
             HandGhost nearestGhost = null;
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.Score(handToObject, this.transform, out (Vector3, Quaternion) surfacePose);
+                float poseScore = ghost.Score(userPose);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
                     maxScore = poseScore;
-                    bestSurfacePose = surfacePose;
                 }
             }
             score = maxScore;
@@ -84,20 +85,20 @@ namespace PoseAuthoring
 
         public void LoadFromAsset()
         {
-            foreach (var pose in posesCollection.SnapPoses)
+            foreach (var volumetricPose in volumetricPosesCollection.Poses)
             {
-                AddPose(pose);
+                AddPose(volumetricPose);
             }
         }
 
         public void SaveToAsset()
         {
-            List<HandSnapPose> poses = new List<HandSnapPose>();
+            List<VolumetricPose> volumetricPoses = new List<VolumetricPose>();
             foreach (var ghost in this.ghosts)
             {
-                poses.Add(ghost.PoseToObject);
+                volumetricPoses.Add(ghost.PoseVolume);
             }
-            posesCollection.StorePoses(poses);
+            volumetricPosesCollection.StorePoses(volumetricPoses);
         }
     }
 }

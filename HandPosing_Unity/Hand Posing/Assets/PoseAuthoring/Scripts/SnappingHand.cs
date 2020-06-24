@@ -11,6 +11,7 @@ namespace PoseAuthoring
         private HandPuppet puppet;
 
         private HandGhost currentGhost;
+        private HandSnapPose currentPose;
         private float currentAmount;
 
         private void OnEnable()
@@ -27,16 +28,18 @@ namespace PoseAuthoring
             grabber.OnGrabEnded -= GrabEnded;
         }
 
-
         private void GrabStarted(Grabbable grabbable)
         {
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
+                HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
+                currentGhost = snappable.FindNearsetGhost(userPose, out float score);
+
                 if (currentGhost != null)
                 {
-                    this.puppet.SetRecordedPose(currentGhost.PoseToObject, snappable.transform, 1f, 1f);
+                    currentPose = currentGhost.AdjustPoseToVolume(userPose);
+                    this.puppet.SetRecordedPose(currentPose, snappable.transform, 1f, 1f);
                     currentAmount = 1f;
                 }
             }
@@ -51,10 +54,9 @@ namespace PoseAuthoring
         {
             if (currentGhost != null)
             {
-                this.puppet.SetRecordedPose(currentGhost.PoseToObject, currentGhost.RelativeTo.transform, currentAmount, currentAmount);
+                this.puppet.SetRecordedPose(currentPose, currentGhost.RelativeTo.transform, currentAmount, currentAmount);
             }
         }
-
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
@@ -66,8 +68,18 @@ namespace PoseAuthoring
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                currentGhost = snappable.FindNearsetGhost(this.puppet, out float score);
-                currentAmount = amount;
+                HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
+               
+                currentGhost = snappable.FindNearsetGhost(userPose, out float score);
+                if (currentGhost != null)
+                {
+                    currentPose = currentGhost.AdjustPoseToVolume(userPose);
+                    currentAmount = amount;
+                }
+                else
+                {
+                    currentAmount = 0f;
+                }
             }
         }
     }

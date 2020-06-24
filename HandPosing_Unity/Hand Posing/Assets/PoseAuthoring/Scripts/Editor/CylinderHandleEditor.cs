@@ -34,7 +34,7 @@ namespace PoseAuthoring.Editor
 
         private void DrawEndsCaps(HandGhost ghost)
         {
-            CylinderHandle cylinder = ghost.Cylinder;
+            CylinderSurface cylinder = ghost.Cylinder;
             EditorGUI.BeginChangeCheck();
             Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, Quaternion.identity);
             if (EditorGUI.EndChangeCheck())
@@ -53,7 +53,7 @@ namespace PoseAuthoring.Editor
 
         private void DrawCylinderVolume(HandGhost ghost)
         {
-            CylinderHandle cylinder = ghost.Cylinder;
+            CylinderSurface cylinder = ghost.Cylinder;
             Vector3 start = cylinder.StartPoint;
             Vector3 end = cylinder.EndPoint;
             float radious = cylinder.Radious;
@@ -94,7 +94,7 @@ namespace PoseAuthoring.Editor
 
         private void DrawArcEditor(HandGhost ghost)
         {
-            CylinderHandle cylinder = ghost.Cylinder;
+            CylinderSurface cylinder = ghost.Cylinder;
             float radious = cylinder.Radious;
             topArc.angle = cylinder.Angle;
             topArc.radius = radious;

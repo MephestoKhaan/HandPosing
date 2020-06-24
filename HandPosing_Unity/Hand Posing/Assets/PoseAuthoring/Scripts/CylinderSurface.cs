@@ -1,35 +1,25 @@
-﻿using OVRTouchSample;
-using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace PoseAuthoring
 {
-
-
     [System.Serializable]
-    public class CylinderHandle
+    public struct CylinderSurface
     {
         [SerializeField]
         private Vector3 _startPoint;
         [SerializeField]
         private Vector3 _endPoint;
         [SerializeField]
-        private float _angle = 230f;
+        private float _angle;
+
+        public Transform Grip { get; set; }
 
 
-        [SerializeField]
-        [HideInInspector]
-        private Transform _transform;
-        [SerializeField]
-        [HideInInspector]
-        private Transform _grip;
-
-
-        public CylinderHandle(Transform transform, Transform grip)
+        public CylinderSurface(Transform grip)
         {
-            this._transform = transform;
-            this._grip = grip;
+            this.Grip = grip;
 
+            _angle = 230f;
             _startPoint = Vector3.up * 0.2f;
             _endPoint = Vector3.down * 0.2f;
         }
@@ -53,11 +43,11 @@ namespace PoseAuthoring
         {
             get
             {
-                return this._transform.TransformPoint(_startPoint);
+                return this.Grip.TransformPoint(_startPoint);
             }
             set
             {
-                _startPoint = this._transform.InverseTransformPoint(value);
+                _startPoint = this.Grip.InverseTransformPoint(value);
             }
         }
 
@@ -65,11 +55,11 @@ namespace PoseAuthoring
         {
             get
             {
-                return this._transform.TransformPoint(_endPoint);
+                return this.Grip.TransformPoint(_endPoint);
             }
             set
             {
-                _endPoint = this._transform.InverseTransformPoint(value);
+                _endPoint = this.Grip.InverseTransformPoint(value);
             }
         }
 
@@ -90,8 +80,8 @@ namespace PoseAuthoring
             get
             {
                 Vector3 start = StartPoint;
-                Vector3 projectedPoint = start + Vector3.Project(this._grip.position - start, Direction);
-                return Vector3.Distance(projectedPoint, this._grip.position);
+                Vector3 projectedPoint = start + Vector3.Project(this.Grip.position - start, Direction);
+                return Vector3.Distance(projectedPoint, this.Grip.position);
             }
         }
 
@@ -110,7 +100,7 @@ namespace PoseAuthoring
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this._transform.up;
+                    return this.Grip.up;
                 }
                 return dir.normalized;
             }

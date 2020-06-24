@@ -661,12 +661,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackedHand: {fileID: 0}
-  handAnchor: {fileID: 7161748250141258252}
+  handAnchor: {fileID: 7166070815929903276}
   gripPoint: {fileID: 6947336271118645116}
   isRightHand: 0
   trackedHandOffset:
     id: 0
-    transform: {fileID: 0}
+    transform: {fileID: 7161748250141258252}
     rotationOffset: {x: 0, y: 0, z: 0}
     positionOffset: {x: 0, y: 0, z: 0}
   boneMaps:
