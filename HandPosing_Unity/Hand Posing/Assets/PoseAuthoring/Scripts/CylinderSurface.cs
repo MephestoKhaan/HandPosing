@@ -3,7 +3,7 @@
 namespace PoseAuthoring
 {
     [System.Serializable]
-    public struct CylinderSurface
+    public class CylinderSurface
     {
         [SerializeField]
         private Vector3 _startPoint;
@@ -13,7 +13,6 @@ namespace PoseAuthoring
         private float _angle;
 
         public Transform Grip { get; set; }
-
 
         public CylinderSurface(Transform grip)
         {
@@ -28,7 +27,7 @@ namespace PoseAuthoring
         {
             get
             {
-                return Vector3.Cross(Direction, Vector3.forward).normalized;
+                return Vector3.Cross(Direction, Vector3.forward).normalized;//TODO probably not forward what I want
             }
         }
         public Vector3 EndAngleDir
@@ -147,17 +146,12 @@ namespace PoseAuthoring
             return surfacePoint;
         }
 
-        public Quaternion TransformRotation(HandSnapPose pose, Transform relativeTo, Vector3 atSurfacePoint)
+        public Quaternion CalculateRotationOffset(Vector3 surfacePoint, Transform relativeTo)
         {
-            Vector3 globalPos = relativeTo.TransformPoint(pose.relativeGripPos);
-            Quaternion globalRot = relativeTo.rotation * pose.relativeGripRot;
+            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.Grip.position - StartPoint, Direction);
+            Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
 
-            Vector3 entrySurfacePoint = NearestPointInSurface(globalPos);
-            Vector3 entryDirection = Vector3.ProjectOnPlane(entrySurfacePoint - StartPoint, Direction);
-            Vector3 desiredDirection = Vector3.ProjectOnPlane(atSurfacePoint - StartPoint, Direction);
-            Quaternion offsetDirection = Quaternion.FromToRotation(entryDirection, desiredDirection);
-
-            return offsetDirection * globalRot;
+            return Quaternion.FromToRotation(recordedDirection, desiredDirection);
         }
     }
 }

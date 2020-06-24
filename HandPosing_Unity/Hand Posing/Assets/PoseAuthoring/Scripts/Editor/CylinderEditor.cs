@@ -6,7 +6,7 @@ namespace PoseAuthoring.Editor
 {
     [CustomEditor(typeof(HandGhost))]
     [CanEditMultipleObjects]
-    public class CylinderHandleEditor : UnityEditor.Editor
+    public class CylinderEditor : UnityEditor.Editor
     {
         private static readonly Color NONINTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.1f);
         private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.5f);
