@@ -27,7 +27,7 @@ namespace PoseAuthoring
         {
             get
             {
-                return Vector3.Cross(Direction, Vector3.forward).normalized;//TODO probably not forward what I want
+                return Vector3.ProjectOnPlane(Grip.transform.position - StartPoint, Direction).normalized;
             }
         }
         public Vector3 EndAngleDir
