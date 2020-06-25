@@ -111,6 +111,14 @@ namespace PoseAuthoring
             Angle = 0f;
         }
 
+        public Vector3 PointAltitude(Vector3 point)
+        {
+            Vector3 start = StartPoint;
+            Vector3 dir = Direction;
+            Vector3 projectedPoint = start + Vector3.Project(point - start, Direction);
+            return projectedPoint;
+        }
+
         public Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
             Vector3 start = StartPoint;

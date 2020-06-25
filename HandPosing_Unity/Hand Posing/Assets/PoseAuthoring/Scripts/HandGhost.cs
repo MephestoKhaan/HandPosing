@@ -16,6 +16,8 @@ namespace PoseAuthoring
         [InspectorButton("MakeStaticPose")]
         public string StaticPose;
 
+        public Transform axis;
+
         [SerializeField]
         public CylinderSurface _cylinder;
         public CylinderSurface Cylinder
@@ -133,7 +135,7 @@ namespace PoseAuthoring
             return forwardDifference * upDifference * positionDifference;
         }
 
-        public HandSnapPose AdjustPoseToVolume(HandSnapPose userPose)
+        public HandSnapPose AdjustPoseToVolumePositionFirst(HandSnapPose userPose)
         {
             HandSnapPose snapPose = this.Pose;
 
@@ -143,6 +145,29 @@ namespace PoseAuthoring
             Quaternion globalRotPose = RelativeTo.rotation * Pose.relativeGripRot;
             Quaternion surfaceRotation = Cylinder.CalculateRotationOffset(surfacePoint, RelativeTo) * globalRotPose;
             
+            snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(surfacePoint);
+            snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * surfaceRotation;
+
+            return snapPose;
+        }
+
+        public HandSnapPose AdjustPoseToVolumeRotationFirst(HandSnapPose userPose)
+        {
+            HandSnapPose snapPose = this.Pose;
+
+            Vector3 desiredPos = RelativeTo.TransformPoint(userPose.relativeGripPos);
+            Quaternion baseRot = RelativeTo.rotation * Pose.relativeGripRot;
+            Quaternion desiredRot = RelativeTo.rotation * userPose.relativeGripRot;
+            
+            Quaternion rotDif = Quaternion.Inverse(desiredRot) * baseRot;
+            Vector3 dir = Vector3.ProjectOnPlane(rotDif * _cylinder.StartAngleDir, _cylinder.Direction).normalized;
+            Vector3 altitudePoint = _cylinder.PointAltitude(desiredPos);
+            Vector3 surfacePoint = Cylinder.NearestPointInSurface(altitudePoint + dir * _cylinder.Radious);
+
+            axis.SetPositionAndRotation(altitudePoint, Quaternion.LookRotation(rotDif * _cylinder.StartAngleDir));
+            
+            Quaternion surfaceRotation = Cylinder.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
+
             snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(surfacePoint);
             snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * surfaceRotation;
 
