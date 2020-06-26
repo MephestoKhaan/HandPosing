@@ -38,7 +38,7 @@ namespace PoseAuthoring
 
                 if (currentGhost != null)
                 {
-                    currentPose = currentGhost.AdjustPoseToVolumeRotationFirst(userPose);
+                    currentPose = currentGhost.AdjustPoseToVolume(userPose);
                     this.puppet.SetRecordedPose(currentPose, snappable.transform, 1f, 1f);
                     currentAmount = 1f;
                 }
@@ -73,7 +73,7 @@ namespace PoseAuthoring
                 currentGhost = snappable.FindNearsetGhost(userPose, out float score);
                 if (currentGhost != null)
                 {
-                    currentPose = currentGhost.AdjustPoseToVolumeRotationFirst(userPose);
+                    currentPose = currentGhost.AdjustPoseToVolume(userPose);
                     currentAmount = amount;
                 }
                 else
