@@ -12,40 +12,11 @@ namespace PoseAuthoring
         [InspectorButton("SaveToAsset")]
         public string StorePoses;
 
-        [Space]
-        [SerializeField]
-        protected Collider[] snapPoints = null;
-        public Collider[] SnapPoints
-        {
-            get
-            {
-                return snapPoints;
-            }
-        }
-
         private List<HandGhost> ghosts = new List<HandGhost>();
-
-        private void Awake()
-        {
-            InitializeSnapPoints();
-        }
 
         private void Start()
         {
             LoadFromAsset();
-        }
-
-        private void InitializeSnapPoints()
-        {
-            if (snapPoints == null
-                || snapPoints.Length == 0)
-            {
-                if (!this.TryGetComponent(out Collider collider))
-                {
-                    throw new System.ArgumentException("Snappables cannot have zero grab points and no collider -- please add a grab point or collider.");
-                }
-                snapPoints = new Collider[1] { collider };
-            }
         }
 
         public HandGhost AddPose(HandPuppet puppet)
