@@ -138,7 +138,7 @@ namespace PoseAuthoring.Grabbing
 
         public float CurrentFlex()
         {
-            if (trackedHand)
+            if (trackedHand && trackedHand.IsTracked)
             {
                 return Math.Max(trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
                      trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
