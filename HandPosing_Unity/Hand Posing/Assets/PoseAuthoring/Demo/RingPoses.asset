@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: RingPoses
+  m_EditorClassIdentifier: Assembly-CSharp:PoseAuthoring:VolumetricPosesCollection
+  _poses:
+  - pose:
+      relativeGripPos: {x: 0.14518598, y: -0.03881204, z: 0.043569237}
+      relativeGripRot: {x: 0.670163, y: 0.28057003, z: 0.63846815, w: -0.25400898}
+      isRightHand: 1
+      _bones:
+      - boneID: 2
+        rotation: {x: 0.08105542, y: 0.9769291, z: -0.04719877, w: 0.19186419}
+      - boneID: 4
+        rotation: {x: -0.08299701, y: 0.06146919, z: -0.100644074, w: 0.9895473}
+      - boneID: 5
+        rotation: {x: 0.079286814, y: -0.050930727, z: -0.109629706, w: 0.98949534}
+      - boneID: 6
+        rotation: {x: -0.12029294, y: 0.71922743, z: 0.6494623, w: 0.21550009}
+      - boneID: 7
+        rotation: {x: -0.025769927, y: -0.003648394, z: -0.39690122, w: 0.9174923}
+      - boneID: 8
+        rotation: {x: -0.016388284, y: 0.026237803, z: 0.012675833, w: 0.999441}
+      - boneID: 9
+        rotation: {x: -0.22250171, y: 0.66592795, z: 0.67826664, w: 0.21676579}
+      - boneID: 10
+        rotation: {x: -0.012706385, y: 0.0005481625, z: -0.31857958, w: 0.9478108}
+      - boneID: 11
+        rotation: {x: -0.051794145, y: -0.0031606187, z: -0.084986955, w: 0.99503}
+      - boneID: 12
+        rotation: {x: -0.22606039, y: 0.63285166, z: 0.72314936, w: 0.15953217}
+      - boneID: 13
+        rotation: {x: -0.040244784, y: -0.009026208, z: -0.3525611, w: 0.9348795}
+      - boneID: 14
+        rotation: {x: -0.010913959, y: -0.029662654, z: -0.134363, w: 0.99042803}
+      - boneID: 16
+        rotation: {x: 0.026567986, y: 0.089331836, z: 0.96786034, w: 0.23358165}
+      - boneID: 17
+        rotation: {x: -0.06615868, y: 0.026735976, z: -0.33820567, w: 0.9383631}
+      - boneID: 18
+        rotation: {x: 0.0011726096, y: -0.048649985, z: -0.13078594, w: 0.9902156}
+    volume:
+      _startPoint: {x: -0.0472581, y: -0.1051843, z: -0.09846178}
+      _endPoint: {x: -0.047590192, y: -0.10060088, z: -0.10295021}
+      _angle: 360
+  - pose:
+      relativeGripPos: {x: -0.012618754, y: -0.03999734, z: -0.12958077}
+      relativeGripRot: {x: 0.28053755, y: 0.33898762, z: 0.89427817, w: -0.08156494}
+      isRightHand: 1
+      _bones:
+      - boneID: 2
+        rotation: {x: 0.1298829, y: 0.9718691, z: -0.016669348, w: 0.19576246}
+      - boneID: 4
+        rotation: {x: -0.08083823, y: 0.045788646, z: -0.26327312, w: 0.96023744}
+      - boneID: 5
+        rotation: {x: 0.085136466, y: -0.07457355, z: 0.18600667, w: 0.9760083}
+      - boneID: 6
+        rotation: {x: -0.088262364, y: 0.7229734, z: 0.6593246, w: 0.1865754}
+      - boneID: 7
+        rotation: {x: -0.024528204, y: -0.007932119, z: -0.54119045, w: 0.8405049}
+      - boneID: 8
+        rotation: {x: -0.016232373, y: 0.02669663, z: 0.04182522, w: 0.99863636}
+      - boneID: 9
+        rotation: {x: -0.18863086, y: 0.67549336, z: 0.6801297, w: 0.21342644}
+      - boneID: 10
+        rotation: {x: -0.012949364, y: -0.0014841928, z: -0.47337922, w: 0.88076234}
+      - boneID: 11
+        rotation: {x: -0.052542347, y: -0.0035083971, z: -0.09294178, w: 0.9942781}
+      - boneID: 12
+        rotation: {x: -0.18563722, y: 0.6450973, z: 0.72961384, w: 0.13058344}
+      - boneID: 13
+        rotation: {x: -0.04180892, y: -0.015458404, z: -0.536327, w: 0.8428324}
+      - boneID: 14
+        rotation: {x: -0.010567405, y: -0.02965685, z: -0.1268776, w: 0.99141866}
+      - boneID: 16
+        rotation: {x: -0.034940794, y: 0.077457204, z: 0.97529674, w: 0.20390156}
+      - boneID: 17
+        rotation: {x: -0.07384328, y: 0.02054192, z: -0.44641915, w: 0.8915353}
+      - boneID: 18
+        rotation: {x: 0.0017315141, y: -0.04667161, z: -0.3007991, w: 0.9525433}
+    volume:
+      _startPoint: {x: 0.061841335, y: 0.07478963, z: 0.086834185}
+      _endPoint: {x: 0.061619405, y: 0.07857995, z: 0.08356867}
+      _angle: 360
