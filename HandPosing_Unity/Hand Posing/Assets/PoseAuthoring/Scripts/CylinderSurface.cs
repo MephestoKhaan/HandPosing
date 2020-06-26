@@ -105,6 +105,14 @@ namespace PoseAuthoring
             }
         }
 
+        public Quaternion Rotation
+        {
+            get
+            {
+                return Quaternion.LookRotation(StartAngleDir, Direction);
+            }
+        }
+
         public void MakeSinglePoint()
         {
             _startPoint = _endPoint = Vector3.zero;
