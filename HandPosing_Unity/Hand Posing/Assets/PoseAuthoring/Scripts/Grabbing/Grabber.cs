@@ -145,7 +145,7 @@ namespace PoseAuthoring.Grabbing
             }
             else
             {
-                return OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, m_controller);
+                return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
             }
         }
 

@@ -2098,6 +2098,11 @@ PrefabInstance:
       propertyPath: axis
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: trackedHand
+      value: 
+      objectReference: {fileID: 114428878996493852}
     m_RemovedComponents:
     - {fileID: 1442438993745604910, guid: 23b1fe0762145904ba4ff0b82e7de514, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 23b1fe0762145904ba4ff0b82e7de514, type: 3}
