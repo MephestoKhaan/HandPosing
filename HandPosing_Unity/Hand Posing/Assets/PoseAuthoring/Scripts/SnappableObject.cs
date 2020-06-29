@@ -43,11 +43,12 @@ namespace PoseAuthoring
             bestPose = (Vector3.zero, Quaternion.identity);
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.Score(userPose, out bestPose);
+                float poseScore = ghost.Score(userPose, out var pose);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
                     maxScore = poseScore;
+                    bestPose = pose;
                 }
             }
             score = maxScore;

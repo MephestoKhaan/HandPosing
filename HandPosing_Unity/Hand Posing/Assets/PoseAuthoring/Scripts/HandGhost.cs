@@ -120,14 +120,13 @@ namespace PoseAuthoring
 
             Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
             Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
-
             (Vector3, Quaternion) desiredPose = (globalPosDesired, globalRotDesired);
 
             var similarPose = SimilarPoseAtVolume(userPose);
             var nearestPose = NearestPoseAtVolume(userPose);
 
-            float similarScore = Score(similarPose, desiredPose);
-            float nearestScore = Score(nearestPose, desiredPose);
+            float similarScore = Score(desiredPose,similarPose);
+            float nearestScore = Score(desiredPose,nearestPose);
 
             if(similarScore >= nearestScore)
             {
