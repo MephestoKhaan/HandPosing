@@ -1306,7 +1306,6 @@ GameObject:
   - component: {fileID: 1442438993745604909}
   - component: {fileID: 1442438993745604908}
   - component: {fileID: 1442438993745604907}
-  - component: {fileID: 1442438993745604910}
   - component: {fileID: 7195348242957399794}
   m_Layer: 0
   m_Name: CustomHandRight
@@ -1376,16 +1375,13 @@ MonoBehaviour:
   trackedHand: {fileID: 0}
   handAnchor: {fileID: 0}
   gripPoint: {fileID: 1442438993032791978}
-  isRightHand: 1
+  handeness: 1
   trackedHandOffset:
     id: 0
     transform: {fileID: 1442438993032825912}
     rotationOffset: {x: 6.3, y: 69.49, z: 4.83}
     positionOffset: {x: -0.09, y: -0.055, z: -0.04}
   boneMaps:
-  - id: 0
-    transform: {fileID: 1442438993032825912}
-    rotationOffset: {x: 6.3, y: 69.49, z: 4.83}
   - id: 2
     transform: {fileID: 1444372827363248344}
     rotationOffset: {x: 240, y: 20, z: -180}
@@ -1444,7 +1440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1442438993745604909}
-  grabber: {fileID: 1442438993745604910}
+  grabber: {fileID: 7195348242957399794}
 --- !u!114 &1442438993745604907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1457,26 +1453,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe2feb9c525fb614e8034e8789afee86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snapDetector: {fileID: 1442438993745604910}
   grabber: {fileID: 7195348242957399794}
-  detector: {fileID: 1442438993745604910}
   puppet: {fileID: 1442438993745604909}
---- !u!114 &1442438993745604910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1442438993032528950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc3c0c3814ff2cb4ca018ed659ce1773, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_grabVolumes:
-  - {fileID: 1442438993020805292}
-  - {fileID: 1442438993021150130}
-  m_gripTransform: {fileID: 1442438993032791978}
 --- !u!114 &7195348242957399794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1491,15 +1469,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabBegin: 0.85
   grabEnd: 0.55
-  m_parentHeldObject: 1
-  hand: {fileID: 0}
+  trackedHand: {fileID: 0}
   _gripTransform: {fileID: 1442438993032791978}
   _grabVolumes:
   - {fileID: 1442438993020805292}
   - {fileID: 1442438993021150130}
   m_controller: 2
-  m_parentTransform: {fileID: 0}
-  _prevFlex: 0
 --- !u!1 &1442438993032529408
 GameObject:
   m_ObjectHideFlags: 0

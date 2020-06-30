@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using OVRTouchSample;
 
-namespace PoseAuthoring.Grabbing
+namespace Interaction
 {
     [RequireComponent(typeof(Grabber))]
     public class RiggedHand : MonoBehaviour
@@ -30,42 +30,41 @@ namespace PoseAuthoring.Grabbing
         [SerializeField]
         private HandPose m_defaultGrabPose = null;
 
-        private Collider[] m_colliders = null;
-        private bool m_collisionEnabled = true;
-        private Grabber m_grabber;
+        private Collider[] _colliders = null;
+        private bool _collisionEnabled = true;
+        private Grabber _grabber;
 
-        List<Renderer> m_showAfterInputFocusAcquired;
+        List<Renderer> _showAfterInputFocusAcquired;
 
-        private int m_animLayerIndexThumb = -1;
-        private int m_animLayerIndexPoint = -1;
-        private int m_animParamIndexFlex = -1;
-        private int m_animParamIndexPose = -1;
+        private int _animLayerIndexThumb = -1;
+        private int _animLayerIndexPoint = -1;
+        private int _animParamIndexFlex = -1;
+        private int _animParamIndexPose = -1;
 
-        private bool m_isPointing = false;
-        private bool m_isGivingThumbsUp = false;
-        private float m_pointBlend = 0.0f;
-        private float m_thumbsUpBlend = 0.0f;
+        private bool _isPointing = false;
+        private bool _isGivingThumbsUp = false;
+        private float _pointBlend = 0.0f;
+        private float _thumbsUpBlend = 0.0f;
 
-        private bool m_restoreOnInputAcquired = false;
+        private bool _restoreOnInputAcquired = false;
 
         private void Awake()
         {
-            m_grabber = GetComponent<Grabber>();
+            _grabber = GetComponent<Grabber>();
         }
 
         private void Start()
         {
-            m_showAfterInputFocusAcquired = new List<Renderer>();
+            _showAfterInputFocusAcquired = new List<Renderer>();
 
-            // Collision starts disabled. We'll enable it for certain cases such as making a fist.
-            m_colliders = this.GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
+            _colliders = this.GetComponentsInChildren<Collider>().Where(childCollider => !childCollider.isTrigger).ToArray();
             CollisionEnable(true);
 
             // Get animator layer indices by name, for later use switching between hand visuals
-            m_animLayerIndexPoint = m_animator.GetLayerIndex(ANIM_LAYER_NAME_POINT);
-            m_animLayerIndexThumb = m_animator.GetLayerIndex(ANIM_LAYER_NAME_THUMB);
-            m_animParamIndexFlex = Animator.StringToHash(ANIM_PARAM_NAME_FLEX);
-            m_animParamIndexPose = Animator.StringToHash(ANIM_PARAM_NAME_POSE);
+            _animLayerIndexPoint = m_animator.GetLayerIndex(ANIM_LAYER_NAME_POINT);
+            _animLayerIndexThumb = m_animator.GetLayerIndex(ANIM_LAYER_NAME_THUMB);
+            _animParamIndexFlex = Animator.StringToHash(ANIM_PARAM_NAME_FLEX);
+            _animParamIndexPose = Animator.StringToHash(ANIM_PARAM_NAME_POSE);
 
             OVRManager.InputFocusAcquired += OnInputFocusAcquired;
             OVRManager.InputFocusLost += OnInputFocusLost;
@@ -81,8 +80,8 @@ namespace PoseAuthoring.Grabbing
         {
             UpdateCapTouchStates();
 
-            m_pointBlend = InputValueRateChange(m_isPointing, m_pointBlend);
-            m_thumbsUpBlend = InputValueRateChange(m_isGivingThumbsUp, m_thumbsUpBlend);
+            _pointBlend = InputValueRateChange(_isPointing, _pointBlend);
+            _thumbsUpBlend = InputValueRateChange(_isGivingThumbsUp, _thumbsUpBlend);
 
             float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
 
@@ -93,19 +92,19 @@ namespace PoseAuthoring.Grabbing
         // debouncing.
         private void UpdateCapTouchStates()
         {
-            m_isPointing = !OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, m_controller);
-            m_isGivingThumbsUp = !OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, m_controller);
+            _isPointing = !OVRInput.Get(OVRInput.NearTouch.PrimaryIndexTrigger, m_controller);
+            _isGivingThumbsUp = !OVRInput.Get(OVRInput.NearTouch.PrimaryThumbButtons, m_controller);
         }
 
         private void LateUpdate()
         {
             // Hand's collision grows over a short amount of time on enable, rather than snapping to on, to help somewhat with interpenetration issues.
-            if (m_collisionEnabled && m_collisionScaleCurrent + Mathf.Epsilon < COLLIDER_SCALE_MAX)
+            if (_collisionEnabled && m_collisionScaleCurrent + Mathf.Epsilon < COLLIDER_SCALE_MAX)
             {
                 m_collisionScaleCurrent = Mathf.Min(COLLIDER_SCALE_MAX, m_collisionScaleCurrent + Time.deltaTime * COLLIDER_SCALE_PER_SECOND);
-                for (int i = 0; i < m_colliders.Length; ++i)
+                for (int i = 0; i < _colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
+                    Collider collider = _colliders[i];
                     collider.transform.localScale = new Vector3(m_collisionScaleCurrent, m_collisionScaleCurrent, m_collisionScaleCurrent);
                 }
             }
@@ -116,34 +115,34 @@ namespace PoseAuthoring.Grabbing
         {
             if (gameObject.activeInHierarchy)
             {
-                m_showAfterInputFocusAcquired.Clear();
+                _showAfterInputFocusAcquired.Clear();
                 Renderer[] renderers = GetComponentsInChildren<Renderer>();
                 for (int i = 0; i < renderers.Length; ++i)
                 {
                     if (renderers[i].enabled)
                     {
                         renderers[i].enabled = false;
-                        m_showAfterInputFocusAcquired.Add(renderers[i]);
+                        _showAfterInputFocusAcquired.Add(renderers[i]);
                     }
                 }
-                m_restoreOnInputAcquired = true;
+                _restoreOnInputAcquired = true;
             }
         }
 
         private void OnInputFocusAcquired()
         {
-            if (m_restoreOnInputAcquired)
+            if (_restoreOnInputAcquired)
             {
-                for (int i = 0; i < m_showAfterInputFocusAcquired.Count; ++i)
+                for (int i = 0; i < _showAfterInputFocusAcquired.Count; ++i)
                 {
-                    if (m_showAfterInputFocusAcquired[i])
+                    if (_showAfterInputFocusAcquired[i])
                     {
-                        m_showAfterInputFocusAcquired[i].enabled = true;
+                        _showAfterInputFocusAcquired[i].enabled = true;
                     }
                 }
-                m_showAfterInputFocusAcquired.Clear();
+                _showAfterInputFocusAcquired.Clear();
 
-                m_restoreOnInputAcquired = false;
+                _restoreOnInputAcquired = false;
             }
         }
 
@@ -156,31 +155,31 @@ namespace PoseAuthoring.Grabbing
 
         private void UpdateAnimStates()
         {
-            bool grabbing = m_grabber.GrabbedObject != null;
+            bool grabbing = _grabber.GrabbedObject != null;
             HandPose grabPose = m_defaultGrabPose;
             if (grabbing)
             {
-                HandPose customPose = m_grabber.GrabbedObject.GetComponent<HandPose>();
+                HandPose customPose = _grabber.GrabbedObject.GetComponent<HandPose>();
                 if (customPose != null) grabPose = customPose;
             }
             // Pose
             HandPoseId handPoseId = grabPose.PoseId;
-            m_animator.SetInteger(m_animParamIndexPose, (int)handPoseId);
+            m_animator.SetInteger(_animParamIndexPose, (int)handPoseId);
 
             // Flex
             // blend between open hand and fully closed fist
             float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
-            m_animator.SetFloat(m_animParamIndexFlex, flex);
+            m_animator.SetFloat(_animParamIndexFlex, flex);
 
             // Point
             bool canPoint = !grabbing || grabPose.AllowPointing;
-            float point = canPoint ? m_pointBlend : 0.0f;
-            m_animator.SetLayerWeight(m_animLayerIndexPoint, point);
+            float point = canPoint ? _pointBlend : 0.0f;
+            m_animator.SetLayerWeight(_animLayerIndexPoint, point);
 
             // Thumbs up
             bool canThumbsUp = !grabbing || grabPose.AllowThumbsUp;
-            float thumbsUp = canThumbsUp ? m_thumbsUpBlend : 0.0f;
-            m_animator.SetLayerWeight(m_animLayerIndexThumb, thumbsUp);
+            float thumbsUp = canThumbsUp ? _thumbsUpBlend : 0.0f;
+            m_animator.SetLayerWeight(_animLayerIndexThumb, thumbsUp);
 
             float pinch = OVRInput.Get(OVRInput.Axis1D.PrimaryIndexTrigger, m_controller);
             m_animator.SetFloat("Pinch", pinch);
@@ -190,18 +189,18 @@ namespace PoseAuthoring.Grabbing
 
         private void CollisionEnable(bool enabled)
         {
-            if (m_collisionEnabled == enabled)
+            if (_collisionEnabled == enabled)
             {
                 return;
             }
-            m_collisionEnabled = enabled;
+            _collisionEnabled = enabled;
 
             if (enabled)
             {
                 m_collisionScaleCurrent = COLLIDER_SCALE_MIN;
-                for (int i = 0; i < m_colliders.Length; ++i)
+                for (int i = 0; i < _colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
+                    Collider collider = _colliders[i];
                     collider.transform.localScale = new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
                     collider.enabled = true;
                 }
@@ -209,9 +208,9 @@ namespace PoseAuthoring.Grabbing
             else
             {
                 m_collisionScaleCurrent = COLLIDER_SCALE_MAX;
-                for (int i = 0; i < m_colliders.Length; ++i)
+                for (int i = 0; i < _colliders.Length; ++i)
                 {
-                    Collider collider = m_colliders[i];
+                    Collider collider = _colliders[i];
                     collider.enabled = false;
                     collider.transform.localScale = new Vector3(COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN, COLLIDER_SCALE_MIN);
                 }

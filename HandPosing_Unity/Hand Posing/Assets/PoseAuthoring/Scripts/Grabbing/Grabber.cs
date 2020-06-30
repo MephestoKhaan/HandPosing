@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PoseAuthoring.Grabbing
+namespace Interaction
 {
     public class Grabber : MonoBehaviour
     {
@@ -97,7 +97,7 @@ namespace PoseAuthoring.Grabbing
             }
         }
 
-
+         
 
         protected virtual void Start()
         {

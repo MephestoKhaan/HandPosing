@@ -13,41 +13,35 @@ namespace PoseAuthoring
         private Color defaultColor = Color.blue;
         [SerializeField]
         private string colorProperty = "_RimColor";
+
+
         [InspectorButton("MakeStaticPose")]
         public string StaticPose;
+        [InspectorButton("CreateDuplicate")]
+        public string Duplicate;
+
 
         [SerializeField]
-        public CylinderSurface _cylinder;
-        public CylinderSurface Cylinder
+        private VolumetricPose _snapPoseVolume;
+        public VolumetricPose SnapPoseVolume
         {
             get
             {
-                return _cylinder;
+                return _snapPoseVolume;
             }
         }
 
-        public HandSnapPose Pose
-        {
-            get;
-            private set;
-        }
-
-        public VolumetricPose PoseVolume
-        {
-            get
-            {
-                return new VolumetricPose()
-                {
-                    pose = Pose,
-                    volume = Cylinder
-                };
-            }
-        }
-
+        private Transform _relativeTo;
         public Transform RelativeTo
         {
-            get;
-            private set;
+            get
+            {
+                return _relativeTo ?? this.transform.parent;
+            }
+            private set
+            {
+                _relativeTo = value;
+            }
         }
 
         private HandPuppet _puppet;
@@ -74,17 +68,27 @@ namespace PoseAuthoring
         {
             Puppet.SetRecordedPose(userPose, relativeTo);
             RelativeTo = relativeTo;
-            Pose = userPose;
-            _cylinder = new CylinderSurface(Puppet.Grip);
-            _cylinder.MakeSinglePoint();
+            _snapPoseVolume = new VolumetricPose()
+            {
+                pose = userPose,
+                volume = new CylinderSurface(Puppet.Grip).MakeSinglePoint(),
+                maxDistance = 0.1f
+            };
         }
 
         public void SetPoseVolume(VolumetricPose poseVolume, Transform relativeTo)
         {
             SetPose(poseVolume.pose, relativeTo);
-            _cylinder = poseVolume.volume;
-            _cylinder.Grip = Puppet.Grip;
+            _snapPoseVolume = poseVolume;
+            _snapPoseVolume.volume.Grip = Puppet.Grip;
+
         }
+
+        public void RefreshPose(Transform relativeTo)
+        {
+            _snapPoseVolume.pose = Puppet.CurrentPoseVisual(relativeTo);
+        }
+
 
         public void Highlight(float amount)
         {
@@ -100,84 +104,117 @@ namespace PoseAuthoring
 
         public void MakeStaticPose()
         {
-            _cylinder.MakeSinglePoint();
+            _snapPoseVolume.volume.MakeSinglePoint();
+        }
+
+        public void CreateDuplicate()
+        {
+            HandGhost ghost = Instantiate(this, this.transform.parent);
+            ghost.SetPoseVolume(this._snapPoseVolume, this.transform);
+            ghost.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
         }
 
         private void Reset()
         {
-            _cylinder = new CylinderSurface(Puppet.Grip);
+            _snapPoseVolume.volume = new CylinderSurface(Puppet.Grip);
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public float Score(HandSnapPose userPose, out (Vector3,Quaternion) bestPose, float maxDistance = 0.1f)
+        public float CalculateBestPose(HandSnapPose userPose, out (Vector3, Quaternion) bestPose)
         {
-            HandSnapPose snapPose = this.Pose;
-            if (snapPose.isRightHand != userPose.isRightHand)
+            float bestScore = 0f;
+            HandSnapPose snapPose = _snapPoseVolume.pose;
+
+            if (snapPose.handeness != userPose.handeness
+                && !_snapPoseVolume.ambydextrous)
             {
                 bestPose = (Vector3.zero, Quaternion.identity);
-                return 0f;
+                return bestScore;
             }
 
             Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
             Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
             (Vector3, Quaternion) desiredPose = (globalPosDesired, globalRotDesired);
 
-            var similarPose = SimilarPoseAtVolume(userPose);
-            var nearestPose = NearestPoseAtVolume(userPose);
+            var similarPose = SimilarPoseAtVolume(userPose, snapPose);
+            var nearestPose = NearestPoseAtVolume(userPose, snapPose);
+            bestPose = GetBestPose(similarPose, nearestPose, desiredPose, out bestScore);
 
-            float similarScore = Score(desiredPose,similarPose);
-            float nearestScore = Score(desiredPose,nearestPose);
-
-            if(similarScore >= nearestScore)
+            if (_snapPoseVolume.handCanInvert)
             {
-                bestPose = similarPose;
-                return similarScore;
+                HandSnapPose invertedPose = _snapPoseVolume.InvertedPose(RelativeTo);
+
+                var similarInvertedPose = SimilarPoseAtVolume(userPose, invertedPose);
+                var nearestInvertedPose = NearestPoseAtVolume(userPose, invertedPose);
+                var bestInvertedPose = GetBestPose(similarInvertedPose, nearestInvertedPose, desiredPose, out float bestInvertedScore);
+
+                if (bestInvertedScore > bestScore)
+                {
+                    bestPose = bestInvertedPose;
+                    return bestInvertedScore;
+                }
+
             }
-            bestPose = nearestPose;
-            return nearestScore;
+
+            return bestScore;
         }
-        
-        private float Score((Vector3, Quaternion) from, (Vector3,Quaternion) to,  float maxDistance = 0.1f)
+
+        private (Vector3, Quaternion) GetBestPose((Vector3, Quaternion) a, (Vector3, Quaternion) b, (Vector3, Quaternion) comparer, out float bestScore)
+        {
+            float aScore = Score(comparer, a);
+            float bScore = Score(comparer, b);
+
+            if (aScore >= bScore)
+            {
+                bestScore = aScore;
+                return a;
+            }
+            bestScore = bScore;
+            return b;
+        }
+
+        private float Score((Vector3, Quaternion) from, (Vector3, Quaternion) to)
         {
             float forwardDifference = Vector3.Dot(from.Item2 * Vector3.forward, to.Item2 * Vector3.forward) * 0.5f + 0.5f;
             float upDifference = Vector3.Dot(from.Item2 * Vector3.up, to.Item2 * Vector3.up) * 0.5f + 0.5f;
 
-            float positionDifference = 1f - Mathf.Clamp01(Vector3.Distance(from.Item1, to.Item1) / maxDistance);
+            float positionDifference = 1f - Mathf.Clamp01(Vector3.Distance(from.Item1, to.Item1) / this.SnapPoseVolume.maxDistance);
 
             return forwardDifference * upDifference * positionDifference;
         }
 
-        private (Vector3, Quaternion) NearestPoseAtVolume(HandSnapPose userPose)
+        private (Vector3, Quaternion) NearestPoseAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
         {
             Vector3 desiredPos = RelativeTo.TransformPoint(userPose.relativeGripPos);
-            Quaternion baseRot = RelativeTo.rotation * Pose.relativeGripRot;
+            Quaternion baseRot = RelativeTo.rotation * snapPose.relativeGripRot;
 
-            Vector3 surfacePoint = Cylinder.NearestPointInSurface(desiredPos);
-            Quaternion surfaceRotation = Cylinder.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
+            Vector3 surfacePoint = _snapPoseVolume.volume.NearestPointInSurface(desiredPos);
+            Quaternion surfaceRotation = _snapPoseVolume.volume.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
 
             return (surfacePoint, surfaceRotation);
         }
 
-        private (Vector3, Quaternion) SimilarPoseAtVolume(HandSnapPose userPose)
+        private (Vector3, Quaternion) SimilarPoseAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
         {
+            CylinderSurface cylinder = _snapPoseVolume.volume;
             Vector3 desiredPos = RelativeTo.TransformPoint(userPose.relativeGripPos);
-            Quaternion baseRot = RelativeTo.rotation * Pose.relativeGripRot;
+            Quaternion baseRot = RelativeTo.rotation * snapPose.relativeGripRot;
             Quaternion desiredRot = RelativeTo.rotation * userPose.relativeGripRot;
 
             Quaternion rotDif = (desiredRot) * Quaternion.Inverse(baseRot);
-            Vector3 desiredDirection = (rotDif * _cylinder.Rotation) * Vector3.forward;
-            Vector3 projectedDirection = Vector3.ProjectOnPlane(desiredDirection, _cylinder.Direction).normalized;
+            Vector3 desiredDirection = (rotDif * cylinder.Rotation) * Vector3.forward;
+            Vector3 projectedDirection = Vector3.ProjectOnPlane(desiredDirection, cylinder.Direction).normalized;
 
-            Vector3 altitudePoint = _cylinder.PointAltitude(desiredPos);
-            Vector3 surfacePoint = Cylinder.NearestPointInSurface(altitudePoint + projectedDirection * _cylinder.Radious);
-            Quaternion surfaceRotation = Cylinder.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
+            Vector3 altitudePoint = cylinder.PointAltitude(desiredPos);
+            Vector3 surfacePoint = cylinder.NearestPointInSurface(altitudePoint + projectedDirection * cylinder.Radious);
+            Quaternion surfaceRotation = cylinder.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
 
             return (surfacePoint, surfaceRotation);
         }
 
         public HandSnapPose AdjustPose((Vector3, Quaternion) volumePose)
         {
-            HandSnapPose snapPose = this.Pose;
+            HandSnapPose snapPose = _snapPoseVolume.pose;
 
             snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(volumePose.Item1);
             snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * volumePose.Item2;

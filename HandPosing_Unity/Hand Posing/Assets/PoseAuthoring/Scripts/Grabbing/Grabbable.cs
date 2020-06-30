@@ -1,19 +1,28 @@
-﻿using System;
+﻿using PoseAuthoring;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-namespace PoseAuthoring.Grabbing
+namespace Interaction
 {
     public class Grabbable : MonoBehaviour
     {
         [SerializeField]
-        protected Collider[] _grabPoints = null;
+        private int collideLayer;
+        [SerializeField]
+        private int ignoreCollisionLayer;
 
-        protected bool _grabbedKinematic = false;
-        protected Collider _grabbedCollider = null;
-        protected Grabber _grabbedBy = null;
-
+        public Color highlightColor = Color.white;
 
         public SnappableObject Snappable { get; private set; }
+
+        private HashSet<GameObject> _colliderObjects = null;
+
+        private Collider[] _grabPoints = null;
+        private bool _grabbedKinematic = false;
+        private Collider _grabbedCollider = null;
+        private Grabber _grabbedBy = null;
 
         public bool IsGrabbed
         {
@@ -49,6 +58,7 @@ namespace PoseAuthoring.Grabbing
 
         public virtual void GrabBegin(Grabber hand, Collider grabPoint)
         {
+            EnableCollisions(false);
             _grabbedBy = hand;
             _grabbedCollider = grabPoint;
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -57,6 +67,7 @@ namespace PoseAuthoring.Grabbing
 
         public virtual void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
         {
+            EnableCollisions(true);
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
             rb.isKinematic = _grabbedKinematic;
             rb.velocity = linearVelocity;
@@ -65,19 +76,58 @@ namespace PoseAuthoring.Grabbing
             _grabbedCollider = null;
         }
 
+
+        public void DistantGrabBegin()
+        {
+            EnableCollisions(false);
+            gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        }
+
+        public void DistantGrabEnds()
+        {
+            if (!GrabbedBy)
+            {
+                GrabEnd(Vector3.zero, Vector3.zero);
+            }
+        }
+
+        private void EnableCollisions(bool canCollide)
+        {
+            int layer = canCollide ? collideLayer : ignoreCollisionLayer;
+            foreach (var collider in _colliderObjects)
+            {
+                collider.layer = layer;
+            }
+        }
+
         void Awake()
         {
             Snappable = this.GetComponent<SnappableObject>();
+
+            PopulateColliderObjects();
 
             Collider collider = this.GetComponentInChildren<Collider>();
             if (collider == null)
             {
                 throw new ArgumentException("Grabbables cannot have zero grab points and no collider -- please add a grab point or collider.");
             }
+            // Create a default grab point
             _grabPoints = new Collider[1] { collider };
 
         }
 
+        private void PopulateColliderObjects()
+        {
+            var colliders = this.GetComponentsInChildren<Collider>().Where(c => !c.isTrigger);
+            _colliderObjects = new HashSet<GameObject>();
+            foreach (var col in colliders)
+            {
+                if (!_colliderObjects.Contains(col.gameObject))
+                {
+                    _colliderObjects.Add(col.gameObject);
+                }
+            }
+        }
 
         protected virtual void Start()
         {

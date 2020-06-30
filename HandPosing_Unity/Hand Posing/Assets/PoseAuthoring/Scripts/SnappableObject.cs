@@ -22,7 +22,7 @@ namespace PoseAuthoring
         public HandGhost AddPose(HandPuppet puppet)
         {
             HandSnapPose pose = puppet.CurrentPoseVisual(this.transform);
-            HandGhost ghost = Instantiate(handProvider.GetHand(pose.isRightHand), this.transform);
+            HandGhost ghost = Instantiate(handProvider.GetHand(pose.handeness), this.transform);
             ghost.SetPose(pose, this.transform);
             this.ghosts.Add(ghost);
             return ghost;
@@ -30,9 +30,10 @@ namespace PoseAuthoring
 
         private HandGhost AddPose(VolumetricPose poseVolume)
         {
-            HandGhost ghost = Instantiate(handProvider.GetHand(poseVolume.pose.isRightHand), this.transform);
+            HandGhost ghost = Instantiate(handProvider.GetHand(poseVolume.pose.handeness), this.transform);
             ghost.SetPoseVolume(poseVolume, this.transform);
             this.ghosts.Add(ghost);
+
             return ghost;
         }
 
@@ -43,7 +44,7 @@ namespace PoseAuthoring
             bestPose = (Vector3.zero, Quaternion.identity);
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.Score(userPose, out var pose);
+                float poseScore = ghost.CalculateBestPose(userPose, out var pose);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
@@ -66,9 +67,10 @@ namespace PoseAuthoring
         public void SaveToAsset()
         {
             List<VolumetricPose> volumetricPoses = new List<VolumetricPose>();
-            foreach (var ghost in this.ghosts)
+            foreach (var ghost in this.GetComponentsInChildren<HandGhost>())
             {
-                volumetricPoses.Add(ghost.PoseVolume);
+                ghost.RefreshPose(this.transform);
+                volumetricPoses.Add(ghost.SnapPoseVolume);
             }
             volumetricPosesCollection.StorePoses(volumetricPoses);
         }

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
@@ -6,13 +7,13 @@ namespace PoseAuthoring
     public class HandProvider : ScriptableObject
     {
         [SerializeField]
-        private HandGhost rightHand;
-        [SerializeField]
         private HandGhost leftHand;
+        [SerializeField]
+        private HandGhost rightHand;
 
-        public HandGhost GetHand(bool isRightHand)
+        public HandGhost GetHand(Handeness handeness)
         {
-            return isRightHand ? rightHand : leftHand;
+            return handeness == Handeness.Right ? rightHand : leftHand;
         }
     }
 }

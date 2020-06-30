@@ -29,11 +29,4 @@ namespace PoseAuthoring
 #endif
         }
     }
-
-    [Serializable]
-    public struct VolumetricPose
-    {
-        public HandSnapPose pose;
-        public CylinderSurface volume;
-    }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   - pose:
       relativeGripPos: {x: 0.000051558018, y: 0.12085688, z: -0.005523622}
       relativeGripRot: {x: -0.08710041, y: 0.61902696, z: -0.037212633, w: -0.7796374}
-      isRightHand: 1
+      handeness: 0
       _bones:
       - boneID: 2
         rotation: {x: 0.33247066, y: 0.9135345, z: 0.1137079, w: 0.2049109}
@@ -52,10 +52,13 @@ MonoBehaviour:
       _startPoint: {x: 0.0063943826, y: -0.019978335, z: 0.005049534}
       _endPoint: {x: 0.006194759, y: -0.01604231, z: 0.0043205544}
       _angle: 360
+    ambydextrous: 0
+    handCanInvert: 0
+    maxDistance: 0
   - pose:
       relativeGripPos: {x: -0.00743483, y: -0.122919224, z: -0.0025955373}
       relativeGripRot: {x: 0.8340332, y: 0.054869615, z: 0.5479094, w: -0.03425792}
-      isRightHand: 1
+      handeness: 0
       _bones:
       - boneID: 2
         rotation: {x: 0.35098928, y: 0.9049116, z: 0.12595265, w: 0.20512801}
@@ -91,10 +94,13 @@ MonoBehaviour:
       _startPoint: {x: 0.006545406, y: -0.02176016, z: 0.008423833}
       _endPoint: {x: 0.0063776225, y: -0.018678263, z: 0.008059366}
       _angle: 360
+    ambydextrous: 0
+    handCanInvert: 0
+    maxDistance: 0
   - pose:
       relativeGripPos: {x: -0.000053286552, y: -0.015842438, z: 0.021562934}
       relativeGripRot: {x: -0.15795025, y: 0.6904695, z: 0.58910775, w: -0.38891616}
-      isRightHand: 1
+      handeness: 0
       _bones:
       - boneID: 2
         rotation: {x: 0.3092007, y: 0.92352563, z: 0.09840544, w: 0.20447922}
@@ -130,3 +136,6 @@ MonoBehaviour:
       _startPoint: {x: 0.024581216, y: -0.03236027, z: -0.032830205}
       _endPoint: {x: -0.069075644, y: 0.0030902456, z: 0.06280904}
       _angle: 360
+    ambydextrous: 0
+    handCanInvert: 0
+    maxDistance: 0.1

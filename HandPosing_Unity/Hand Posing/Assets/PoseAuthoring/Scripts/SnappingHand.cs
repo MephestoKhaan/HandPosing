@@ -1,5 +1,7 @@
-using PoseAuthoring.Grabbing;
 using UnityEngine;
+
+using Grabber = Interaction.Grabber;
+using Grabbable = Interaction.Grabbable;
 
 namespace PoseAuthoring
 {

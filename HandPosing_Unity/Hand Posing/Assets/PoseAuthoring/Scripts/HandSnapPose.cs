@@ -13,9 +13,14 @@ namespace PoseAuthoring
     [System.Serializable]
     public struct HandSnapPose
     {
+        public enum Handeness
+        {
+            Left,Right
+        }
+
         public Vector3 relativeGripPos;
         public Quaternion relativeGripRot;
-        public bool isRightHand;
+        public Handeness handeness;
 
         [SerializeField]
         private List<BoneRotation> _bones;

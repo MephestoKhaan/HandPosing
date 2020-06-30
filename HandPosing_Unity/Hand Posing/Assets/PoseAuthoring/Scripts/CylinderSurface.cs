@@ -23,10 +23,23 @@ namespace PoseAuthoring
             _endPoint = Vector3.down * 0.2f;
         }
 
+        public CylinderSurface(CylinderSurface other)
+        {
+            this.Grip = other.Grip;
+
+            _angle = other.Angle;
+            _startPoint = other._startPoint;
+            _endPoint = other._endPoint;
+        }
+
         public Vector3 StartAngleDir
         {
             get
             {
+                if(this.Grip == null)
+                {
+                    return Vector3.forward;
+                }
                 return Vector3.ProjectOnPlane(Grip.transform.position - StartPoint, Direction).normalized;
             }
         }
@@ -42,11 +55,25 @@ namespace PoseAuthoring
         {
             get
             {
-                return this.Grip.TransformPoint(_startPoint);
+                if(this.Grip != null)
+                {
+                    return this.Grip.TransformPoint(_startPoint);
+                }
+                else
+                {
+                    return _startPoint;
+                }
             }
             set
             {
-                _startPoint = this.Grip.InverseTransformPoint(value);
+                if (this.Grip != null)
+                {
+                    _startPoint = this.Grip.InverseTransformPoint(value);
+                }
+                else
+                {
+                    _startPoint = value;
+                }
             }
         }
 
@@ -54,11 +81,25 @@ namespace PoseAuthoring
         {
             get
             {
-                return this.Grip.TransformPoint(_endPoint);
+                if (this.Grip != null)
+                {
+                    return this.Grip.TransformPoint(_endPoint);
+                }
+                else
+                {
+                    return _endPoint;
+                }
             }
             set
             {
-                _endPoint = this.Grip.InverseTransformPoint(value);
+                if (this.Grip != null)
+                {
+                    _endPoint = this.Grip.InverseTransformPoint(value);
+                }
+                else
+                {
+                    _endPoint = value;
+                }
             }
         }
 
@@ -78,6 +119,10 @@ namespace PoseAuthoring
         {
             get
             {
+                if (this.Grip == null)
+                {
+                    return 0f;
+                }
                 Vector3 start = StartPoint;
                 Vector3 projectedPoint = start + Vector3.Project(this.Grip.position - start, Direction);
                 return Vector3.Distance(projectedPoint, this.Grip.position);
@@ -99,7 +144,7 @@ namespace PoseAuthoring
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this.Grip.up;
+                    return this.Grip?this.Grip.up:Vector3.up;
                 }
                 return dir.normalized;
             }
@@ -109,14 +154,19 @@ namespace PoseAuthoring
         {
             get
             {
+                if(_startPoint == _endPoint)
+                {
+                    return Quaternion.LookRotation(Vector3.forward);
+                }
                 return Quaternion.LookRotation(StartAngleDir, Direction);
             }
         }
 
-        public void MakeSinglePoint()
+        public CylinderSurface MakeSinglePoint()
         {
             _startPoint = _endPoint = Vector3.zero;
             Angle = 0f;
+            return this;
         }
 
         public Vector3 PointAltitude(Vector3 point)
