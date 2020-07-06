@@ -215,10 +215,8 @@ namespace PoseAuthoring
         public HandSnapPose AdjustPose((Vector3, Quaternion) volumePose)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
-
             snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(volumePose.Item1);
             snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * volumePose.Item2;
-
             return snapPose;
         }
     }

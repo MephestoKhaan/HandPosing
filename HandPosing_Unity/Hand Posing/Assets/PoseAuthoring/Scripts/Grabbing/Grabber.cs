@@ -11,8 +11,6 @@ namespace Interaction
         [SerializeField]
         private Vector2 grabThresoldHand = new Vector2(0.35f, 0.95f);
 
-        bool alreadyUpdated = false;
-
         [SerializeField]
         private OVRHand trackedHand;
 
@@ -24,14 +22,10 @@ namespace Interaction
         protected OVRInput.Controller m_controller;
 
         protected bool _grabVolumeEnabled = true;
-        protected Vector3 _lastPos;
-        protected Quaternion _lastRot;
         protected Quaternion _anchorOffsetRotation;
         protected Vector3 _anchorOffsetPosition;
         protected float _prevFlex;
         protected Grabbable _grabbedObj = null;
-        protected Vector3 _grabbedObjectPosOff;
-        protected Quaternion _grabbedObjectRotOff;
         protected Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
         private bool _nearGrab = false;
 
@@ -93,20 +87,6 @@ namespace Interaction
             _anchorOffsetPosition = transform.localPosition;
             _anchorOffsetRotation = transform.localRotation;
             allGrabbers.Add(this);
-
-            OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
-            if (rig != null)
-            {
-                rig.UpdatedAnchors += (r) => OnUpdatedAnchors();
-            }
-        }
-
-         
-
-        protected virtual void Start()
-        {
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
         }
 
         private void OnDisable()
@@ -118,22 +98,8 @@ namespace Interaction
             }
         }
 
-        virtual public void Update()
+        void LateUpdate()
         {
-            alreadyUpdated = false;
-        }
-
-        void OnUpdatedAnchors()
-        {
-            if (alreadyUpdated)
-            {
-                return;
-            }
-            alreadyUpdated = true;
-
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
-
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
 
@@ -203,12 +169,15 @@ namespace Interaction
 
         protected void CheckForGrabOrRelease(float prevFlex)
         {
-            if ((_prevFlex >= GrabThresold.y) && (prevFlex < GrabThresold.y))
+            if (_prevFlex >= GrabThresold.y
+                && prevFlex < GrabThresold.y)
             {
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if ((_prevFlex <= GrabThresold.x) && (prevFlex > GrabThresold.x))
+            else if (GrabbedObject != null 
+                && _prevFlex <= GrabThresold.x 
+                && prevFlex > GrabThresold.x)
             {
                 GrabEnd();
             }
@@ -231,8 +200,8 @@ namespace Interaction
                 OnGrabAttemp?.Invoke(null, 0f);
                 return;
             }
-            (Grabbable, Collider) closestGrabbable;
-            closestGrabbable = FindClosestGrabbable();
+
+            (Grabbable, Collider)  closestGrabbable = FindClosestGrabbable();
             if (closestGrabbable.Item1 != null)
             {
                 OnGrabAttemp?.Invoke(closestGrabbable.Item1, factor);
@@ -268,26 +237,13 @@ namespace Interaction
             {
                 closestGrabbable.GrabbedBy.OffhandGrabbed(closestGrabbable);
             }
-
+            
             _grabbedObj = closestGrabbable;
             _grabbedObj.GrabBegin(this, closestGrabbableCollider);
+            _grabbedObj.transform.SetParent(transform, true);
+
             OnGrabStarted?.Invoke(_grabbedObj);
-
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
-
-            Vector3 relPos = _grabbedObj.transform.position - transform.position;
-            relPos = Quaternion.Inverse(transform.rotation) * relPos;
-            _grabbedObjectPosOff = relPos;
-
-            Quaternion relOri = Quaternion.Inverse(transform.rotation) * _grabbedObj.transform.rotation;
-            _grabbedObjectRotOff = relOri;
-
-
-            MoveGrabbedObject(_lastPos, _lastRot, true);
-            _grabbedObj.transform.parent = transform;
         }
-
 
         public (Grabbable, Collider) FindClosestGrabbable()
         {
@@ -298,12 +254,6 @@ namespace Interaction
             // Iterate grab candidates and find the closest grabbable candidate
             foreach (Grabbable grabbable in _grabCandidates.Keys)
             {
-                bool canGrab = !grabbable.IsGrabbed;
-                if (!canGrab)
-                {
-                    continue;
-                }
-
                 for (int j = 0; j < grabbable.GrabPoints.Length; ++j)
                 {
                     Collider grabbableCollider = grabbable.GrabPoints[j];
@@ -325,29 +275,6 @@ namespace Interaction
             return (closestGrabbable, closestGrabbableCollider);
         }
 
-        protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot, bool forceTeleport = false)
-        {
-            if (_grabbedObj == null
-                || _grabbedObj.GrabbedBody == null)
-            {
-                return;
-            }
-
-            Rigidbody grabbedRigidbody = _grabbedObj.GrabbedBody;
-            Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
-            Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
-
-            if (forceTeleport)
-            {
-                grabbedRigidbody.transform.position = grabbablePosition;
-                grabbedRigidbody.transform.rotation = grabbableRotation;
-            }
-            else
-            {
-                grabbedRigidbody.MovePosition(grabbablePosition);
-                grabbedRigidbody.MoveRotation(grabbableRotation);
-            }
-        }
 
         protected void GrabEnd()
         {

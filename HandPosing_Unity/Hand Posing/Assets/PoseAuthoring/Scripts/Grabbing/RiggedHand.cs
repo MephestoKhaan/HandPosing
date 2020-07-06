@@ -83,8 +83,6 @@ namespace Interaction
             _pointBlend = InputValueRateChange(_isPointing, _pointBlend);
             _thumbsUpBlend = InputValueRateChange(_isGivingThumbsUp, _thumbsUpBlend);
 
-            float flex = OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
-
             UpdateAnimStates();
         }
 

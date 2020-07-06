@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections;
 
 using Grabber = Interaction.Grabber;
 using Grabbable = Interaction.Grabbable;
@@ -42,13 +41,13 @@ namespace PoseAuthoring
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
-
                 if (ghost != null)
                 {
                     currentGhost = ghost;
                     currentPose = currentGhost.AdjustPose(bestPose);
-                    this.puppet.TransitionToPose(currentPose, snappable.transform, 1f, 1f);
                     currentAmount = 1f;
+                    this.puppet.TransitionToPose(currentPose, currentGhost.RelativeTo, currentAmount, currentAmount);
+
                 }
             }
         }
