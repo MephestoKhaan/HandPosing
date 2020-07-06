@@ -175,13 +175,13 @@ namespace Interaction
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if (GrabbedObject != null 
-                && _prevFlex <= GrabThresold.x 
+            else if ( _prevFlex <= GrabThresold.x 
                 && prevFlex > GrabThresold.x)
             {
                 GrabEnd();
             }
-            else if (GrabbedObject == null && _prevFlex > 0)
+            
+            if (GrabbedObject == null && _prevFlex > 0)
             {
                 _nearGrab = true;
                 NearGrab(_prevFlex / GrabThresold.y);
@@ -240,9 +240,9 @@ namespace Interaction
             
             _grabbedObj = closestGrabbable;
             _grabbedObj.GrabBegin(this, closestGrabbableCollider);
-            _grabbedObj.transform.SetParent(transform, true);
-
             OnGrabStarted?.Invoke(_grabbedObj);
+            Debug.Log("GRAB!!");
+            _grabbedObj.transform.SetParent(transform, true);
         }
 
         public (Grabbable, Collider) FindClosestGrabbable()
