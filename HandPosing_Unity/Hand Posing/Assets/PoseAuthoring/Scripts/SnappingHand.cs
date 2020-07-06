@@ -40,11 +40,11 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
+                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
                     currentGhost = ghost;
-                    currentPose = currentGhost.AdjustPose(bestPose);
+                    currentPose = currentGhost.AdjustPlace(bestPlace);
                     currentAmount = 1f;
                     this.puppet.TransitionToPose(currentPose, currentGhost.RelativeTo, currentAmount, currentAmount);
 
@@ -78,11 +78,11 @@ namespace PoseAuthoring
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
+                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
                     currentGhost = ghost;
-                    currentPose = currentGhost.AdjustPose(bestPose);
+                    currentPose = currentGhost.AdjustPlace(bestPlace);
                     currentAmount = amount;
                 }
                 else

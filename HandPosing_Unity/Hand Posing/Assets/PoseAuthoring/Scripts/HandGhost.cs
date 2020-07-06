@@ -120,7 +120,7 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public float CalculateBestPose(HandSnapPose userPose, out (Vector3, Quaternion) bestPose)
+        public float CalculateBestPlace(HandSnapPose userPose, out (Vector3, Quaternion) bestPlace)
         {
             float bestScore = 0f;
             HandSnapPose snapPose = _snapPoseVolume.pose;
@@ -128,29 +128,29 @@ namespace PoseAuthoring
             if (snapPose.handeness != userPose.handeness
                 && !_snapPoseVolume.ambydextrous)
             {
-                bestPose = (Vector3.zero, Quaternion.identity);
+                bestPlace = (Vector3.zero, Quaternion.identity);
                 return bestScore;
             }
 
             Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
             Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
-            (Vector3, Quaternion) desiredPose = (globalPosDesired, globalRotDesired);
+            (Vector3, Quaternion) desiredPlace = (globalPosDesired, globalRotDesired);
 
-            var similarPose = SimilarPoseAtVolume(userPose, snapPose);
-            var nearestPose = NearestPoseAtVolume(userPose, snapPose);
-            bestPose = GetBestPose(similarPose, nearestPose, desiredPose, out bestScore);
+            var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
+            var nearestPlace = NearestPlaceAtVolume(userPose, snapPose);
+            bestPlace = GetBestPlace(similarPlace, nearestPlace, desiredPlace, out bestScore);
 
             if (_snapPoseVolume.handCanInvert)
             {
                 HandSnapPose invertedPose = _snapPoseVolume.InvertedPose(RelativeTo);
 
-                var similarInvertedPose = SimilarPoseAtVolume(userPose, invertedPose);
-                var nearestInvertedPose = NearestPoseAtVolume(userPose, invertedPose);
-                var bestInvertedPose = GetBestPose(similarInvertedPose, nearestInvertedPose, desiredPose, out float bestInvertedScore);
+                var similarInvertedPlace = SimilarPlaceAtVolume(userPose, invertedPose);
+                var nearestInvertedPlace = NearestPlaceAtVolume(userPose, invertedPose);
+                var bestInvertedPlace = GetBestPlace(similarInvertedPlace, nearestInvertedPlace, desiredPlace, out float bestInvertedScore);
 
                 if (bestInvertedScore > bestScore)
                 {
-                    bestPose = bestInvertedPose;
+                    bestPlace = bestInvertedPlace;
                     return bestInvertedScore;
                 }
 
@@ -159,7 +159,7 @@ namespace PoseAuthoring
             return bestScore;
         }
 
-        private (Vector3, Quaternion) GetBestPose((Vector3, Quaternion) a, (Vector3, Quaternion) b, (Vector3, Quaternion) comparer, out float bestScore)
+        private (Vector3, Quaternion) GetBestPlace((Vector3, Quaternion) a, (Vector3, Quaternion) b, (Vector3, Quaternion) comparer, out float bestScore)
         {
             float aScore = Score(comparer, a);
             float bScore = Score(comparer, b);
@@ -183,7 +183,7 @@ namespace PoseAuthoring
             return forwardDifference * upDifference * positionDifference;
         }
 
-        private (Vector3, Quaternion) NearestPoseAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
+        private (Vector3, Quaternion) NearestPlaceAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
         {
             Vector3 desiredPos = RelativeTo.TransformPoint(userPose.relativeGripPos);
             Quaternion baseRot = RelativeTo.rotation * snapPose.relativeGripRot;
@@ -194,7 +194,7 @@ namespace PoseAuthoring
             return (surfacePoint, surfaceRotation);
         }
 
-        private (Vector3, Quaternion) SimilarPoseAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
+        private (Vector3, Quaternion) SimilarPlaceAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
         {
             CylinderSurface cylinder = _snapPoseVolume.volume;
             Vector3 desiredPos = RelativeTo.TransformPoint(userPose.relativeGripPos);
@@ -212,11 +212,11 @@ namespace PoseAuthoring
             return (surfacePoint, surfaceRotation);
         }
 
-        public HandSnapPose AdjustPose((Vector3, Quaternion) volumePose)
+        public HandSnapPose AdjustPlace((Vector3, Quaternion) volumePlace)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
-            snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(volumePose.Item1);
-            snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * volumePose.Item2;
+            snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(volumePlace.Item1);
+            snapPose.relativeGripRot = Quaternion.Inverse(RelativeTo.rotation) * volumePlace.Item2;
             return snapPose;
         }
     }

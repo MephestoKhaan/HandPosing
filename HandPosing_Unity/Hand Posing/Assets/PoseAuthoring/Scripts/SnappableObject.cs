@@ -37,19 +37,19 @@ namespace PoseAuthoring
             return ghost;
         }
 
-        public HandGhost FindNearsetGhost(HandSnapPose userPose, out float score, out (Vector3, Quaternion) bestPose)
+        public HandGhost FindNearsetGhost(HandSnapPose userPose, out float score, out (Vector3, Quaternion) bestPlace)
         {
             float maxScore = 0f;
             HandGhost nearestGhost = null;
-            bestPose = (Vector3.zero, Quaternion.identity);
+            bestPlace = (Vector3.zero, Quaternion.identity);
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.CalculateBestPose(userPose, out var pose);
+                float poseScore = ghost.CalculateBestPlace(userPose, out var place);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
                     maxScore = poseScore;
-                    bestPose = pose;
+                    bestPlace = place;
                 }
             }
             score = maxScore;

@@ -241,8 +241,7 @@ namespace Interaction
             _grabbedObj = closestGrabbable;
             _grabbedObj.GrabBegin(this, closestGrabbableCollider);
             OnGrabStarted?.Invoke(_grabbedObj);
-            Debug.Log("GRAB!!");
-            _grabbedObj.transform.SetParent(transform, true);
+            //_grabbedObj.transform.SetParent(transform, true);
         }
 
         public (Grabbable, Collider) FindClosestGrabbable()
