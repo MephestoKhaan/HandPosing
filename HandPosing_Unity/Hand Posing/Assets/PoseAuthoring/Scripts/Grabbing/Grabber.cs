@@ -37,9 +37,9 @@ namespace Interaction
 
         public Vector2 GrabThresold { get; private set; }
 
-        public System.Action<Grabbable> OnGrabStarted;
-        public System.Action<Grabbable, float> OnGrabAttemp;
-        public System.Action<Grabbable> OnGrabEnded;
+        public Action<Grabbable> OnGrabStarted;
+        public Action<Grabbable, float> OnGrabAttemp;
+        public Action<Grabbable> OnGrabEnded;
 
         public bool IsGrabbing
         {

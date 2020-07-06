@@ -33,6 +33,8 @@ namespace PoseAuthoring
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
+        public System.Action OnUpdated;
+
         private (Vector3, Quaternion) _originalGripOffset;
         private (Vector3, Quaternion)? _pupettedGripOffset;
         private (Vector3, Quaternion) WorldGripPose
@@ -104,6 +106,7 @@ namespace PoseAuthoring
                 _restored = true;
                 DisableHandTracked();
             }
+            OnUpdated?.Invoke();
         }
 
         private void EnableHandTracked()
@@ -214,8 +217,10 @@ namespace PoseAuthoring
             Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
             Vector3 trackedPosition = worldGrip.Item1 + positionDif;
             this.transform.position = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
-
         }
+
+
+
 
         public HandSnapPose CurrentPoseVisual(Transform relativeTo)
         {

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 using Grabber = Interaction.Grabber;
 using Grabbable = Interaction.Grabbable;
@@ -21,6 +22,8 @@ namespace PoseAuthoring
             grabber.OnGrabAttemp += GrabAttemp;
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
+
+            puppet.OnUpdated += Snap;
         }
 
         private void OnDisable()
@@ -28,6 +31,8 @@ namespace PoseAuthoring
             grabber.OnGrabAttemp -= GrabAttemp;
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
+
+            puppet.OnUpdated -= Snap;
         }
 
         private void GrabStarted(Grabbable grabbable)
@@ -36,10 +41,11 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                currentGhost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
+                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
 
-                if (currentGhost != null)
+                if (ghost != null)
                 {
+                    currentGhost = ghost;
                     currentPose = currentGhost.AdjustPose(bestPose);
                     this.puppet.TransitionToPose(currentPose, snappable.transform, 1f, 1f);
                     currentAmount = 1f;
@@ -52,7 +58,7 @@ namespace PoseAuthoring
             currentGhost = null;
         }
 
-        private void LateUpdate()
+        private void Snap()
         {
             if (currentGhost != null)
             {
@@ -73,14 +79,16 @@ namespace PoseAuthoring
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                
-                currentGhost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
-                if (currentGhost != null)
+                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
+                if (ghost != null)
                 {
+                    currentGhost = ghost;
                     currentPose = currentGhost.AdjustPose(bestPose);
                     currentAmount = amount;
                 }
                 else
                 {
+                    currentGhost = null;
                     currentAmount = 0f;
                 }
             }
