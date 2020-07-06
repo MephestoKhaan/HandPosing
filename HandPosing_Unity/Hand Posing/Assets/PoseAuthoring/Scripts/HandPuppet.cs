@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using static OVRSkeleton;
 using static PoseAuthoring.HandSnapPose;
@@ -171,8 +171,20 @@ namespace PoseAuthoring
 
         }
 
+        public void SetDefaultPose()
+        {
+            (Vector3, Quaternion) worldGrip = WorldGripPose;
+            Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
+            Quaternion trackedRot = rotationDif * worldGrip.Item2;
 
-        public void SetRecordedPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
+            Vector3 positionDif = this.transform.position - this.gripPoint.position;
+            Vector3 trackedPosition = worldGrip.Item1 + positionDif;
+
+            this.transform.rotation = trackedRot;
+            this.transform.position = trackedPosition;
+        }
+
+        public void TransitionToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
             InitializeBones();
 

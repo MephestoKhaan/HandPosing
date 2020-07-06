@@ -8,13 +8,6 @@ namespace Interaction
 {
     public class Grabbable : MonoBehaviour
     {
-        [SerializeField]
-        private int collideLayer;
-        [SerializeField]
-        private int ignoreCollisionLayer;
-
-        public Color highlightColor = Color.white;
-
         public SnappableObject Snappable { get; private set; }
 
         private HashSet<GameObject> _colliderObjects = null;
@@ -58,7 +51,6 @@ namespace Interaction
 
         public virtual void GrabBegin(Grabber hand, Collider grabPoint)
         {
-            EnableCollisions(false);
             _grabbedBy = hand;
             _grabbedCollider = grabPoint;
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -67,7 +59,6 @@ namespace Interaction
 
         public virtual void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
         {
-            EnableCollisions(true);
             Rigidbody rb = gameObject.GetComponent<Rigidbody>();
             rb.isKinematic = _grabbedKinematic;
             rb.velocity = linearVelocity;
@@ -79,7 +70,6 @@ namespace Interaction
 
         public void DistantGrabBegin()
         {
-            EnableCollisions(false);
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
         }
 
@@ -88,15 +78,6 @@ namespace Interaction
             if (!GrabbedBy)
             {
                 GrabEnd(Vector3.zero, Vector3.zero);
-            }
-        }
-
-        private void EnableCollisions(bool canCollide)
-        {
-            int layer = canCollide ? collideLayer : ignoreCollisionLayer;
-            foreach (var collider in _colliderObjects)
-            {
-                collider.layer = layer;
             }
         }
 

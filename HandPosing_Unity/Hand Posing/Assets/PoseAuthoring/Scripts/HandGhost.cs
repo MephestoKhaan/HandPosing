@@ -66,7 +66,7 @@ namespace PoseAuthoring
 
         public void SetPose(HandSnapPose userPose, Transform relativeTo)
         {
-            Puppet.SetRecordedPose(userPose, relativeTo);
+            Puppet.TransitionToPose(userPose, relativeTo);
             RelativeTo = relativeTo;
             _snapPoseVolume = new VolumetricPose()
             {

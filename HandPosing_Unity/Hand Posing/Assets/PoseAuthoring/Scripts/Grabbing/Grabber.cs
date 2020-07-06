@@ -6,8 +6,10 @@ namespace Interaction
 {
     public class Grabber : MonoBehaviour
     {
-        public float grabBegin = 0.55f;
-        public float grabEnd = 0.35f;
+        [SerializeField]
+        private Vector2 grabThresoldController = new Vector2(0.35f, 0.55f);
+        [SerializeField]
+        private Vector2 grabThresoldHand = new Vector2(0.35f, 0.95f);
 
         bool alreadyUpdated = false;
 
@@ -32,6 +34,8 @@ namespace Interaction
         protected Quaternion _grabbedObjectRotOff;
         protected Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
         private bool _nearGrab = false;
+
+        public Vector2 GrabThresold { get; private set; }
 
         public System.Action<Grabbable> OnGrabStarted;
         public System.Action<Grabbable, float> OnGrabAttemp;
@@ -140,11 +144,13 @@ namespace Interaction
         {
             if (trackedHand && trackedHand.IsTracked)
             {
+                GrabThresold = grabThresoldHand;
                 return Math.Max(trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
                      trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
             }
             else
             {
+                GrabThresold = grabThresoldController;
                 return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
             }
         }
@@ -197,19 +203,19 @@ namespace Interaction
 
         protected void CheckForGrabOrRelease(float prevFlex)
         {
-            if ((_prevFlex >= grabBegin) && (prevFlex < grabBegin))
+            if ((_prevFlex >= GrabThresold.y) && (prevFlex < GrabThresold.y))
             {
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if ((_prevFlex <= grabEnd) && (prevFlex > grabEnd))
+            else if ((_prevFlex <= GrabThresold.x) && (prevFlex > GrabThresold.x))
             {
                 GrabEnd();
             }
             else if (GrabbedObject == null && _prevFlex > 0)
             {
                 _nearGrab = true;
-                NearGrab(_prevFlex / grabBegin);
+                NearGrab(_prevFlex / GrabThresold.y);
             }
             else if (_nearGrab)
             {

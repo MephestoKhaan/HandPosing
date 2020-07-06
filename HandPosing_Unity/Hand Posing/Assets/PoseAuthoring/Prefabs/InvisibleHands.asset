@@ -9,7 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
-  m_Name: CylinderPoses
+  m_Script: {fileID: 11500000, guid: 93590be07c671404ba24d67c85f58fa1, type: 3}
+  m_Name: InvisibleHands
   m_EditorClassIdentifier: 
-  _poses: []
+  leftHand: {fileID: 5793644766941875459, guid: e73754068e5f2464184c657a8ae77b97,
+    type: 3}
+  rightHand: {fileID: 7362165940787128986, guid: 5e9970b32a2dcd5479dea4a50fb616fe,
+    type: 3}

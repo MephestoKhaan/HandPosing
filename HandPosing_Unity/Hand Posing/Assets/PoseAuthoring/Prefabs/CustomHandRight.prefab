@@ -1420,7 +1420,7 @@ MonoBehaviour:
     rotationOffset: {x: 0, y: 0, z: 0}
   - id: 16
     transform: {fileID: 1444497012342011746}
-    rotationOffset: {x: -180, y: 180, z: 0}
+    rotationOffset: {x: -170, y: 180, z: 0}
   - id: 17
     transform: {fileID: 1444223270861977528}
     rotationOffset: {x: 0, y: 0, z: 0}
@@ -1467,8 +1467,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea32692d782ba44691f58983dfa68e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabBegin: 0.85
-  grabEnd: 0.55
+  grabThresoldController: {x: 0.35, y: 0.55}
+  grabThresoldHand: {x: 0.35, y: 0.95}
   trackedHand: {fileID: 0}
   _gripTransform: {fileID: 1442438993032791978}
   _grabVolumes:

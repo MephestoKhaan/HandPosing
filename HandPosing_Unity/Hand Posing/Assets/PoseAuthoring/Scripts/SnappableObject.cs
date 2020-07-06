@@ -60,7 +60,7 @@ namespace PoseAuthoring
         {
             foreach (var volumetricPose in volumetricPosesCollection.Poses)
             {
-                AddPose(volumetricPose);
+                AddPose(volumetricPose.Clone());
             }
         }
 

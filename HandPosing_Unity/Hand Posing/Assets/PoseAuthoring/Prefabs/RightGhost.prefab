@@ -445,7 +445,7 @@ MonoBehaviour:
   handRenderer: {fileID: 7100964493634904582}
   highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColor: {r: 0, g: 0, b: 1, a: 1}
-  colorProperty: _RimColor
+  colorProperty: _Color
   StaticPose: 
   Duplicate: 
   _snapPoseVolume:
@@ -1460,13 +1460,12 @@ SkinnedMeshRenderer:
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 944feb076639a4d39b750e3cb5d7dfab, type: 2}
+  - {fileID: 2100000, guid: bd0bb729cb6159b4ab21c5f62cad24ee, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
