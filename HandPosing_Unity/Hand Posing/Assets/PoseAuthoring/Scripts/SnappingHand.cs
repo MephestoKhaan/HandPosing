@@ -12,9 +12,18 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppet;
 
+        [SerializeField]
+        [Tooltip("Use it if you want the hand to return to the tracked position when grabbing.")]
+        private bool snapsBacksOrientation;
+
+        private const float SNAPBACK_TIME = 0.4f;
+
         private HandGhost currentGhost;
-        private HandSnapPose currentPose;
-        private float currentAmount;
+        private HandSnapPose poseInVolume;
+        private float grabbingAmount;
+        private float offsetAmount;
+        private float grabStartTime;
+        private bool isGrabbing;
 
         private void OnEnable()
         {
@@ -41,12 +50,17 @@ namespace PoseAuthoring
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
+
                 if (ghost != null)
                 {
                     currentGhost = ghost;
-                    currentPose = currentGhost.AdjustPlace(bestPlace);
-                    currentAmount = 1f;
-                    this.puppet.TransitionToPose(currentPose, currentGhost.RelativeTo, currentAmount, currentAmount);
+                    poseInVolume = currentGhost.AdjustPlace(bestPlace);
+                    grabbingAmount = 1f;
+                    offsetAmount = 1f;
+                    grabStartTime = Time.timeSinceLevelLoad;
+                    isGrabbing = true;
+                    this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, 1f);
+
                 }
             }
         }
@@ -54,19 +68,26 @@ namespace PoseAuthoring
         private void GrabEnded(Grabbable obj)
         {
             currentGhost = null;
+            isGrabbing = false;
         }
 
         private void Snap()
         {
             if (currentGhost != null)
             {
-                this.puppet.TransitionToPose(currentPose, currentGhost.RelativeTo, currentAmount, currentAmount);
+                if(snapsBacksOrientation && isGrabbing)
+                {
+                    offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
+                }
+
+                this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, offsetAmount);
             }
         }
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
-            if(grabbable == null)
+            isGrabbing = false;
+            if (grabbable == null)
             {
                 currentGhost = null;
                 this.puppet.SetDefaultPose();
@@ -76,18 +97,18 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-               
+
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
                     currentGhost = ghost;
-                    currentPose = currentGhost.AdjustPlace(bestPlace);
-                    currentAmount = amount;
+                    poseInVolume = currentGhost.AdjustPlace(bestPlace);
+                    offsetAmount = grabbingAmount = amount;
                 }
                 else
                 {
                     currentGhost = null;
-                    currentAmount = 0f;
+                    offsetAmount = grabbingAmount = 0f;
                 }
             }
         }
