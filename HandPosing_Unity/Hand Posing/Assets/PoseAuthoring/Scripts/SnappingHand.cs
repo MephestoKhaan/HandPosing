@@ -47,7 +47,6 @@ namespace PoseAuthoring
                     currentPose = currentGhost.AdjustPlace(bestPlace);
                     currentAmount = 1f;
                     this.puppet.TransitionToPose(currentPose, currentGhost.RelativeTo, currentAmount, currentAmount);
-
                 }
             }
         }

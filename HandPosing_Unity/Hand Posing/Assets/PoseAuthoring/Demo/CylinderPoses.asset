@@ -12,4 +12,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
   m_Name: CylinderPoses
   m_EditorClassIdentifier: 
-  _poses: []
+  _poses:
+  - pose:
+      relativeGripPos: {x: 0.025527298, y: 0.041935205, z: 0.00526762}
+      relativeGripRot: {x: -0.25058773, y: 0.51960075, z: 0.6630064, w: -0.47711998}
+      handeness: 1
+      _bones:
+      - boneID: 2
+        rotation: {x: 0.21268162, y: 0.9555685, z: 0.035867434, w: 0.20092037}
+      - boneID: 4
+        rotation: {x: -0.0832178, y: 0.06890576, z: -0.015563726, w: 0.99402446}
+      - boneID: 5
+        rotation: {x: 0.08358035, y: -0.06534133, z: 0.062413994, w: 0.9923958}
+      - boneID: 6
+        rotation: {x: 0.025570605, y: 0.72614884, z: 0.6867778, w: -0.019756392}
+      - boneID: 7
+        rotation: {x: -0.026103707, y: -0.0016913681, z: -0.3285975, w: 0.9441078}
+      - boneID: 8
+        rotation: {x: -0.016874988, y: 0.024161687, z: -0.10491905, w: 0.994044}
+      - boneID: 9
+        rotation: {x: -0.09368336, y: 0.69831586, z: 0.7059632, w: -0.07207268}
+      - boneID: 10
+        rotation: {x: -0.012835603, y: -0.00018125841, z: -0.3753231, w: 0.92680514}
+      - boneID: 11
+        rotation: {x: -0.06856129, y: -0.011318107, z: -0.27135462, w: 0.9599677}
+      - boneID: 12
+        rotation: {x: -0.13093784, y: 0.6622004, z: 0.73202807, w: -0.09209151}
+      - boneID: 13
+        rotation: {x: -0.040445134, y: -0.009591171, z: -0.36885864, w: 0.9285556}
+      - boneID: 14
+        rotation: {x: -0.014598746, y: -0.029617881, z: -0.21431887, w: 0.97620547}
+      - boneID: 16
+        rotation: {x: -0.07220855, y: 0.17451791, z: 0.98153085, w: 0.030442484}
+      - boneID: 17
+        rotation: {x: -0.05711681, y: 0.032822013, z: -0.21978892, w: 0.9733208}
+      - boneID: 18
+        rotation: {x: 0.0011517536, y: -0.048693843, z: -0.12456997, w: 0.9910146}
+    volume:
+      _startPoint: {x: 0.13659696, y: -0.013718395, z: -0.04447572}
+      _endPoint: {x: -0.042018767, y: -0.014667087, z: 0.045499593}
+      _angle: 360
+    ambydextrous: 0
+    handCanInvert: 1
+    maxDistance: 0.1

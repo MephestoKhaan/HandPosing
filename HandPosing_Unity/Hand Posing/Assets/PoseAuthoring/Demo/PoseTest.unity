@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &341260605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,7 +927,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &924816147
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -940,7 +940,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29cb79e7135f12546ac3616b354da9c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  volumetricPosesCollection: {fileID: 0}
+  volumetricPosesCollection: {fileID: 11400000, guid: 6bde19845efeee1438530fd692c7db84,
+    type: 2}
   handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
 --- !u!114 &924816148
@@ -979,7 +980,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 924816146}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3, z: 0.4}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 498266811}
@@ -1692,6 +1693,21 @@ PrefabInstance:
       propertyPath: trackedHand
       value: 
       objectReference: {fileID: 114428880678883142}
+    - target: {fileID: 4635681503502107842, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
+        type: 3}
+      propertyPath: grabThresoldHand.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635681503502107842, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
+        type: 3}
+      propertyPath: grabThresoldHand.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635681503502107842, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
+        type: 3}
+      propertyPath: grabThresoldController.y
+      value: 0.85
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 886cb81ddb5a38541bfc87cbb5fabfd5, type: 3}
 --- !u!1001 &1442438992338314128
@@ -1761,6 +1777,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604908, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: trackedHand
@@ -1776,6 +1797,26 @@ PrefabInstance:
       propertyPath: trackedHand
       value: 
       objectReference: {fileID: 114428878996493852}
+    - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: grabThresoldHand.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: grabThresoldHand.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: grabThresoldController.y
+      value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 9204550037820855142, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 23b1fe0762145904ba4ff0b82e7de514, type: 3}
 --- !u!1 &6532407849566523864
