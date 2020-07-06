@@ -21,9 +21,14 @@ namespace Interaction
         [SerializeField]
         protected OVRInput.Controller m_controller;
 
-        protected bool _grabVolumeEnabled = true;
+        protected Vector3 _lastPos;
+        protected Quaternion _lastRot;
         protected Quaternion _anchorOffsetRotation;
         protected Vector3 _anchorOffsetPosition;
+        protected Vector3 _grabbedObjectPosOff;
+        protected Quaternion _grabbedObjectRotOff;
+
+        protected bool _grabVolumeEnabled = true;
         protected float _prevFlex;
         protected Grabbable _grabbedObj = null;
         protected Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
@@ -34,6 +39,8 @@ namespace Interaction
         public Action<Grabbable> OnGrabStarted;
         public Action<Grabbable, float> OnGrabAttemp;
         public Action<Grabbable> OnGrabEnded;
+
+
 
         public bool IsGrabbing
         {
@@ -100,10 +107,16 @@ namespace Interaction
 
         void LateUpdate()
         {
+            _lastPos = transform.position;
+            _lastRot = transform.rotation;
+
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
 
             CheckForGrabOrRelease(prevFlex);
+
+            //change this in order to support other types of snapping.
+            MoveGrabbedObject(_lastPos, _lastRot, true);
         }
 
         public float CurrentFlex()
@@ -241,6 +254,18 @@ namespace Interaction
             _grabbedObj = closestGrabbable;
             _grabbedObj.GrabBegin(this, closestGrabbableCollider);
             OnGrabStarted?.Invoke(_grabbedObj);
+
+            Vector3 relPos = _grabbedObj.transform.position - transform.position;
+            relPos = Quaternion.Inverse(transform.rotation) * relPos;
+            _grabbedObjectPosOff = relPos;
+
+            Quaternion relOri = Quaternion.Inverse(transform.rotation) * _grabbedObj.transform.rotation;
+            _grabbedObjectRotOff = relOri;
+
+            _lastPos = transform.position;
+            _lastRot = transform.rotation;
+
+
             //_grabbedObj.transform.SetParent(transform, true);
         }
 
@@ -328,5 +353,30 @@ namespace Interaction
                 GrabbableRelease(Vector3.zero, Vector3.zero);
             }
         }
+
+        protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot, bool forceTeleport = false)
+        {
+            if (_grabbedObj == null
+                || _grabbedObj.GrabbedBody == null)
+            {
+                return;
+            }
+
+            Rigidbody grabbedRigidbody = _grabbedObj.GrabbedBody;
+            Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
+            Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
+
+            if (forceTeleport)
+            {
+                grabbedRigidbody.transform.position = grabbablePosition;
+                grabbedRigidbody.transform.rotation = grabbableRotation;
+            }
+            else
+            {
+                grabbedRigidbody.MovePosition(grabbablePosition);
+                grabbedRigidbody.MoveRotation(grabbableRotation);
+            }
+        }
+
     }
 }
