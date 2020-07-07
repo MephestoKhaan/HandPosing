@@ -12,6 +12,8 @@ namespace Interaction
         private bool _canMove = true;
         [SerializeField]
         private bool _physicsMove = false;
+        [SerializeField]
+        private bool _handSnapsBack = true;
 
         public SnappableObject Snappable { get; private set; }
 
@@ -62,6 +64,13 @@ namespace Interaction
                 return _physicsMove;
             }
         }
+        public bool HandSnapBacks
+        {
+            get
+            {
+                return _handSnapsBack && CanMove;
+            }
+        }
 
         public Collider[] GrabPoints
         {
@@ -90,16 +99,22 @@ namespace Interaction
         }
 
 
-        public void DistantGrabBegin()
+        public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
         {
-            gameObject.GetComponent<Rigidbody>().isKinematic = true;
-        }
-
-        public void DistantGrabEnds()
-        {
-            if (!GrabbedBy)
+            if(!CanMove)
             {
-                GrabEnd(Vector3.zero, Vector3.zero);
+                return;
+            }
+
+            if (PhysicsMove) //probably needs to be called from FixedUpdate?
+            {
+                GrabbedBody?.MovePosition(desiredPos);
+                GrabbedBody?.MoveRotation(desiredRot);
+            }
+            else
+            {
+                this.transform.position = desiredPos;
+                this.transform.rotation = desiredRot;
             }
         }
 

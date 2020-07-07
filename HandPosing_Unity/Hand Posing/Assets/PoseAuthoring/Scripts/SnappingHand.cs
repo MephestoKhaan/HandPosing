@@ -12,9 +12,6 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppet;
 
-        [SerializeField]
-        private bool snapsBacksOrientation;
-
         private const float SNAPBACK_TIME = 0.4f;
 
         private HandGhost currentGhost;
@@ -22,7 +19,7 @@ namespace PoseAuthoring
         private float grabbingAmount;
         private float offsetAmount;
         private float grabStartTime;
-        private bool shouldReorient;
+        private bool snapBack;
 
         private void OnEnable()
         {
@@ -57,7 +54,7 @@ namespace PoseAuthoring
                     grabbingAmount = 1f;
                     offsetAmount = 1f;
                     grabStartTime = Time.timeSinceLevelLoad;
-                    shouldReorient = grabbable.CanMove;
+                    snapBack = grabbable.HandSnapBacks;
                     this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, 1f);
 
                 }
@@ -67,14 +64,14 @@ namespace PoseAuthoring
         private void GrabEnded(Grabbable obj)
         {
             currentGhost = null;
-            shouldReorient = false;
+            snapBack = false;
         }
 
         private void Snap()
         {
             if (currentGhost != null)
             {
-                if(snapsBacksOrientation && shouldReorient)
+                if(snapBack)
                 {
                     offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
                 }
@@ -85,7 +82,7 @@ namespace PoseAuthoring
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
-            shouldReorient = false;
+            snapBack = false;
             if (grabbable == null)
             {
                 currentGhost = null;

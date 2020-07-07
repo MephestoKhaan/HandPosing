@@ -351,27 +351,15 @@ namespace Interaction
 
         protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot)
         {
-            if (_grabbedObj == null
-                || !_grabbedObj.CanMove
-                || _grabbedObj.GrabbedBody == null)
+            if (_grabbedObj == null)
             {
                 return;
             }
 
-            Rigidbody grabbedRigidbody = _grabbedObj.GrabbedBody;
             Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
             Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
 
-            if (_grabbedObj.PhysicsMove) //probably needs to be called from FixedUpdate?
-            {
-                grabbedRigidbody.MovePosition(grabbablePosition);
-                grabbedRigidbody.MoveRotation(grabbableRotation);
-            }
-            else
-            {
-                grabbedRigidbody.transform.position = grabbablePosition;
-                grabbedRigidbody.transform.rotation = grabbableRotation;
-            }
+            _grabbedObj.MoveTo(grabbablePosition, grabbableRotation);
         }
 
     }
