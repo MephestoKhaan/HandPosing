@@ -9,4 +9,4 @@ You need to download the **Oculus Utilities** from the Asset Store, as this requ
 Open the **PoseTest** scene, the most important bit are the bindings in **RightHandAnchor** and **LeftHandAnchor** that demonstrates what joints from the tracked hand correspond to the ones in the model (pay special attention to the thumb and the pinky) and their offsets. As well as a set of grabbing experiments that shows the different grab behaviours.
 
 
-Please refer to the **Wiki** for the documentation.
+Please refer to the ![Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for the documentation.
