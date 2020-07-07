@@ -12,11 +12,14 @@ namespace PoseAuthoring
         [SerializeField]
         private Grabber grabber;
 
+        [SerializeField]
+        private KeyCode recordKey = KeyCode.Space;
+            
         private HandGhost previousGhost;
 
         private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.Space))
+        {   
+            if(Input.GetKeyDown(recordKey))
             {
                 RecordPose();
             }

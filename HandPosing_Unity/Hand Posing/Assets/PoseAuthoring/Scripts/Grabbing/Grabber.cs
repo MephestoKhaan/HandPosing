@@ -40,8 +40,6 @@ namespace Interaction
         public Action<Grabbable, float> OnGrabAttemp;
         public Action<Grabbable> OnGrabEnded;
 
-
-
         public bool IsGrabbing
         {
             get
@@ -163,13 +161,11 @@ namespace Interaction
             {
                 return;
             }
-
             bool found = _grabCandidates.TryGetValue(grabbable, out int refCount);
             if (!found)
             {
                 return;
             }
-
             if (refCount > 1)
             {
                 _grabCandidates[grabbable] = refCount - 1;
