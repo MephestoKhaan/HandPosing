@@ -116,7 +116,7 @@ namespace Interaction
             CheckForGrabOrRelease(prevFlex);
 
             //change this in order to support other types of snapping.
-            MoveGrabbedObject(_lastPos, _lastRot, true);
+            MoveGrabbedObject(_lastPos, _lastRot);
         }
 
         public float CurrentFlex()
@@ -264,9 +264,6 @@ namespace Interaction
 
             _lastPos = transform.position;
             _lastRot = transform.rotation;
-
-
-            //_grabbedObj.transform.SetParent(transform, true);
         }
 
         public (Grabbable, Collider) FindClosestGrabbable()
@@ -275,7 +272,6 @@ namespace Interaction
             Grabbable closestGrabbable = null;
             Collider closestGrabbableCollider = null;
 
-            // Iterate grab candidates and find the closest grabbable candidate
             foreach (Grabbable grabbable in _grabCandidates.Keys)
             {
                 for (int j = 0; j < grabbable.GrabPoints.Length; ++j)
@@ -285,7 +281,6 @@ namespace Interaction
                     {
                         continue;
                     }
-                    // Store the closest grabbable
                     Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(_gripTransform.position);
                     float grabbableMagSq = (_gripTransform.position - closestPointOnBounds).sqrMagnitude;
                     if (grabbableMagSq < closestMagSq)
@@ -354,9 +349,10 @@ namespace Interaction
             }
         }
 
-        protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot, bool forceTeleport = false)
+        protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot)
         {
             if (_grabbedObj == null
+                || !_grabbedObj.CanMove
                 || _grabbedObj.GrabbedBody == null)
             {
                 return;
@@ -366,15 +362,15 @@ namespace Interaction
             Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
             Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
 
-            if (forceTeleport)
-            {
-                grabbedRigidbody.transform.position = grabbablePosition;
-                grabbedRigidbody.transform.rotation = grabbableRotation;
-            }
-            else
+            if (_grabbedObj.PhysicsMove) //probably needs to be called from FixedUpdate?
             {
                 grabbedRigidbody.MovePosition(grabbablePosition);
                 grabbedRigidbody.MoveRotation(grabbableRotation);
+            }
+            else
+            {
+                grabbedRigidbody.transform.position = grabbablePosition;
+                grabbedRigidbody.transform.rotation = grabbableRotation;
             }
         }
 

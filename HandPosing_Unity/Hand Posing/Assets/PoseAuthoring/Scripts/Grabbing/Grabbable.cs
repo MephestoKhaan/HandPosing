@@ -8,6 +8,11 @@ namespace Interaction
 {
     public class Grabbable : MonoBehaviour
     {
+        [SerializeField]
+        private bool _canMove = true;
+        [SerializeField]
+        private bool _physicsMove = false;
+
         public SnappableObject Snappable { get; private set; }
 
         private HashSet<GameObject> _colliderObjects = null;
@@ -16,6 +21,8 @@ namespace Interaction
         private bool _grabbedKinematic = false;
         private Collider _grabbedCollider = null;
         private Grabber _grabbedBy = null;
+
+        
 
         public bool IsGrabbed
         {
@@ -38,6 +45,21 @@ namespace Interaction
             get
             {
                 return _grabbedCollider.attachedRigidbody;
+            }
+        }
+
+        public bool CanMove
+        {
+            get
+            {
+                return _canMove;
+            }
+        }
+        public bool PhysicsMove
+        {
+            get
+            {
+                return _physicsMove;
             }
         }
 

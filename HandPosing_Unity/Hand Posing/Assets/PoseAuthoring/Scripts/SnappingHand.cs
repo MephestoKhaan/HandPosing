@@ -13,7 +13,6 @@ namespace PoseAuthoring
         private HandPuppet puppet;
 
         [SerializeField]
-        [Tooltip("Use it if you want the hand to return to the tracked position when grabbing.")]
         private bool snapsBacksOrientation;
 
         private const float SNAPBACK_TIME = 0.4f;
@@ -23,7 +22,7 @@ namespace PoseAuthoring
         private float grabbingAmount;
         private float offsetAmount;
         private float grabStartTime;
-        private bool isGrabbing;
+        private bool shouldReorient;
 
         private void OnEnable()
         {
@@ -58,7 +57,7 @@ namespace PoseAuthoring
                     grabbingAmount = 1f;
                     offsetAmount = 1f;
                     grabStartTime = Time.timeSinceLevelLoad;
-                    isGrabbing = true;
+                    shouldReorient = grabbable.CanMove;
                     this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, 1f);
 
                 }
@@ -68,14 +67,14 @@ namespace PoseAuthoring
         private void GrabEnded(Grabbable obj)
         {
             currentGhost = null;
-            isGrabbing = false;
+            shouldReorient = false;
         }
 
         private void Snap()
         {
             if (currentGhost != null)
             {
-                if(snapsBacksOrientation && isGrabbing)
+                if(snapsBacksOrientation && shouldReorient)
                 {
                     offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
                 }
@@ -86,7 +85,7 @@ namespace PoseAuthoring
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
-            isGrabbing = false;
+            shouldReorient = false;
             if (grabbable == null)
             {
                 currentGhost = null;

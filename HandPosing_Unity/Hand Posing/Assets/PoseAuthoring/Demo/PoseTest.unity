@@ -266,6 +266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canMove: 1
+  _physicsMove: 0
 --- !u!54 &341260607
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -956,6 +958,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canMove: 0
+  _physicsMove: 0
 --- !u!54 &924816149
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1221,6 +1225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _canMove: 1
+  _physicsMove: 0
 --- !u!4 &1506398626
 Transform:
   m_ObjectHideFlags: 0
@@ -1776,6 +1782,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604907, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: snapsBacksOrientation
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1442438993745604908, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}

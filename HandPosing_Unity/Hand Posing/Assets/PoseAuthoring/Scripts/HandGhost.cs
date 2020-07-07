@@ -92,14 +92,20 @@ namespace PoseAuthoring
 
         public void Highlight(float amount)
         {
-            Color color = Color.Lerp(defaultColor, highlightedColor, amount);
-            handRenderer.material.SetColor(colorIndex, color);
+            if(handRenderer != null)
+            {
+                Color color = Color.Lerp(defaultColor, highlightedColor, amount);
+                handRenderer.material.SetColor(colorIndex, color);
+            }
         }
 
         public void Highlight(bool highlight)
         {
-            Color color = highlight ? highlightedColor : defaultColor;
-            handRenderer.material.SetColor(colorIndex, color);
+            if (handRenderer != null)
+            {
+                Color color = highlight ? highlightedColor : defaultColor;
+                handRenderer.material.SetColor(colorIndex, color);
+            }
         }
 
         public void MakeStaticPose()
