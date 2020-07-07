@@ -244,7 +244,7 @@ MonoBehaviour:
   handRenderer: {fileID: 4977550477461104506}
   highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   defaultColor: {r: 0, g: 0, b: 1, a: 1}
-  colorProperty: _Color
+  colorProperty: _RimColor
   StaticPose: 
   Duplicate: 
   _snapPoseVolume:
@@ -1079,7 +1079,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6ea491f82329b774d8b8af4a409d8d03, type: 3}
+  - {fileID: 2100000, guid: 944feb076639a4d39b750e3cb5d7dfab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
