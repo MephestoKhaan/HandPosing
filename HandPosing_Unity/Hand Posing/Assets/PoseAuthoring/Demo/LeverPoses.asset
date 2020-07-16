@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
+  m_Name: LeverPoses
+  m_EditorClassIdentifier: 
+  _poses:
+  - pose:
+      relativeGripPos: {x: 0.00856483, y: 0.22638074, z: -0.022140548}
+      relativeGripRot: {x: 0.5642807, y: 0.14710514, z: -0.1418419, w: -0.7998928}
+      handeness: 1
+      _bones:
+      - boneID: 2
+        rotation: {x: 0.2286479, y: 0.9512686, z: 0.04611313, w: 0.20169736}
+      - boneID: 4
+        rotation: {x: -0.082502164, y: 0.05617183, z: -0.15790698, w: 0.98239684}
+      - boneID: 5
+        rotation: {x: 0.080974996, y: -0.055882726, z: -0.052891016, w: 0.9937418}
+      - boneID: 6
+        rotation: {x: 0.004054003, y: 0.7248906, z: 0.6736123, w: 0.14409624}
+      - boneID: 7
+        rotation: {x: -0.02622877, y: -0.000597405, z: -0.28978786, w: 0.95673126}
+      - boneID: 8
+        rotation: {x: -0.016859533, y: 0.02425396, z: -0.100096494, w: 0.9945392}
+      - boneID: 9
+        rotation: {x: -0.11049838, y: 0.6928998, z: 0.705896, w: 0.09690577}
+      - boneID: 10
+        rotation: {x: -0.012858684, y: -0.00034898153, z: -0.38818362, w: 0.9214923}
+      - boneID: 11
+        rotation: {x: -0.04989225, y: -0.002282571, z: -0.064899504, w: 0.9966412}
+      - boneID: 12
+        rotation: {x: -0.16206774, y: 0.65340346, z: 0.7393011, w: 0.015230311}
+      - boneID: 13
+        rotation: {x: -0.040535215, y: -0.009856245, z: -0.37649545, w: 0.9254788}
+      - boneID: 14
+        rotation: {x: -0.013250429, y: -0.029657207, z: -0.184983, w: 0.9822048}
+      - boneID: 16
+        rotation: {x: -0.12338028, y: 0.17556557, z: 0.97670543, w: 0.0007989332}
+      - boneID: 17
+        rotation: {x: -0.068406254, y: 0.025037562, z: -0.3690166, w: 0.92656386}
+      - boneID: 18
+        rotation: {x: 0.0013736404, y: -0.04812177, z: -0.19115295, w: 0.980379}
+    volume:
+      _startPoint: {x: 0, y: 0, z: 0}
+      _endPoint: {x: 0, y: 0, z: 0}
+      _angle: 0
+    ambydextrous: 0
+    handCanInvert: 0
+    maxDistance: 0.1
