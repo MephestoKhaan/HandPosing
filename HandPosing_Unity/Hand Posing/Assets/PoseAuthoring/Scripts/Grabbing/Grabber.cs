@@ -312,7 +312,6 @@ namespace Interaction
         protected void GrabbableRelease(Vector3 linearVelocity, Vector3 angularVelocity)
         {
             _grabbedObj.GrabEnd(linearVelocity, angularVelocity);
-            _grabbedObj.transform.parent = null;
             OnGrabEnded?.Invoke(_grabbedObj);
             _grabbedObj = null;
         }
