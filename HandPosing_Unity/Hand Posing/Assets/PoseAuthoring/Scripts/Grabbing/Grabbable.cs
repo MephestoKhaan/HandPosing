@@ -12,18 +12,17 @@ namespace Interaction
         private bool _canMove = true;
         [SerializeField]
         private bool _physicsMove = false;
-        [SerializeField]
-        private bool _handSnapsBack = true;
 
         public SnappableObject Snappable { get; private set; }
 
         private HashSet<GameObject> _colliderObjects = null;
 
         private Collider[] _grabPoints = null;
-        private bool _grabbedKinematic = false;
+        private bool _isKinematic = false;
         private Collider _grabbedCollider = null;
         private Grabber _grabbedBy = null;
 
+        private (Vector3, Quaternion)? desiredPhysicsPose;
         
 
         public bool IsGrabbed
@@ -64,13 +63,6 @@ namespace Interaction
                 return _physicsMove;
             }
         }
-        public bool HandSnapBacks
-        {
-            get
-            {
-                return _handSnapsBack && CanMove;
-            }
-        }
 
         public Collider[] GrabPoints
         {
@@ -84,18 +76,25 @@ namespace Interaction
         {
             _grabbedBy = hand;
             _grabbedCollider = grabPoint;
-            gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            if(!PhysicsMove)
+            {
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+            }
         }
 
 
         public virtual void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
         {
-            Rigidbody rb = gameObject.GetComponent<Rigidbody>();
-            rb.isKinematic = _grabbedKinematic;
-            rb.velocity = linearVelocity;
-            rb.angularVelocity = angularVelocity;
+            if(GrabbedBody != null)
+            {
+                Rigidbody rb = GrabbedBody;
+                rb.isKinematic = _isKinematic;
+                rb.velocity = linearVelocity;
+                rb.angularVelocity = angularVelocity;
+            }
             _grabbedBy = null;
             _grabbedCollider = null;
+            desiredPhysicsPose = null;
         }
 
 
@@ -106,10 +105,9 @@ namespace Interaction
                 return;
             }
 
-            if (PhysicsMove) //probably needs to be called from FixedUpdate?
+            if (PhysicsMove)
             {
-                GrabbedBody?.MovePosition(desiredPos);
-                GrabbedBody?.MoveRotation(desiredRot);
+                desiredPhysicsPose = (desiredPos, desiredRot);
             }
             else
             {
@@ -147,9 +145,19 @@ namespace Interaction
             }
         }
 
+        private void LateUpdate()
+        {
+            if(desiredPhysicsPose.HasValue && GrabbedBody != null)
+            {
+                GrabbedBody.MovePosition(desiredPhysicsPose.Value.Item1);
+                GrabbedBody.MoveRotation(desiredPhysicsPose.Value.Item2);
+               
+            }
+        }
+
         protected virtual void Start()
         {
-            _grabbedKinematic = this.GetComponent<Rigidbody>().isKinematic;
+            _isKinematic = this.GetComponent<Rigidbody>().isKinematic;
         }
 
         private void OnDisable()
