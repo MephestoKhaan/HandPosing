@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _poses:
   - pose:
-      relativeGripPos: {x: 0.08362287, y: -0.04209304, z: -0.13003549}
-      relativeGripRot: {x: 0.96294516, y: 0.17753883, z: -0.08381698, w: -0.18490906}
+      relativeGripPos: {x: -0.027537823, y: -0.04209304, z: 0.1521305}
+      relativeGripRot: {x: -0.2699373, y: -0.21597278, z: -0.92812854, w: -0.13808386}
       handeness: 1
       _bones:
       - boneID: 2
@@ -51,13 +51,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: -0.08790329, y: -0.08019784, z: -0.09881686}
       _endPoint: {x: -0.09131284, y: -0.07225652, z: -0.10180068}
-      _angle: 360
+      _angle: 249.73135
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: -0.11164889, y: -0.050233006, z: -0.082834035}
-      relativeGripRot: {x: -0.6537682, y: -0.17370191, z: -0.72176635, w: -0.14652038}
+      relativeGripPos: {x: -0.026635736, y: -0.050233006, z: 0.13644595}
+      relativeGripRot: {x: -0.9592393, y: -0.21659034, z: 0.16798638, w: 0.06876913}
       handeness: 1
       _bones:
       - boneID: 2
@@ -93,13 +93,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: 0.06491257, y: 0.03353723, z: 0.11839664}
       _endPoint: {x: 0.061323527, y: 0.040874623, z: 0.11791253}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: -0.02902025, y: -0.04037237, z: -0.13970527}
-      relativeGripRot: {x: -0.95220715, y: 0.23358694, z: -0.09428879, w: 0.1727668}
+      relativeGripPos: {x: -0.029261291, y: -0.04037237, z: 0.13965501}
+      relativeGripRot: {x: -0.2867688, y: 0.21683045, z: 0.91288143, w: -0.19337991}
       handeness: 0
       _bones:
       - boneID: 2
@@ -135,13 +135,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: 0.036587637, y: -0.06854063, z: -0.11979991}
       _endPoint: {x: 0.040103517, y: -0.06241963, z: -0.12189849}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: 0.02902031, y: 0.04037237, z: -0.13970527}
-      relativeGripRot: {x: -0.23358749, y: -0.952207, z: 0.17276675, w: 0.094288886}
+      relativeGripPos: {x: 0.14233285, y: 0.04037237, z: -0.010055348}
+      relativeGripRot: {x: 0.29051924, y: 0.816236, z: 0.0031668767, w: 0.49934697}
       handeness: 0
       _bones:
       - boneID: 2
@@ -177,13 +177,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: 0.036587637, y: -0.06854063, z: -0.11979991}
       _endPoint: {x: 0.040103517, y: -0.06241963, z: -0.12189849}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: -0.08362281, y: 0.04209304, z: -0.13003549}
-      relativeGripRot: {x: -0.17753826, y: 0.9629453, z: -0.1849091, w: 0.08381688}
+      relativeGripPos: {x: 0.1538187, y: 0.04209304, z: -0.01555036}
+      relativeGripRot: {x: 0.06483557, y: 0.43188766, z: -0.2480072, w: 0.86473227}
       handeness: 1
       _bones:
       - boneID: 2
@@ -219,13 +219,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: -0.08790329, y: -0.08019784, z: -0.09881686}
       _endPoint: {x: -0.09131284, y: -0.07225652, z: -0.10180068}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: 0.11164895, y: 0.050232887, z: -0.082834035}
-      relativeGripRot: {x: 0.17370154, y: -0.6537683, z: -0.1465208, w: 0.7217663}
+      relativeGripPos: {x: 0.13847268, y: 0.050232887, z: -0.012340769}
+      relativeGripRot: {x: 0.20693484, y: -0.82504666, z: -0.09390708, w: 0.5173561}
       handeness: 1
       _bones:
       - boneID: 2
@@ -261,13 +261,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: 0.06491257, y: 0.03353723, z: 0.11839664}
       _endPoint: {x: 0.061323527, y: 0.040874623, z: 0.11791253}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: -0.1323442, y: -0.04252112, z: 0.062479973}
-      relativeGripRot: {x: -0.7170014, y: -0.0033582046, z: -0.6501738, w: 0.25134027}
+      relativeGripPos: {x: -0.032553554, y: -0.04252112, z: 0.14268501}
+      relativeGripRot: {x: -0.92916083, y: 0.10691557, z: -0.2710665, w: 0.22749126}
       handeness: 0
       _bones:
       - boneID: 2
@@ -303,13 +303,13 @@ MonoBehaviour:
     volume:
       _startPoint: {x: -0.038810696, y: 0.063689396, z: 0.12595245}
       _endPoint: {x: -0.03720432, y: 0.0680477, z: 0.12413266}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
-      relativeGripPos: {x: 0.13234447, y: 0.042520404, z: 0.062479973}
-      relativeGripRot: {x: 0.0033560891, y: -0.7170014, z: 0.25133836, w: 0.6501745}
+      relativeGripPos: {x: 0.14571083, y: 0.042520404, z: -0.01368089}
+      relativeGripRot: {x: 0.06963421, y: -0.5197697, z: 0.2415229, w: 0.81649077}
       handeness: 0
       _bones:
       - boneID: 2
@@ -345,7 +345,7 @@ MonoBehaviour:
     volume:
       _startPoint: {x: -0.038810696, y: 0.063689396, z: 0.12595245}
       _endPoint: {x: -0.03720432, y: 0.0680477, z: 0.12413266}
-      _angle: 360
+      _angle: 250
     ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
