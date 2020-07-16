@@ -11,8 +11,20 @@ namespace PoseAuthoring
         public HandProvider handProvider;
         [InspectorButton("SaveToAsset")]
         public string StorePoses;
+        [Space]
+        [SerializeField]
+        private bool canSnapBack = true;
 
         private List<HandGhost> ghosts = new List<HandGhost>();
+
+
+        public bool HandSnapBacks
+        {
+            get
+            {
+                return canSnapBack;
+            }
+        }
 
         private void Start()
         {

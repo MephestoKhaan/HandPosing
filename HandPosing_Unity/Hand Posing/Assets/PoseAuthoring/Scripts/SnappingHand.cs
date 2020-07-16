@@ -54,7 +54,7 @@ namespace PoseAuthoring
                     grabbingAmount = 1f;
                     offsetAmount = 1f;
                     grabStartTime = Time.timeSinceLevelLoad;
-                    snapBack = grabbable.HandSnapBacks;
+                    snapBack = grabbable.CanMove && snappable.HandSnapBacks;
                     this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, 1f);
 
                 }
