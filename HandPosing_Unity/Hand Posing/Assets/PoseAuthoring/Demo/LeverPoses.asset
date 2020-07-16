@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _poses:
   - pose:
-      relativeGripPos: {x: 0.00856483, y: 0.22638074, z: -0.022140548}
-      relativeGripRot: {x: 0.5642807, y: 0.14710514, z: -0.1418419, w: -0.7998928}
+      relativeGripPos: {x: 0.008564826, y: 0.22638063, z: -0.022140592}
+      relativeGripRot: {x: 0.56428075, y: 0.14710516, z: -0.14184196, w: -0.7998929}
       handeness: 1
       _bones:
       - boneID: 2
@@ -33,7 +33,7 @@ MonoBehaviour:
       - boneID: 9
         rotation: {x: -0.11049838, y: 0.6928998, z: 0.705896, w: 0.09690577}
       - boneID: 10
-        rotation: {x: -0.012858684, y: -0.00034898153, z: -0.38818362, w: 0.9214923}
+        rotation: {x: -0.012781012, y: -0.0014537866, z: -0.4660058, w: 0.8846882}
       - boneID: 11
         rotation: {x: -0.04989225, y: -0.002282571, z: -0.064899504, w: 0.9966412}
       - boneID: 12
