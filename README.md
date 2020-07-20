@@ -11,4 +11,4 @@ This is a work in progress, and things are subject to change. I hope it serves o
 - Check the **demo scene** with instructions.
 
 
-Please refer to the ![Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for the documentation.
+Please refer to the [Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for the documentation.
