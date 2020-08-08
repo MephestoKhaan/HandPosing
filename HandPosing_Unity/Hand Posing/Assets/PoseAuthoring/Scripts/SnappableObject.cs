@@ -70,9 +70,12 @@ namespace PoseAuthoring
 
         public void LoadFromAsset()
         {
-            foreach (var volumetricPose in volumetricPosesCollection.Poses)
+            if(volumetricPosesCollection != null)
             {
-                AddPose(volumetricPose.Clone());
+                foreach (var volumetricPose in volumetricPosesCollection.Poses)
+                {
+                    AddPose(volumetricPose.Clone());
+                }
             }
         }
 
