@@ -6,6 +6,8 @@ This project uses Oculus Quest hand-tracking to control Oculus default rigged ha
 
 And please leave a **star** if this helped you, it truly helps keep the motivation going!
 
+You can download the latest stable package in the [releases section](https://github.com/MephestoKhaan/HandPosing/releases/).
+
 Please refer to the [Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for the documentation.
 
 This is a work in progress, and things are subject to change. I hope it serves others either as a useful tool or at least as a starting point for their grabbing-interaction implementations. At this moment I won't be accepting **Pull Requests** but reach me in the issues if something is not right or have any feature in mind that you think is missing.
