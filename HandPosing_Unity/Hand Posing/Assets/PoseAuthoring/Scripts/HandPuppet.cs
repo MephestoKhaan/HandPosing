@@ -33,7 +33,7 @@ namespace PoseAuthoring
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
-        public System.Action OnUpdated;
+        public System.Action OnPostupdated;
 
         private (Vector3, Quaternion) _originalGripOffset;
         private (Vector3, Quaternion)? _pupettedGripOffset;
@@ -52,6 +52,9 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
+        private bool _usingRig;
+        private bool _updated;
+
         private void Awake()
         {
             InitializeBones();
@@ -59,6 +62,17 @@ namespace PoseAuthoring
             if (trackedHand == null)
             {
                 this.enabled = false;
+            }
+
+            OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
+            if (rig != null)
+            {
+                rig.UpdatedAnchors += (r) => OnUpdatedAnchors();
+                _usingRig = true;
+            }
+            else
+            {
+                _usingRig = false;
             }
         }
 
@@ -91,8 +105,17 @@ namespace PoseAuthoring
             _initialized = true;
         }
 
-        private void LateUpdate()
+        private void OnUpdatedAnchors()
         {
+            if(!_updated)
+            {
+                _updated = true;
+            }
+            else
+            {
+                return;
+            }
+
             if (trackedHand != null
                 && trackedHand.IsInitialized
                 && trackedHand.IsDataValid)
@@ -106,7 +129,19 @@ namespace PoseAuthoring
                 _restored = true;
                 DisableHandTracked();
             }
-            OnUpdated?.Invoke();
+        }
+
+        private void LateUpdate()
+        {
+            if(!_usingRig)
+            {
+                OnUpdatedAnchors();
+            }
+            if(_updated)
+            {
+                OnPostupdated?.Invoke();
+                _updated = false;
+            }
         }
 
         private void EnableHandTracked()
@@ -204,13 +239,11 @@ namespace PoseAuthoring
                 }
             }
 
-
             (Vector3, Quaternion) worldGrip = WorldGripPose;
 
             Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
             Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
             Quaternion trackedRot = rotationDif * worldGrip.Item2;
-
             this.transform.rotation = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
 
             Vector3 positionDif = this.transform.position - this.gripPoint.position;
@@ -218,8 +251,6 @@ namespace PoseAuthoring
             Vector3 trackedPosition = worldGrip.Item1 + positionDif;
             this.transform.position = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
         }
-
-
 
 
         public HandSnapPose CurrentPoseVisual(Transform relativeTo)

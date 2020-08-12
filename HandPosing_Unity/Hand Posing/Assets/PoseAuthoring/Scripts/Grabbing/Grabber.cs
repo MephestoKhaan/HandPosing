@@ -103,7 +103,7 @@ namespace Interaction
             }
         }
 
-        void LateUpdate()
+        void Update()
         {
             _lastPos = transform.position;
             _lastRot = transform.rotation;

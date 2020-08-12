@@ -27,7 +27,7 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnUpdated += Snap;
+            puppet.OnPostupdated += Snap;
         }
 
         private void OnDisable()
@@ -36,7 +36,7 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnUpdated -= Snap;
+            puppet.OnPostupdated -= Snap;
         }
 
         private void GrabStarted(Grabbable grabbable)
@@ -55,8 +55,7 @@ namespace PoseAuthoring
                     offsetAmount = 1f;
                     grabStartTime = Time.timeSinceLevelLoad;
                     snapBack = grabbable.CanMove && snappable.HandSnapBacks;
-                    this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, 1f);
-
+                    this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, offsetAmount);
                 }
             }
         }
@@ -67,6 +66,7 @@ namespace PoseAuthoring
             snapBack = false;
         }
 
+
         private void Snap()
         {
             if (currentGhost != null)
@@ -75,7 +75,6 @@ namespace PoseAuthoring
                 {
                     offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
                 }
-
                 this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, offsetAmount);
             }
         }
