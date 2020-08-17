@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/PoseAuthoring/Demo/PoseTest.unity
+    guid: bf123bceb3fe5f846882fccddca3bb5a
   m_configObjects: {}
