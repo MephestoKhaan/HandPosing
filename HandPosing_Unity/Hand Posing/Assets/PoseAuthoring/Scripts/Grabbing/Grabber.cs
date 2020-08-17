@@ -107,15 +107,12 @@ namespace Interaction
         {
             _lastPos = transform.position;
             _lastRot = transform.rotation;
-
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
-
             CheckForGrabOrRelease(prevFlex);
-
-            //change this in order to support other types of snapping.
             MoveGrabbedObject(_lastPos, _lastRot);
         }
+
 
         public float CurrentFlex()
         {

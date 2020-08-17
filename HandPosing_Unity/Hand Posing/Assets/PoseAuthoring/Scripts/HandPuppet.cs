@@ -52,8 +52,6 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
-        private bool _usingRig;
-        private bool _updated;
 
         private void Awake()
         {
@@ -62,17 +60,6 @@ namespace PoseAuthoring
             if (trackedHand == null)
             {
                 this.enabled = false;
-            }
-
-            OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
-            if (rig != null)
-            {
-                rig.UpdatedAnchors += (r) => OnUpdatedAnchors();
-                _usingRig = true;
-            }
-            else
-            {
-                _usingRig = false;
             }
         }
 
@@ -107,15 +94,6 @@ namespace PoseAuthoring
 
         private void OnUpdatedAnchors()
         {
-            if(!_updated)
-            {
-                _updated = true;
-            }
-            else
-            {
-                return;
-            }
-
             if (trackedHand != null
                 && trackedHand.IsInitialized
                 && trackedHand.IsDataValid)
@@ -133,15 +111,8 @@ namespace PoseAuthoring
 
         private void LateUpdate()
         {
-            if(!_usingRig)
-            {
-                OnUpdatedAnchors();
-            }
-            if(_updated)
-            {
-                OnPostupdated?.Invoke();
-                _updated = false;
-            }
+            OnUpdatedAnchors();
+            OnPostupdated?.Invoke();
         }
 
         private void EnableHandTracked()
