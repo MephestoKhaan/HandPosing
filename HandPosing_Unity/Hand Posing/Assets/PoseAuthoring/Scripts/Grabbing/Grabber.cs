@@ -105,14 +105,17 @@ namespace Interaction
 
         void Update()
         {
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
-            MoveGrabbedObject(_lastPos, _lastRot);
         }
 
+        private void LateUpdate()
+        {
+            _lastPos = transform.position;
+            _lastRot = transform.rotation;
+            MoveGrabbedObject(_lastPos, _lastRot);
+        }
 
         public float CurrentFlex()
         {

@@ -5,6 +5,7 @@ using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(10)]
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
@@ -20,7 +21,6 @@ namespace PoseAuthoring
         private HandMap trackedHandOffset;
         [SerializeField]
         private List<BoneMap> boneMaps;
-
 
         public Transform Grip
         {
@@ -52,7 +52,6 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
-
         private void Awake()
         {
             InitializeBones();
@@ -76,7 +75,6 @@ namespace PoseAuthoring
             return (relativePosition, relativeRotation);
         }
 
-
         private void InitializeBones()
         {
             if (_initialized)
@@ -90,6 +88,12 @@ namespace PoseAuthoring
                 _bonesCollection.Add(id, boneMap);
             }
             _initialized = true;
+        }
+
+        private void LateUpdate()
+        {
+            OnUpdatedAnchors();
+            OnPostupdated?.Invoke();
         }
 
         private void OnUpdatedAnchors()
@@ -109,11 +113,6 @@ namespace PoseAuthoring
             }
         }
 
-        private void LateUpdate()
-        {
-            OnUpdatedAnchors();
-            OnPostupdated?.Invoke();
-        }
 
         private void EnableHandTracked()
         {
@@ -128,7 +127,7 @@ namespace PoseAuthoring
             SetOriginalBonePositions();
             _originalGripOffset = CalculateGripOffset();
         }
-
+        
         #region bone restoring
         private void StoreOriginalBonePositions()
         {
