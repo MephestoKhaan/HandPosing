@@ -80,7 +80,7 @@ namespace PoseAuthoring
         {
             SetPose(poseVolume.pose, relativeTo);
             _snapPoseVolume = poseVolume;
-            _snapPoseVolume.volume.Grip = Puppet.Grip;
+            _snapPoseVolume.volume.transform = Puppet.Grip;
 
         }
 

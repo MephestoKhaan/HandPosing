@@ -44,6 +44,8 @@ namespace PoseAuthoring
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
+                grabbable.OnMoved += Snap;
+                puppet.OnPostupdated -= Snap;
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
 
@@ -60,8 +62,10 @@ namespace PoseAuthoring
             }
         }
 
-        private void GrabEnded(Grabbable obj)
+        private void GrabEnded(Grabbable grabbable)
         {
+            grabbable.OnMoved -= Snap;
+            puppet.OnPostupdated += Snap;
             currentGhost = null;
             snapBack = false;
         }

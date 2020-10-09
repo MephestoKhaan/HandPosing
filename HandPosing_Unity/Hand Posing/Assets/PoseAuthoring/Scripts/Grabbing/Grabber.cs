@@ -103,7 +103,7 @@ namespace Interaction
             }
         }
 
-        void Update()
+        private void Update()
         {
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();

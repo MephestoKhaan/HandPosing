@@ -14,6 +14,7 @@ namespace Interaction
         private bool _physicsMove = false;
 
         public SnappableObject Snappable { get; private set; }
+        public Action OnMoved;
 
         private HashSet<GameObject> _colliderObjects = null;
 
@@ -113,6 +114,7 @@ namespace Interaction
             {
                 this.transform.position = desiredPos;
                 this.transform.rotation = desiredRot;
+                OnMoved?.Invoke();
             }
         }
 
@@ -151,7 +153,7 @@ namespace Interaction
             {
                 GrabbedBody.MovePosition(desiredPhysicsPose.Value.Item1);
                 GrabbedBody.MoveRotation(desiredPhysicsPose.Value.Item2);
-               
+                OnMoved?.Invoke();
             }
         }
 

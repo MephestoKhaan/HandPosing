@@ -5,11 +5,12 @@ using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
-    [DefaultExecutionOrder(10)]
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
         private OVRSkeleton trackedHand;
+        [SerializeField]
+        private Animator animator;
         [SerializeField]
         private Transform handAnchor;
         [SerializeField]
@@ -90,7 +91,7 @@ namespace PoseAuthoring
             _initialized = true;
         }
 
-        private void LateUpdate()
+        private void Update()
         {
             OnUpdatedAnchors();
             OnPostupdated?.Invoke();
@@ -118,11 +119,19 @@ namespace PoseAuthoring
         {
             SetLivePose(trackedHand);
             _pupettedGripOffset = CalculateGripOffset();
+            if(!_puppettedHand)
+            {
+                animator.enabled = false;
+            }
             _puppettedHand = true;
         }
 
         private void DisableHandTracked()
         {
+            if (_puppettedHand)
+            {
+                animator.enabled = true;
+            }
             _puppettedHand = false;
             SetOriginalBonePositions();
             _originalGripOffset = CalculateGripOffset();

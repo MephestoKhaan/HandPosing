@@ -12,11 +12,11 @@ namespace PoseAuthoring
         [SerializeField]
         private float _angle;
 
-        public Transform Grip { get; set; }
+        public Transform transform { private get; set; }
 
         public CylinderSurface(Transform grip)
         {
-            this.Grip = grip;
+            this.transform = grip;
 
             _angle = 230f;
             _startPoint = Vector3.up * 0.2f;
@@ -25,7 +25,7 @@ namespace PoseAuthoring
 
         public CylinderSurface(CylinderSurface other)
         {
-            this.Grip = other.Grip;
+            this.transform = other.transform;
 
             _angle = other.Angle;
             _startPoint = other._startPoint;
@@ -36,11 +36,11 @@ namespace PoseAuthoring
         {
             get
             {
-                if(this.Grip == null)
+                if(this.transform == null)
                 {
                     return Vector3.forward;
                 }
-                return Vector3.ProjectOnPlane(Grip.transform.position - StartPoint, Direction).normalized;
+                return Vector3.ProjectOnPlane(transform.transform.position - StartPoint, Direction).normalized;
             }
         }
         public Vector3 EndAngleDir
@@ -55,9 +55,9 @@ namespace PoseAuthoring
         {
             get
             {
-                if(this.Grip != null)
+                if(this.transform != null)
                 {
-                    return this.Grip.TransformPoint(_startPoint);
+                    return this.transform.TransformPoint(_startPoint);
                 }
                 else
                 {
@@ -66,9 +66,9 @@ namespace PoseAuthoring
             }
             set
             {
-                if (this.Grip != null)
+                if (this.transform != null)
                 {
-                    _startPoint = this.Grip.InverseTransformPoint(value);
+                    _startPoint = this.transform.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -81,9 +81,9 @@ namespace PoseAuthoring
         {
             get
             {
-                if (this.Grip != null)
+                if (this.transform != null)
                 {
-                    return this.Grip.TransformPoint(_endPoint);
+                    return this.transform.TransformPoint(_endPoint);
                 }
                 else
                 {
@@ -92,9 +92,9 @@ namespace PoseAuthoring
             }
             set
             {
-                if (this.Grip != null)
+                if (this.transform != null)
                 {
-                    _endPoint = this.Grip.InverseTransformPoint(value);
+                    _endPoint = this.transform.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -119,13 +119,13 @@ namespace PoseAuthoring
         {
             get
             {
-                if (this.Grip == null)
+                if (this.transform == null)
                 {
                     return 0f;
                 }
                 Vector3 start = StartPoint;
-                Vector3 projectedPoint = start + Vector3.Project(this.Grip.position - start, Direction);
-                return Vector3.Distance(projectedPoint, this.Grip.position);
+                Vector3 projectedPoint = start + Vector3.Project(this.transform.position - start, Direction);
+                return Vector3.Distance(projectedPoint, this.transform.position);
             }
         }
 
@@ -144,7 +144,7 @@ namespace PoseAuthoring
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this.Grip?this.Grip.up:Vector3.up;
+                    return this.transform?this.transform.up:Vector3.up;
                 }
                 return dir.normalized;
             }
@@ -214,7 +214,7 @@ namespace PoseAuthoring
 
         public Quaternion CalculateRotationOffset(Vector3 surfacePoint, Transform relativeTo)
         {
-            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.Grip.position - StartPoint, Direction);
+            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.transform.position - StartPoint, Direction);
             Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
 
             return Quaternion.FromToRotation(recordedDirection, desiredDirection);
