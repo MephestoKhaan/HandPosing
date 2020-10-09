@@ -16,8 +16,8 @@ namespace PoseAuthoring
 
         private HandGhost grabbedGhost;
         private HandSnapPose poseInVolume;
-        private float grabbingAmount;
-        private float offsetAmount;
+        private float fingerLockFactor;
+        private float handLockFactor;
         private float grabStartTime;
         private bool snapBack;
 
@@ -44,8 +44,8 @@ namespace PoseAuthoring
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                //puppet.OnPostupdated -= SnapToGrabbable;
                 grabbable.OnMoved += SnapToGrabbable;
+                
 
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
@@ -54,11 +54,13 @@ namespace PoseAuthoring
                 {
                     grabbedGhost = ghost;
                     poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
-                    grabbingAmount = 1f;
-                    offsetAmount = 1f;
-                    grabStartTime = Time.timeSinceLevelLoad;
+
                     snapBack = grabbable.CanMove && snappable.HandSnapBacks;
-                    this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, grabbingAmount, offsetAmount);
+                    grabStartTime = Time.timeSinceLevelLoad;
+
+                    handLockFactor = 1f;
+                    fingerLockFactor = 1f;
+                    this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
                 }
             }
         }
@@ -66,7 +68,6 @@ namespace PoseAuthoring
         private void GrabEnded(Grabbable grabbable)
         {
             grabbable.OnMoved -= SnapToGrabbable;
-            //puppet.OnPostupdated += SnapToGrabbable;
 
             grabbedGhost = null;
             snapBack = false;
@@ -78,9 +79,9 @@ namespace PoseAuthoring
             {
                 if(snapBack)
                 {
-                    offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
+                    handLockFactor = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
                 }
-                this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, grabbingAmount, offsetAmount);
+                this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
             }
         }
 
@@ -90,7 +91,6 @@ namespace PoseAuthoring
             if (grabbable == null)
             {
                 grabbedGhost = null;
-                this.puppet.SetDefaultPose();
                 return;
             }
             SnappableObject snappable = grabbable.Snappable;
@@ -102,13 +102,12 @@ namespace PoseAuthoring
                 {
                     grabbedGhost = ghost;
                     poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
-                    offsetAmount = grabbingAmount = amount;
-                    
+                    handLockFactor = fingerLockFactor = amount;
                 }
                 else
                 {
                     grabbedGhost = null;
-                    offsetAmount = grabbingAmount = 0f;
+                    handLockFactor = fingerLockFactor = 0f; //TODO: animate?
                 }
             }
         }
