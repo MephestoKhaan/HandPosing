@@ -14,7 +14,7 @@ namespace PoseAuthoring
 
         private const float SNAPBACK_TIME = 0.4f;
 
-        private HandGhost currentGhost;
+        private HandGhost grabbedGhost;
         private HandSnapPose poseInVolume;
         private float grabbingAmount;
         private float offsetAmount;
@@ -27,7 +27,7 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnPostupdated += Snap;
+            puppet.OnPostupdated += SnapToGrabbable;
         }
 
         private void OnDisable()
@@ -36,7 +36,7 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnPostupdated -= Snap;
+            puppet.OnPostupdated -= SnapToGrabbable;
         }
 
         private void GrabStarted(Grabbable grabbable)
@@ -44,42 +44,43 @@ namespace PoseAuthoring
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                grabbable.OnMoved += Snap;
-                puppet.OnPostupdated -= Snap;
+                //puppet.OnPostupdated -= SnapToGrabbable;
+                grabbable.OnMoved += SnapToGrabbable;
+
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
 
                 if (ghost != null)
                 {
-                    currentGhost = ghost;
-                    poseInVolume = currentGhost.AdjustPlace(bestPlace);
+                    grabbedGhost = ghost;
+                    poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
                     grabbingAmount = 1f;
                     offsetAmount = 1f;
                     grabStartTime = Time.timeSinceLevelLoad;
                     snapBack = grabbable.CanMove && snappable.HandSnapBacks;
-                    this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, offsetAmount);
+                    this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, grabbingAmount, offsetAmount);
                 }
             }
         }
 
         private void GrabEnded(Grabbable grabbable)
         {
-            grabbable.OnMoved -= Snap;
-            puppet.OnPostupdated += Snap;
-            currentGhost = null;
+            grabbable.OnMoved -= SnapToGrabbable;
+            //puppet.OnPostupdated += SnapToGrabbable;
+
+            grabbedGhost = null;
             snapBack = false;
         }
 
-
-        private void Snap()
+        private void SnapToGrabbable()
         {
-            if (currentGhost != null)
+            if (grabbedGhost != null)
             {
                 if(snapBack)
                 {
                     offsetAmount = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
                 }
-                this.puppet.TransitionToPose(poseInVolume, currentGhost.RelativeTo, grabbingAmount, offsetAmount);
+                this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, grabbingAmount, offsetAmount);
             }
         }
 
@@ -88,7 +89,7 @@ namespace PoseAuthoring
             snapBack = false;
             if (grabbable == null)
             {
-                currentGhost = null;
+                grabbedGhost = null;
                 this.puppet.SetDefaultPose();
                 return;
             }
@@ -96,17 +97,17 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
-                    currentGhost = ghost;
-                    poseInVolume = currentGhost.AdjustPlace(bestPlace);
+                    grabbedGhost = ghost;
+                    poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
                     offsetAmount = grabbingAmount = amount;
+                    
                 }
                 else
                 {
-                    currentGhost = null;
+                    grabbedGhost = null;
                     offsetAmount = grabbingAmount = 0f;
                 }
             }
