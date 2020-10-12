@@ -108,6 +108,7 @@ namespace Interaction
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
+
         }
 
         private void LateUpdate()

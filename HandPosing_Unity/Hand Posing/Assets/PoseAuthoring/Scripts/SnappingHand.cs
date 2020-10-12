@@ -5,6 +5,7 @@ using Grabbable = Interaction.Grabbable;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(50)]
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
@@ -20,6 +21,7 @@ namespace PoseAuthoring
         private float handLockFactor;
         private float grabStartTime;
         private bool snapBack;
+        private bool physicsGrab;
 
         private void OnEnable()
         {
@@ -42,11 +44,9 @@ namespace PoseAuthoring
         private void GrabStarted(Grabbable grabbable)
         {
             SnappableObject snappable = grabbable.Snappable;
+
             if (snappable != null)
             {
-                grabbable.OnMoved += SnapToGrabbable;
-                
-
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
 
@@ -60,6 +60,7 @@ namespace PoseAuthoring
 
                     handLockFactor = 1f;
                     fingerLockFactor = 1f;
+                    physicsGrab = grabbable.PhysicsMove;
                     this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
                 }
             }
@@ -67,10 +68,17 @@ namespace PoseAuthoring
 
         private void GrabEnded(Grabbable grabbable)
         {
-            grabbable.OnMoved -= SnapToGrabbable;
-
             grabbedGhost = null;
             snapBack = false;
+            physicsGrab = false;
+        }
+
+        private void LateUpdate()
+        {
+            if(physicsGrab)
+            {
+                SnapToGrabbable();
+            }
         }
 
         private void SnapToGrabbable()

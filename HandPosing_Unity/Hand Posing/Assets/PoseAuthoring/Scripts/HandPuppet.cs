@@ -5,6 +5,7 @@ using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(-50)]
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
@@ -204,6 +205,11 @@ namespace PoseAuthoring
         public void TransitionToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
             InitializeBones();
+
+            if(_puppettedHand)
+            {
+              //  SetLivePose(trackedHand);
+            }
 
             if (bonesWeight > 0f)
             {
