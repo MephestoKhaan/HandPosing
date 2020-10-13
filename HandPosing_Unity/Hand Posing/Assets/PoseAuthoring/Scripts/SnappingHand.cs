@@ -123,7 +123,8 @@ namespace PoseAuthoring
                     handLockFactor = AdjustSnapback(grabStartTime);
                 }
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
-
+                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+                /*
                 if (grabOffset.HasValue)
                 {
                     this.puppet.transform.rotation = Quaternion.Lerp(this.puppet.TrackedPose.rotation, 
@@ -136,7 +137,7 @@ namespace PoseAuthoring
                 else
                 {
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor); 
-                }
+                }*/
             }
         }
 

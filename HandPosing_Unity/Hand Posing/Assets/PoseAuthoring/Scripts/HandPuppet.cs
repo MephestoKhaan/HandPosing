@@ -124,11 +124,10 @@ namespace PoseAuthoring
         private void EnableHandTracked()
         {
             SetLivePose(trackedHand);
-
+            _pupettedGripOffset = CalculateGripOffset(); //TODO needed every frame?
             if (!_puppettedHand)
             {
                 animator.enabled = false;
-                _pupettedGripOffset = CalculateGripOffset(); //TODO not every frame
             }
             _puppettedHand = true;
         }

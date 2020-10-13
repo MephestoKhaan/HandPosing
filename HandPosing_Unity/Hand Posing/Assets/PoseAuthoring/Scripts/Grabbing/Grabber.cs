@@ -106,12 +106,8 @@ namespace Interaction
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
+            MoveGrabbedObject(transform.position, transform.rotation);//<==========
 
-        }
-
-        private void LateUpdate()
-        {
-            MoveGrabbedObject(transform.position, transform.rotation);
         }
 
         public float CurrentFlex()
