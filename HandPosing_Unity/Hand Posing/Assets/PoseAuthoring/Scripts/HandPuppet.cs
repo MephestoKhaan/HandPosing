@@ -37,12 +37,6 @@ namespace PoseAuthoring
 
         public System.Action OnPuppetUpdated;
 
-        public Pose TrackedPose
-        {
-            get;
-            private set;
-        }
-
         private Pose _originalGripOffset;
         private Pose? _pupettedGripOffset;
         private Pose WorldGripPose
@@ -101,6 +95,7 @@ namespace PoseAuthoring
         private void Update()
         {
             OnUpdatedAnchors();
+
             OnPuppetUpdated?.Invoke();
         }
 
@@ -184,8 +179,6 @@ namespace PoseAuthoring
 
                     boneTransform.localPosition = trackedHandOffset.positionOffset 
                         + skeleton.Bones[i].Transform.localPosition;
-
-                    TrackedPose = new Pose(boneTransform.position, boneTransform.rotation);
                 }
             }
 

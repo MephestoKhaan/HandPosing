@@ -147,7 +147,7 @@ namespace Interaction
 
         private void FixedUpdate()
         {
-            if(desiredPhysicsPose.HasValue 
+            if (desiredPhysicsPose.HasValue 
                 && GrabbedBody != null)
             {
                 GrabbedBody.MovePosition(desiredPhysicsPose.Value.position);
