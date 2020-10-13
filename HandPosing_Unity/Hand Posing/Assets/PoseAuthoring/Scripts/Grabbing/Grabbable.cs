@@ -97,7 +97,6 @@ namespace Interaction
             desiredPhysicsPose = null;
         }
 
-
         public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
         {
             if (!CanMove)

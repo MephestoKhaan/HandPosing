@@ -103,15 +103,17 @@ namespace Interaction
 
         private void Update()
         {
+            UpdateAnchors();
+        }
+
+        private void UpdateAnchors()
+        {
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
-        }
-
-        private void LateUpdate()
-        {
             MoveGrabbedObject(transform.position, transform.rotation);
         }
+
         public float CurrentFlex()
         {
             if (trackedHand && trackedHand.IsTracked)

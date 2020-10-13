@@ -13,7 +13,7 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppet;
 
-        private const float SNAPBACK_TIME = 0.33f;
+        private const float SNAPBACK_TIME = 0.5f;
 
         private HandGhost grabbedGhost;
         private HandSnapPose poseInVolume;
