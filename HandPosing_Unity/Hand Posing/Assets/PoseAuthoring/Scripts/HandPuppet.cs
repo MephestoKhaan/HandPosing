@@ -5,6 +5,7 @@ using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(-50)]
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
@@ -34,7 +35,13 @@ namespace PoseAuthoring
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
-        public System.Action OnPostupdated;
+        public System.Action OnPuppetUpdated;
+
+        public Pose TrackedPose
+        {
+            get;
+            private set;
+        }
 
         private Pose _originalGripOffset;
         private Pose? _pupettedGripOffset;
@@ -94,7 +101,7 @@ namespace PoseAuthoring
         private void Update()
         {
             OnUpdatedAnchors();
-            OnPostupdated?.Invoke();
+            OnPuppetUpdated?.Invoke();
         }
 
         private void OnUpdatedAnchors()
@@ -114,14 +121,14 @@ namespace PoseAuthoring
             }
         }
 
-
         private void EnableHandTracked()
         {
             SetLivePose(trackedHand);
-            _pupettedGripOffset = CalculateGripOffset();
-            if(!_puppettedHand)
+
+            if (!_puppettedHand)
             {
                 animator.enabled = false;
+                _pupettedGripOffset = CalculateGripOffset(); //TODO not every frame
             }
             _puppettedHand = true;
         }
@@ -170,12 +177,16 @@ namespace PoseAuthoring
                 }
                 else if (trackedHandOffset.id == boneId)
                 {
+
                     Transform boneTransform = trackedHandOffset.transform;
                     boneTransform.localRotation = UnmapRotation(boneTransform,
                         skeleton.Bones[i],
                         trackedHandOffset.rotationOffset);
 
-                    boneTransform.localPosition = trackedHandOffset.positionOffset + skeleton.Bones[i].Transform.localPosition;
+                    boneTransform.localPosition = trackedHandOffset.positionOffset 
+                        + skeleton.Bones[i].Transform.localPosition;
+
+                    TrackedPose = new Pose(boneTransform.position, boneTransform.rotation);
                 }
             }
 
@@ -201,7 +212,13 @@ namespace PoseAuthoring
             this.transform.position = trackedPosition;
         }
 
-        public void TransitionToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
+        public void LerpToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
+        {
+            LerpBones(pose, bonesWeight);
+            LerpOffset(pose, relativeTo, positionWeight);
+        }
+
+        public void LerpBones(HandSnapPose pose, float bonesWeight = 1f)
         {
             InitializeBones();
 
@@ -217,18 +234,23 @@ namespace PoseAuthoring
                     }
                 }
             }
+        }
 
+        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float positionWeight = 1f)
+        {
             Pose worldGrip = WorldGripPose;
 
             Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
             Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
             Quaternion trackedRot = rotationDif * worldGrip.rotation;
-            this.transform.rotation = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
+            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
+            this.transform.rotation = finalRot;
 
             Vector3 positionDif = this.transform.position - this.gripPoint.position;
             Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
             Vector3 trackedPosition = worldGrip.position + positionDif;
-            this.transform.position = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
+            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
+            this.transform.position = finalPos;
         }
 
 

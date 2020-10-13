@@ -5,6 +5,7 @@ using Grabbable = Interaction.Grabbable;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(100)]
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
@@ -12,7 +13,7 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppet;
 
-        private const float SNAPBACK_TIME = 0.4f;
+        private const float SNAPBACK_TIME = 0.33f;
 
         private HandGhost grabbedGhost;
         private HandSnapPose poseInVolume;
@@ -20,6 +21,7 @@ namespace PoseAuthoring
         private float handLockFactor;
         private float grabStartTime;
         private bool snapBack;
+        private Pose? grabOffset;
 
         private void OnEnable()
         {
@@ -27,7 +29,7 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnPostupdated += SnapToGrabbable;
+            puppet.OnPuppetUpdated += PreAttachToObject;
         }
 
         private void OnDisable()
@@ -36,17 +38,15 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnPostupdated -= SnapToGrabbable;
+            puppet.OnPuppetUpdated -= PreAttachToObject;
         }
 
         private void GrabStarted(Grabbable grabbable)
         {
             SnappableObject snappable = grabbable.Snappable;
+
             if (snappable != null)
             {
-                grabbable.OnMoved += SnapToGrabbable;
-                
-
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
                 HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
 
@@ -60,29 +60,20 @@ namespace PoseAuthoring
 
                     handLockFactor = 1f;
                     fingerLockFactor = 1f;
-                    this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
+
+                    this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+
+                    grabOffset = new Pose(Quaternion.Inverse(this.puppet.TrackedPose.rotation) * (this.puppet.transform.position - this.puppet.TrackedPose.position),
+                        Quaternion.Inverse(this.puppet.TrackedPose.rotation) * this.puppet.transform.rotation);
                 }
             }
         }
 
         private void GrabEnded(Grabbable grabbable)
         {
-            grabbable.OnMoved -= SnapToGrabbable;
-
+            grabOffset = null;
             grabbedGhost = null;
             snapBack = false;
-        }
-
-        private void SnapToGrabbable()
-        {
-            if (grabbedGhost != null)
-            {
-                if(snapBack)
-                {
-                    handLockFactor = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
-                }
-                this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
-            }
         }
 
         private void GrabAttemp(Grabbable grabbable, float amount)
@@ -107,9 +98,56 @@ namespace PoseAuthoring
                 else
                 {
                     grabbedGhost = null;
-                    handLockFactor = fingerLockFactor = 0f; //TODO: animate?
+                    handLockFactor = fingerLockFactor = 0f; 
                 }
             }
         }
+
+        private void LateUpdate()
+        {
+            PostAttachToObject(); 
+        }
+
+        private float AdjustSnapback(float grabStartTime)
+        {
+            return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
+        }
+
+
+        private void PreAttachToObject()
+        {
+            if (grabbedGhost != null)
+            {
+                if (snapBack)
+                {
+                    handLockFactor = AdjustSnapback(grabStartTime);
+                }
+                this.puppet.LerpBones(poseInVolume, fingerLockFactor);
+
+                if (grabOffset.HasValue)
+                {
+                    this.puppet.transform.rotation = Quaternion.Lerp(this.puppet.TrackedPose.rotation, 
+                        this.puppet.TrackedPose.rotation * grabOffset.Value.rotation, 
+                        handLockFactor);
+                    this.puppet.transform.position = Vector3.Lerp(this.puppet.TrackedPose.position, 
+                        this.puppet.TrackedPose.position + this.puppet.TrackedPose.rotation * grabOffset.Value.position, 
+                        handLockFactor);
+                }
+                else
+                {
+                    this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor); 
+                }
+            }
+        }
+
+        private void PostAttachToObject()
+        {
+            if (grabbedGhost != null
+                && grabOffset.HasValue)
+            {
+                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f);
+            }
+        }
+
     }
 }

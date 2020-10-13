@@ -14,7 +14,6 @@ namespace Interaction
         private bool _physicsMove = false;
 
         public SnappableObject Snappable { get; private set; }
-        public Action OnMoved;
 
         private HashSet<GameObject> _colliderObjects = null;
 
@@ -23,7 +22,7 @@ namespace Interaction
         private Collider _grabbedCollider = null;
         private Grabber _grabbedBy = null;
 
-        private (Vector3, Quaternion)? desiredPhysicsPose;
+        private Pose? desiredPhysicsPose;
         
 
         public bool IsGrabbed
@@ -101,20 +100,19 @@ namespace Interaction
 
         public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
         {
-            if(!CanMove)
+            if (!CanMove)
             {
                 return;
             }
 
             if (PhysicsMove)
             {
-                desiredPhysicsPose = (desiredPos, desiredRot);
+                desiredPhysicsPose = new Pose(desiredPos, desiredRot);
             }
             else
             {
                 this.transform.position = desiredPos;
-                this.transform.rotation = desiredRot;
-                OnMoved?.Invoke();
+                this.transform.rotation = desiredRot; 
             }
         }
 
@@ -147,13 +145,13 @@ namespace Interaction
             }
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
-            if(desiredPhysicsPose.HasValue && GrabbedBody != null)
+            if(desiredPhysicsPose.HasValue 
+                && GrabbedBody != null)
             {
-                GrabbedBody.MovePosition(desiredPhysicsPose.Value.Item1);
-                GrabbedBody.MoveRotation(desiredPhysicsPose.Value.Item2);
-                OnMoved?.Invoke();
+                GrabbedBody.MovePosition(desiredPhysicsPose.Value.position);
+                GrabbedBody.MoveRotation(desiredPhysicsPose.Value.rotation);
             }
         }
 

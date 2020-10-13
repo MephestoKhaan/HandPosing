@@ -21,8 +21,6 @@ namespace Interaction
         [SerializeField]
         protected OVRInput.Controller m_controller;
 
-        protected Vector3 _lastPos;
-        protected Quaternion _lastRot;
         protected Quaternion _anchorOffsetRotation;
         protected Vector3 _anchorOffsetPosition;
         protected Vector3 _grabbedObjectPosOff;
@@ -108,13 +106,12 @@ namespace Interaction
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
+
         }
 
         private void LateUpdate()
         {
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
-            MoveGrabbedObject(_lastPos, _lastRot);
+            MoveGrabbedObject(transform.position, transform.rotation);
         }
 
         public float CurrentFlex()
@@ -240,28 +237,6 @@ namespace Interaction
             }
         }
 
-        private void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
-        {
-            if (closestGrabbable.IsGrabbed)
-            {
-                closestGrabbable.GrabbedBy.OffhandGrabbed(closestGrabbable);
-            }
-            
-            _grabbedObj = closestGrabbable;
-            _grabbedObj.GrabBegin(this, closestGrabbableCollider);
-            OnGrabStarted?.Invoke(_grabbedObj);
-
-            Vector3 relPos = _grabbedObj.transform.position - transform.position;
-            relPos = Quaternion.Inverse(transform.rotation) * relPos;
-            _grabbedObjectPosOff = relPos;
-
-            Quaternion relOri = Quaternion.Inverse(transform.rotation) * _grabbedObj.transform.rotation;
-            _grabbedObjectRotOff = relOri;
-
-            _lastPos = transform.position;
-            _lastRot = transform.rotation;
-        }
-
         public (Grabbable, Collider) FindClosestGrabbable()
         {
             float closestMagSq = float.MaxValue;
@@ -290,6 +265,22 @@ namespace Interaction
             return (closestGrabbable, closestGrabbableCollider);
         }
 
+        private void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
+        {
+            if (closestGrabbable.IsGrabbed)
+            {
+                closestGrabbable.GrabbedBy.OffhandGrabbed(closestGrabbable);
+            }
+
+            _grabbedObj = closestGrabbable;
+            _grabbedObj.GrabBegin(this, closestGrabbableCollider);
+
+            OnGrabStarted?.Invoke(_grabbedObj);
+
+            Vector3 relPos = _grabbedObj.transform.position - transform.position;
+            _grabbedObjectPosOff = Quaternion.Inverse(transform.rotation) * relPos;
+            _grabbedObjectRotOff = Quaternion.Inverse(transform.rotation) * _grabbedObj.transform.rotation;
+        }
 
         protected void GrabEnd()
         {
@@ -349,7 +340,7 @@ namespace Interaction
             if (_grabbedObj == null)
             {
                 return;
-            }
+            }   
 
             Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
             Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
