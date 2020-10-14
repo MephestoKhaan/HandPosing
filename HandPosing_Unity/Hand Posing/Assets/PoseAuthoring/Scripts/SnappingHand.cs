@@ -106,7 +106,7 @@ namespace PoseAuthoring
 
         private void LateUpdate()
         {
-           PostAttachToObject(); 
+           //PostAttachToObject(); 
         }
 
         private void PreAttachToObject()

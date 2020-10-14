@@ -132,6 +132,7 @@ namespace Interaction
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
+
             MoveGrabbedObject(transform.position, transform.rotation);
         }
 
@@ -298,8 +299,9 @@ namespace Interaction
 
             OnGrabStarted?.Invoke(_grabbedObj);
 
-            Vector3 relPos = _grabbedObj.transform.position - transform.position;
-            _grabbedObjectPosOff = Quaternion.Inverse(transform.rotation) * relPos;
+            _grabbedObj.transform.SetParent(this.transform);
+
+            _grabbedObjectPosOff = Quaternion.Inverse(transform.rotation) * (_grabbedObj.transform.position - transform.position);
             _grabbedObjectRotOff = Quaternion.Inverse(transform.rotation) * _grabbedObj.transform.rotation;
         }
 
@@ -323,6 +325,7 @@ namespace Interaction
 
         protected void GrabbableRelease(Vector3 linearVelocity, Vector3 angularVelocity)
         {
+            _grabbedObj.transform.SetParent(null);
             _grabbedObj.GrabEnd(linearVelocity, angularVelocity);
             OnGrabEnded?.Invoke(_grabbedObj);
             _grabbedObj = null;
@@ -361,12 +364,12 @@ namespace Interaction
             if (_grabbedObj == null)
             {
                 return;
-            }   
+            }
 
             Vector3 grabbablePosition = pos + rot * _grabbedObjectPosOff;
             Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
 
-            _grabbedObj.MoveTo(grabbablePosition, grabbableRotation);
+            //_grabbedObj.MoveTo(grabbablePosition, grabbableRotation);
         }
 
     }
