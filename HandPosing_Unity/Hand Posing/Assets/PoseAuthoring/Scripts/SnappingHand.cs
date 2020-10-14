@@ -13,7 +13,7 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppet;
 
-        private const float SNAPBACK_TIME = 0.5f;
+        private const float SNAPBACK_TIME = 0.33f;
 
         private HandGhost grabbedGhost;
         private HandSnapPose poseInVolume;
@@ -106,7 +106,7 @@ namespace PoseAuthoring
 
         private void LateUpdate()
         {
-           //PostAttachToObject(); 
+           PostAttachToObject(); 
         }
 
         private void PreAttachToObject()

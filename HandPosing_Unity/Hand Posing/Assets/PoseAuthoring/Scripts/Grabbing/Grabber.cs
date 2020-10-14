@@ -113,13 +113,10 @@ namespace Interaction
 
         private void Update()
         {
-            if(_operatingWithoutOVRCameraRig)
+            alreadyUpdated = false;
+            if (_operatingWithoutOVRCameraRig)
             {
                 OnUpdatedAnchors();
-            }
-            else
-            {
-                alreadyUpdated = false;
             }
         }
 
@@ -128,7 +125,6 @@ namespace Interaction
             if (alreadyUpdated) return;
             alreadyUpdated = true;
 
-            Debug.Log("Grabber UpdateAnchors");
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);

@@ -24,7 +24,7 @@ namespace Interaction
         private Grabber _grabbedBy = null;
 
         private Pose? desiredPhysicsPose;
-        
+
 
         public bool IsGrabbed
         {
@@ -112,7 +112,7 @@ namespace Interaction
             else
             {
                 this.transform.position = desiredPos;
-                this.transform.rotation = desiredRot; 
+                this.transform.rotation = desiredRot;
             }
         }
 
@@ -147,11 +147,10 @@ namespace Interaction
 
         private void FixedUpdate()
         {
-            if (desiredPhysicsPose.HasValue 
-                && GrabbedBody != null)
+            if (desiredPhysicsPose.HasValue)
             {
-                GrabbedBody.MovePosition(desiredPhysicsPose.Value.position);
                 GrabbedBody.MoveRotation(desiredPhysicsPose.Value.rotation);
+                GrabbedBody.MovePosition(desiredPhysicsPose.Value.position);
             }
         }
 

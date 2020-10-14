@@ -113,13 +113,10 @@ namespace PoseAuthoring
 
         private void Update()
         {
+            alreadyUpdated = false;
             if (_operatingWithoutOVRCameraRig)
             {
                 OnUpdatedAnchors();
-            }
-            else
-            {
-                alreadyUpdated = false;
             }
         }
 
@@ -128,7 +125,6 @@ namespace PoseAuthoring
             if (alreadyUpdated) return;
             alreadyUpdated = true;
 
-            Debug.Log("Puppet Update");
             if (trackedHand != null
                 && trackedHand.IsInitialized
                 && trackedHand.IsDataValid)
