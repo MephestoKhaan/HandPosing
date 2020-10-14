@@ -20,8 +20,9 @@ namespace PoseAuthoring
         private float fingerLockFactor;
         private float handLockFactor;
         private float grabStartTime;
-        private bool isGrabbing;
         private bool snapBack;
+
+        private Pose? grabOffset = null;
 
         private void OnEnable()
         {
@@ -48,7 +49,7 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
+                HandGhost ghost = snappable.FindBestGhost(userPose, out float score, out var bestPlace);
 
                 if (ghost != null)
                 {
@@ -58,11 +59,12 @@ namespace PoseAuthoring
                     snapBack = grabbable.CanMove && snappable.HandSnapBacks;
                     grabStartTime = Time.timeSinceLevelLoad;
 
-                    handLockFactor = 1f;
-                    fingerLockFactor = 1f;
+                    handLockFactor = fingerLockFactor = 1f;
 
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
-                    isGrabbing = true;
+
+                    grabOffset = new Pose(Quaternion.Inverse(this.puppet.Origin.rotation) * (this.puppet.transform.position - this.puppet.Origin.position), 
+                        Quaternion.Inverse(this.puppet.Origin.rotation) * this.puppet.transform.rotation);
                 }
             }
         }
@@ -71,7 +73,7 @@ namespace PoseAuthoring
         {
             grabbedGhost = null;
             snapBack = false;
-            isGrabbing = false;
+            grabOffset = null;
         }
 
         private void GrabAttemp(Grabbable grabbable, float amount)
@@ -86,7 +88,7 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
+                HandGhost ghost = snappable.FindBestGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
                     grabbedGhost = ghost;
@@ -115,13 +117,30 @@ namespace PoseAuthoring
                     handLockFactor = AdjustSnapback(grabStartTime);
                 }
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
-                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+
+                if(false)//grabOffset.HasValue)
+                {
+                    this.puppet.transform.position = Vector3.Lerp(
+                        this.puppet.Origin.position + this.puppet.Origin.rotation * grabOffset.Value.position, 
+                        this.puppet.transform.position, 
+                        handLockFactor);
+                    this.puppet.transform.rotation = Quaternion.Lerp(
+                        grabOffset.Value.rotation * this.puppet.Origin.rotation, 
+                        this.puppet.transform.rotation, 
+                        handLockFactor);
+                }
+                else
+                {
+                    this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+                }
+
             }
         }
 
         private void PostAttachToObject()
         {
-            if (isGrabbing && grabbedGhost != null)
+            if (grabOffset.HasValue 
+                && grabbedGhost != null)
             {
                 this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f);
             }

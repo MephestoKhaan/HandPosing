@@ -49,7 +49,7 @@ namespace PoseAuthoring
             return ghost;
         }
 
-        public HandGhost FindNearsetGhost(HandSnapPose userPose, out float score, out Pose bestPlace)
+        public HandGhost FindBestGhost(HandSnapPose userPose, out float score, out Pose bestPlace)
         {
             float maxScore = 0f;
             HandGhost nearestGhost = null;

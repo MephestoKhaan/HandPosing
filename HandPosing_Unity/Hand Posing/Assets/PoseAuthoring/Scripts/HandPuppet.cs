@@ -5,7 +5,7 @@ using static PoseAuthoring.HandSnapPose;
 
 namespace PoseAuthoring
 {
-    [DefaultExecutionOrder(-50)]
+    [DefaultExecutionOrder(-10)]
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
@@ -29,6 +29,14 @@ namespace PoseAuthoring
             get
             {
                 return gripPoint;
+            }
+        }
+
+        public Transform Origin
+        {
+            get
+            {
+                return _controlledHandOffset.transform;
             }
         }
 
@@ -94,8 +102,8 @@ namespace PoseAuthoring
 
         private void Update()
         {
+            Debug.Log("Puppet Update");
             OnUpdatedAnchors();
-
             OnPuppetUpdated?.Invoke();
         }
 

@@ -32,6 +32,9 @@ namespace Interaction
         protected Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
         private bool _nearGrab = false;
 
+        private bool _operatingWithoutOVRCameraRig = true;
+        private bool alreadyUpdated = false;
+
         public Vector2 GrabThresold { get; private set; }
 
         public Action<Grabbable> OnGrabStarted;
@@ -90,6 +93,13 @@ namespace Interaction
             _anchorOffsetPosition = transform.localPosition;
             _anchorOffsetRotation = transform.localRotation;
             allGrabbers.Add(this);
+
+            OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
+            if (rig != null)
+            {
+                rig.UpdatedAnchors += (r) => { OnUpdatedAnchors(); };
+                _operatingWithoutOVRCameraRig = false;
+            }
         }
 
         private void OnDisable()
@@ -103,11 +113,22 @@ namespace Interaction
 
         private void Update()
         {
-            UpdateAnchors();
+            if(_operatingWithoutOVRCameraRig)
+            {
+                OnUpdatedAnchors();
+            }
+            else
+            {
+                alreadyUpdated = false;
+            }
         }
 
-        private void UpdateAnchors()
+        private void OnUpdatedAnchors()
         {
+            if (alreadyUpdated) return;
+            alreadyUpdated = true;
+
+            Debug.Log("Grabber UpdateAnchors");
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
             CheckForGrabOrRelease(prevFlex);
