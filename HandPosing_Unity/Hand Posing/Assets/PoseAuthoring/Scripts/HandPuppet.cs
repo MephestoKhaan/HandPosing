@@ -32,11 +32,11 @@ namespace PoseAuthoring
             }
         }
 
-        public Transform Origin
+        public Transform Anchor
         {
             get
             {
-                return _controlledHandOffset.transform;
+                return handAnchor;
             }
         }
 
@@ -62,6 +62,9 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
+        private bool _operatingWithoutOVRCameraRig;
+        private bool alreadyUpdated;
+
         private void Awake()
         {
             InitializeBones();
@@ -69,6 +72,14 @@ namespace PoseAuthoring
             if (trackedHand == null)
             {
                 this.enabled = false;
+            }
+
+
+            OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
+            if (rig != null)
+            {
+                rig.UpdatedAnchors += (r) => { OnUpdatedAnchors(); };
+                _operatingWithoutOVRCameraRig = false;
             }
         }
 
@@ -102,13 +113,22 @@ namespace PoseAuthoring
 
         private void Update()
         {
-            Debug.Log("Puppet Update");
-            OnUpdatedAnchors();
-            OnPuppetUpdated?.Invoke();
+            if (_operatingWithoutOVRCameraRig)
+            {
+                OnUpdatedAnchors();
+            }
+            else
+            {
+                alreadyUpdated = false;
+            }
         }
 
         private void OnUpdatedAnchors()
         {
+            if (alreadyUpdated) return;
+            alreadyUpdated = true;
+
+            Debug.Log("Puppet Update");
             if (trackedHand != null
                 && trackedHand.IsInitialized
                 && trackedHand.IsDataValid)
@@ -122,6 +142,9 @@ namespace PoseAuthoring
                 _restored = true;
                 DisableHandTracked();
             }
+
+
+            OnPuppetUpdated?.Invoke();
         }
 
         private void EnableHandTracked()

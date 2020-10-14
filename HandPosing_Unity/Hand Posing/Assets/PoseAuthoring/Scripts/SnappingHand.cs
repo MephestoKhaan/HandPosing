@@ -63,8 +63,9 @@ namespace PoseAuthoring
 
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
 
-                    grabOffset = new Pose(Quaternion.Inverse(this.puppet.Origin.rotation) * (this.puppet.transform.position - this.puppet.Origin.position), 
-                        Quaternion.Inverse(this.puppet.Origin.rotation) * this.puppet.transform.rotation);
+                    grabOffset = new Pose(
+                         Quaternion.Inverse(this.puppet.Anchor.rotation) * (this.puppet.transform.position - this.puppet.Anchor.position), 
+                        Quaternion.Inverse(this.puppet.Anchor.rotation) *  this.puppet.transform.rotation);
                 }
             }
         }
@@ -105,7 +106,7 @@ namespace PoseAuthoring
 
         private void LateUpdate()
         {
-            PostAttachToObject(); 
+           PostAttachToObject(); 
         }
 
         private void PreAttachToObject()
@@ -118,17 +119,18 @@ namespace PoseAuthoring
                 }
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
 
-                if(false)//grabOffset.HasValue)
+                if(grabOffset.HasValue)
                 {
-                    this.puppet.transform.position = Vector3.Lerp(
-                        this.puppet.Origin.position + this.puppet.Origin.rotation * grabOffset.Value.position, 
-                        this.puppet.transform.position, 
-                        handLockFactor);
                     this.puppet.transform.rotation = Quaternion.Lerp(
-                        grabOffset.Value.rotation * this.puppet.Origin.rotation, 
-                        this.puppet.transform.rotation, 
+                         this.puppet.transform.rotation,
+                         this.puppet.Anchor.rotation * grabOffset.Value.rotation, 
+                         handLockFactor);
+
+                    this.puppet.transform.position = Vector3.Lerp(
+                        this.puppet.transform.position,
+                        this.puppet.Anchor.position + this.puppet.Anchor.rotation * grabOffset.Value.position, 
                         handLockFactor);
-                }
+                } 
                 else
                 {
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
