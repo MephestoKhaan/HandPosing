@@ -62,7 +62,7 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
-        private bool _operatingWithoutOVRCameraRig;
+        private bool _operatingWithoutOVRCameraRig = true;
         private bool alreadyUpdated;
 
         private void Awake()
@@ -78,7 +78,7 @@ namespace PoseAuthoring
             OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
             if (rig != null)
             {
-                rig.UpdatedAnchors += (r) => { OnUpdatedAnchors(); };
+                rig.UpdatedAnchors += (r) => { UpdatedOVR(); };
                 _operatingWithoutOVRCameraRig = false;
             }
         }
@@ -118,6 +118,11 @@ namespace PoseAuthoring
             {
                 OnUpdatedAnchors();
             }
+        }
+
+        private void UpdatedOVR()
+        {
+            OnUpdatedAnchors();
         }
 
         private void OnUpdatedAnchors()
@@ -198,7 +203,6 @@ namespace PoseAuthoring
                 }
                 else if (trackedHandOffset.id == boneId)
                 {
-
                     Transform boneTransform = trackedHandOffset.transform;
                     boneTransform.localRotation = UnmapRotation(boneTransform,
                         skeleton.Bones[i],
@@ -215,7 +219,6 @@ namespace PoseAuthoring
                 Quaternion desiredRot = trackedBone.Transform.localRotation;
                 return offset * desiredRot;
             }
-
         }
 
         public void SetDefaultPose()

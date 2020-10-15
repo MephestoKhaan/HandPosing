@@ -130,6 +130,7 @@ namespace Interaction
             CheckForGrabOrRelease(prevFlex);
 
             MoveGrabbedObject(transform.position, transform.rotation);
+
         }
 
         public float CurrentFlex()
@@ -352,6 +353,7 @@ namespace Interaction
             }
         }
 
+
         protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot)
         {
             if (_grabbedObj == null)
@@ -363,6 +365,7 @@ namespace Interaction
             Quaternion grabbableRotation = rot * _grabbedObjectRotOff;
 
             _grabbedObj.MoveTo(grabbablePosition, grabbableRotation);
+
         }
 
     }

@@ -63,9 +63,6 @@ namespace PoseAuthoring
 
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
 
-                    grabOffset = new Pose(
-                         Quaternion.Inverse(this.puppet.Anchor.rotation) * (this.puppet.transform.position - this.puppet.Anchor.position), 
-                        Quaternion.Inverse(this.puppet.Anchor.rotation) *  this.puppet.transform.rotation);
                 }
             }
         }
@@ -106,7 +103,12 @@ namespace PoseAuthoring
 
         private void LateUpdate()
         {
-           PostAttachToObject(); 
+           PostAttachToObject();
+
+
+            grabOffset = new Pose(
+                Quaternion.Inverse(this.puppet.Anchor.rotation) * (this.puppet.transform.position - this.puppet.Anchor.position),
+                Quaternion.Inverse(this.puppet.Anchor.rotation) * this.puppet.transform.rotation);
         }
 
         private void PreAttachToObject()
@@ -119,23 +121,24 @@ namespace PoseAuthoring
                 }
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
 
-                if(grabOffset.HasValue)
+                if (grabOffset.HasValue)
                 {
-                    this.puppet.transform.rotation = Quaternion.Lerp(
+                    Quaternion rot = Quaternion.Lerp(
                          this.puppet.transform.rotation,
                          this.puppet.Anchor.rotation * grabOffset.Value.rotation, 
                          handLockFactor);
 
-                    this.puppet.transform.position = Vector3.Lerp(
+                    Vector3 pos = Vector3.Lerp(
                         this.puppet.transform.position,
                         this.puppet.Anchor.position + this.puppet.Anchor.rotation * grabOffset.Value.position, 
                         handLockFactor);
+
+                    this.transform.SetPositionAndRotation(pos, rot);
                 } 
                 else
                 {
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
                 }
-
             }
         }
 
