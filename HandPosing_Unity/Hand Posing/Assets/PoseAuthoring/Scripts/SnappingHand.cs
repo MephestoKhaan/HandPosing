@@ -23,7 +23,7 @@ namespace PoseAuthoring
         private bool snapBack;
         private bool isGrabbing;
 
-        private Pose localOffset;
+        private Pose currentOffset;
 
         private void OnEnable()
         {
@@ -31,7 +31,8 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnPuppetPreUpdate += RecordAttach;
+            Application.onBeforeRender += AttachToObject;
+            puppet.OnPuppetPreUpdate += AttachToObject;
             puppet.OnPuppetUpdated += AttachToObjectOffseted;
         }
 
@@ -41,7 +42,8 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnPuppetPreUpdate -= RecordAttach;
+            Application.onBeforeRender -= AttachToObject;
+            puppet.OnPuppetPreUpdate -= AttachToObject;
             puppet.OnPuppetUpdated -= AttachToObjectOffseted;
         }
 
@@ -105,18 +107,6 @@ namespace PoseAuthoring
             }
         }
 
-        private void RecordAttach()
-        {
-            AttachToObject();
-            localOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
-        }
-
-        private void LateUpdate()
-        {
-            AttachToObject();
-            localOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
-        }
-
         private void AttachToObjectOffseted()
         {
             if (grabbedGhost != null)
@@ -129,12 +119,11 @@ namespace PoseAuthoring
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
                 this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
 
-                //Apply a valid offset so objects actually move
                 if (isGrabbing 
                     && !snapBack)
                 {
-                    this.transform.localRotation = localOffset.rotation;
-                    this.transform.localPosition = localOffset.position;
+                    this.transform.localRotation = currentOffset.rotation;
+                    this.transform.localPosition = currentOffset.position;
                 }
             }
         }
@@ -146,12 +135,12 @@ namespace PoseAuthoring
             {
                 this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f);
             }
+            currentOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
         }
 
         private float AdjustSnapback(float grabStartTime)
         {
             return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
         }
-
     }
 }
