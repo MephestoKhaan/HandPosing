@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Interaction
 {
-    [DefaultExecutionOrder(500)]
     public class Grabbable : MonoBehaviour
     {
         [SerializeField]

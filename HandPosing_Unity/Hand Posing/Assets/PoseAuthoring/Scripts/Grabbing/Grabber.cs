@@ -130,7 +130,6 @@ namespace Interaction
             CheckForGrabOrRelease(prevFlex);
 
             MoveGrabbedObject(transform.position, transform.rotation);
-
         }
 
         public float CurrentFlex()

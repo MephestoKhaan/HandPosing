@@ -322,7 +322,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_LinearLimit:
-    limit: 0
+    limit: 0.2
     bounciness: 0
     contactDistance: 0
   m_AngularXLimitSpring:
@@ -340,7 +340,7 @@ ConfigurableJoint:
     spring: 0
     damper: 0
   m_AngularYLimit:
-    limit: 0
+    limit: 48.25461
     bounciness: 0
     contactDistance: 0
   m_AngularZLimit:
@@ -1469,14 +1469,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920525599}
-  m_LocalRotation: {x: -0, y: 0.65388787, z: -0, w: 0.75659156}
-  m_LocalPosition: {x: 0.279, y: 0.6, z: -0.441}
+  m_LocalRotation: {x: 0, y: 0.74895567, z: 0, w: 0.66262007}
+  m_LocalPosition: {x: 0.446, y: 0.4, z: -0.355}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 920166013}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 801.671, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 97, z: 0}
 --- !u!1 &920457041
 GameObject:
   m_ObjectHideFlags: 0
@@ -3843,7 +3843,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1870938087394516
 GameObject:
   m_ObjectHideFlags: 0

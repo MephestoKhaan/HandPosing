@@ -43,6 +43,7 @@ namespace PoseAuthoring
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
+        public System.Action OnPuppetPreUpdate;
         public System.Action OnPuppetUpdated;
 
         private Pose _originalGripOffset;
@@ -60,8 +61,8 @@ namespace PoseAuthoring
         private bool _restored;
         private bool _puppettedHand;
 
-        private bool _operatingWithoutOVRCameraRig = true;
-        private bool alreadyUpdated;
+        private bool _usingOVRUpdates;
+        private bool appliedOVRUpdate;
 
         private void Awake()
         {
@@ -72,12 +73,20 @@ namespace PoseAuthoring
                 this.enabled = false;
             }
 
+            InitializeOVRUpdates();
+        }
 
+        private void InitializeOVRUpdates()
+        {
             OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
             if (rig != null)
             {
                 rig.UpdatedAnchors += (r) => { OnUpdatedAnchors(); };
-                _operatingWithoutOVRCameraRig = false;
+                _usingOVRUpdates = true;
+            }
+            else
+            {
+                _usingOVRUpdates = false;
             }
         }
 
@@ -96,7 +105,7 @@ namespace PoseAuthoring
             Vector3 p = hand.localPosition;
             Quaternion r = hand.localRotation;
 
-            hand.localRotation = trackedHandOffset.RotationOffset * Quaternion.Euler(0f,180f,0f);
+            hand.localRotation = trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f);
             hand.localPosition = hand.localPosition + trackedHandOffset.positionOffset;
 
             Pose pose = this.handAnchor.RelativeOffset(this.gripPoint);
@@ -123,18 +132,22 @@ namespace PoseAuthoring
 
         private void Update()
         {
-            alreadyUpdated = false;
-            if (_operatingWithoutOVRCameraRig)
+            OnPuppetPreUpdate?.Invoke();
+
+            appliedOVRUpdate = false;
+            if (!_usingOVRUpdates)
             {
                 OnUpdatedAnchors();
             }
         }
 
-
         private void OnUpdatedAnchors()
         {
-            if (alreadyUpdated) return;
-            alreadyUpdated = true;
+            if(appliedOVRUpdate)
+            {
+                return;
+            }
+            appliedOVRUpdate = true;
 
             if (trackedHand != null
                 && trackedHand.IsInitialized
@@ -142,7 +155,6 @@ namespace PoseAuthoring
             {
                 _restored = false;
                 EnableHandTracked();
-
             }
             else if (!_restored)
             {
@@ -208,7 +220,7 @@ namespace PoseAuthoring
                 {
                     Transform boneTransform = trackedHandOffset.transform;
                     boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
-                        trackedHandOffset.RotationOffset);
+                     trackedHandOffset.RotationOffset);
 
                     boneTransform.localPosition = trackedHandOffset.positionOffset
                         + skeleton.Bones[i].Transform.localPosition;
