@@ -105,10 +105,7 @@ namespace PoseAuthoring
         {
            PostAttachToObject();
 
-
-            grabOffset = new Pose(
-                Quaternion.Inverse(this.puppet.Anchor.rotation) * (this.puppet.transform.position - this.puppet.Anchor.position),
-                Quaternion.Inverse(this.puppet.Anchor.rotation) * this.puppet.transform.rotation);
+            grabOffset = this.puppet.Anchor.RelativeOffset(this.puppet.transform);
         }
 
         private void PreAttachToObject()

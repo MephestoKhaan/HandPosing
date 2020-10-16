@@ -40,18 +40,21 @@ namespace PoseAuthoring
             }
         }
 
+        public Transform test;
+
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
         public System.Action OnPuppetUpdated;
 
         private Pose _originalGripOffset;
-        private Pose? _pupettedGripOffset;
+        private Pose _pupettedGripOffset;
         private Pose WorldGripPose
         {
             get
             {
-                Pose offset = _puppettedHand ? _pupettedGripOffset.Value : _originalGripOffset;
+                Pose offset = _puppettedHand ? _pupettedGripOffset : _originalGripOffset;
+                //TODO return this.handAnchor.GlobalPose(offset);
                 Vector3 trackedGripPosition = this.handAnchor.TransformPoint(offset.position);
                 Quaternion trackedGripRotation = this.handAnchor.rotation * offset.rotation;
                 return new Pose(trackedGripPosition, trackedGripRotation);
@@ -78,7 +81,7 @@ namespace PoseAuthoring
             OVRCameraRig rig = transform.GetComponentInParent<OVRCameraRig>();
             if (rig != null)
             {
-                rig.UpdatedAnchors += (r) => { UpdatedOVR(); };
+                rig.UpdatedAnchors += (r) => { OnUpdatedAnchors(); };
                 _operatingWithoutOVRCameraRig = false;
             }
         }
@@ -86,14 +89,28 @@ namespace PoseAuthoring
         private void Start()
         {
             StoreOriginalBonePositions();
-            _originalGripOffset = CalculateGripOffset();
+
+
+            _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
+            _pupettedGripOffset = OffsetedGripPose();
+
         }
 
-        private Pose CalculateGripOffset()
+        private Pose OffsetedGripPose()
         {
-            Vector3 relativePosition = this.handAnchor.InverseTransformPoint(this.gripPoint.position);
-            Quaternion relativeRotation = Quaternion.Inverse(this.handAnchor.rotation) * this.gripPoint.rotation;
-            return new Pose(relativePosition, relativeRotation);
+            Transform hand = trackedHandOffset.transform;
+            Vector3 p = hand.localPosition;
+            Quaternion r = hand.localRotation;
+
+            hand.localRotation = trackedHandOffset.RotationOffset * Quaternion.Euler(0f,180f,0f);
+            hand.localPosition = hand.localPosition + trackedHandOffset.positionOffset;
+
+            Pose pose = this.handAnchor.RelativeOffset(this.gripPoint);
+
+            hand.localRotation = r;
+            hand.localPosition = p;
+
+            return pose;
         }
 
         private void InitializeBones()
@@ -118,12 +135,10 @@ namespace PoseAuthoring
             {
                 OnUpdatedAnchors();
             }
+
+            test.SetPose(this.Anchor.GlobalPose(_puppettedHand ? _pupettedGripOffset : _originalGripOffset));
         }
 
-        private void UpdatedOVR()
-        {
-            OnUpdatedAnchors();
-        }
 
         private void OnUpdatedAnchors()
         {
@@ -151,7 +166,6 @@ namespace PoseAuthoring
         private void EnableHandTracked()
         {
             SetLivePose(trackedHand);
-            _pupettedGripOffset = CalculateGripOffset(); //TODO needed every frame?
             if (!_puppettedHand)
             {
                 animator.enabled = false;
@@ -167,9 +181,9 @@ namespace PoseAuthoring
             }
             _puppettedHand = false;
             SetOriginalBonePositions();
-            _originalGripOffset = CalculateGripOffset();
+
         }
-        
+
         #region bone restoring
         private void StoreOriginalBonePositions()
         {
@@ -197,27 +211,23 @@ namespace PoseAuthoring
                 if (_bonesCollection.ContainsKey(boneId))
                 {
                     Transform boneTransform = _bonesCollection[boneId].transform;
-                    boneTransform.localRotation = UnmapRotation(boneTransform,
-                        skeleton.Bones[i],
-                        _bonesCollection[boneId].rotationOffset);
+                    boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
+                        _bonesCollection[boneId].RotationOffset);
                 }
                 else if (trackedHandOffset.id == boneId)
                 {
                     Transform boneTransform = trackedHandOffset.transform;
-                    boneTransform.localRotation = UnmapRotation(boneTransform,
-                        skeleton.Bones[i],
-                        trackedHandOffset.rotationOffset);
+                    boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
+                        trackedHandOffset.RotationOffset);
 
-                    boneTransform.localPosition = trackedHandOffset.positionOffset 
+                    boneTransform.localPosition = trackedHandOffset.positionOffset
                         + skeleton.Bones[i].Transform.localPosition;
                 }
             }
 
-            Quaternion UnmapRotation(Transform boneTransform, OVRBone trackedBone, Vector3 rotationOffset)
+            Quaternion UnmapRotation(OVRBone trackedBone, Quaternion rotationOffset)
             {
-                Quaternion offset = Quaternion.Euler(rotationOffset);
-                Quaternion desiredRot = trackedBone.Transform.localRotation;
-                return offset * desiredRot;
+                return rotationOffset * trackedBone.Transform.localRotation;
             }
         }
 
