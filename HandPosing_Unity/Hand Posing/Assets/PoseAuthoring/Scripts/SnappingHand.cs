@@ -21,8 +21,9 @@ namespace PoseAuthoring
         private float handLockFactor;
         private float grabStartTime;
         private bool snapBack;
+        private bool isGrabbing;
 
-        private Pose? grabOffset = null;
+        private Pose lastGlobalPose;
 
         private void OnEnable()
         {
@@ -62,16 +63,16 @@ namespace PoseAuthoring
                     handLockFactor = fingerLockFactor = 1f;
 
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
-
+                    isGrabbing = true;
                 }
             }
         }
 
         private void GrabEnded(Grabbable grabbable)
         {
+            isGrabbing = false;
             grabbedGhost = null;
             snapBack = false;
-            grabOffset = null;
         }
 
         private void GrabAttemp(Grabbable grabbable, float amount)
@@ -96,16 +97,15 @@ namespace PoseAuthoring
                 else
                 {
                     grabbedGhost = null;
-                    handLockFactor = fingerLockFactor = 0f; 
+                    handLockFactor = fingerLockFactor = 0f;
                 }
             }
         }
 
         private void LateUpdate()
         {
-           PostAttachToObject();
-
-            grabOffset = this.puppet.Anchor.RelativeOffset(this.puppet.transform);
+            PostAttachToObject();
+            lastGlobalPose = new Pose(this.transform.localPosition, this.transform.localRotation);
         }
 
         private void PreAttachToObject()
@@ -117,31 +117,21 @@ namespace PoseAuthoring
                     handLockFactor = AdjustSnapback(grabStartTime);
                 }
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
+                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
 
-                if (grabOffset.HasValue)
+                if (isGrabbing)
                 {
-                    Quaternion rot = Quaternion.Lerp(
-                         this.puppet.transform.rotation,
-                         this.puppet.Anchor.rotation * grabOffset.Value.rotation, 
-                         handLockFactor);
-
-                    Vector3 pos = Vector3.Lerp(
-                        this.puppet.transform.position,
-                        this.puppet.Anchor.position + this.puppet.Anchor.rotation * grabOffset.Value.position, 
-                        handLockFactor);
-
-                    this.transform.SetPositionAndRotation(pos, rot);
-                } 
-                else
-                {
-                    this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+                    Quaternion rot = Quaternion.Lerp(transform.localRotation, lastGlobalPose.rotation, handLockFactor);
+                    Vector3 pos = Vector3.Lerp(transform.localPosition, lastGlobalPose.position, handLockFactor);
+                    this.transform.localRotation = rot;
+                    this.transform.localPosition = pos;
                 }
             }
         }
 
         private void PostAttachToObject()
         {
-            if (grabOffset.HasValue 
+            if (isGrabbing
                 && grabbedGhost != null)
             {
                 this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f);

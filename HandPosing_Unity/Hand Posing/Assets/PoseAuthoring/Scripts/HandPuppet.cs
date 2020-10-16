@@ -40,8 +40,6 @@ namespace PoseAuthoring
             }
         }
 
-        public Transform test;
-
         private Dictionary<BoneId, BoneMap> _bonesCollection;
         private HandMap _controlledHandOffset;
 
@@ -54,10 +52,7 @@ namespace PoseAuthoring
             get
             {
                 Pose offset = _puppettedHand ? _pupettedGripOffset : _originalGripOffset;
-                //TODO return this.handAnchor.GlobalPose(offset);
-                Vector3 trackedGripPosition = this.handAnchor.TransformPoint(offset.position);
-                Quaternion trackedGripRotation = this.handAnchor.rotation * offset.rotation;
-                return new Pose(trackedGripPosition, trackedGripRotation);
+                return this.handAnchor.GlobalPose(offset);
             }
         }
 
@@ -90,7 +85,6 @@ namespace PoseAuthoring
         {
             StoreOriginalBonePositions();
 
-
             _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
             _pupettedGripOffset = OffsetedGripPose();
 
@@ -106,7 +100,6 @@ namespace PoseAuthoring
             hand.localPosition = hand.localPosition + trackedHandOffset.positionOffset;
 
             Pose pose = this.handAnchor.RelativeOffset(this.gripPoint);
-
             hand.localRotation = r;
             hand.localPosition = p;
 
@@ -135,8 +128,6 @@ namespace PoseAuthoring
             {
                 OnUpdatedAnchors();
             }
-
-            test.SetPose(this.Anchor.GlobalPose(_puppettedHand ? _pupettedGripOffset : _originalGripOffset));
         }
 
 
@@ -158,7 +149,6 @@ namespace PoseAuthoring
                 _restored = true;
                 DisableHandTracked();
             }
-
 
             OnPuppetUpdated?.Invoke();
         }
@@ -250,11 +240,11 @@ namespace PoseAuthoring
             LerpOffset(pose, relativeTo, positionWeight);
         }
 
-        public void LerpBones(HandSnapPose pose, float bonesWeight = 1f)
+        public void LerpBones(HandSnapPose pose, float weight)
         {
             InitializeBones();
 
-            if (bonesWeight > 0f)
+            if (weight > 0f)
             {
                 foreach (var bone in pose.Bones)
                 {
@@ -262,26 +252,26 @@ namespace PoseAuthoring
                     if (_bonesCollection.ContainsKey(boneId))
                     {
                         Transform boneTransform = _bonesCollection[boneId].transform;
-                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, bone.rotation, bonesWeight);
+                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, bone.rotation, weight);
                     }
                 }
             }
         }
 
-        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float positionWeight = 1f)
+        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float weight)
         {
             Pose worldGrip = WorldGripPose;
 
             Quaternion rotationDif = Quaternion.Inverse(this.transform.rotation) * this.gripPoint.rotation;
             Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
             Quaternion trackedRot = rotationDif * worldGrip.rotation;
-            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, positionWeight);
+            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, weight);
             this.transform.rotation = finalRot;
 
             Vector3 positionDif = this.transform.position - this.gripPoint.position;
             Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
             Vector3 trackedPosition = worldGrip.position + positionDif;
-            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, positionWeight);
+            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, weight);
             this.transform.position = finalPos;
         }
 

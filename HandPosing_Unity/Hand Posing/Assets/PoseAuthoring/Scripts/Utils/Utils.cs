@@ -11,13 +11,23 @@ namespace PoseAuthoring
 
         public static Pose RelativeOffset(this Transform to, Transform from)
         {
-            return RelativeOffset(to, from.position, from.rotation);
+            return RelativeOffset(from.position, from.rotation, to.position, to.rotation);
         }
 
-        public static Pose RelativeOffset(this Transform to, Vector3 fromPosition, Quaternion fromRotation)
+        public static Pose RelativeOffset(this Transform to, Pose from)
         {
-            Quaternion inverseTo = Quaternion.Inverse(to.rotation);
-            Vector3 relativePosition = inverseTo * (fromPosition - to.position);
+            return RelativeOffset(from.position, from.rotation, to.position, to.rotation);
+        }
+
+        public static Pose RelativeOffset(Pose from, Pose to)
+        {
+            return RelativeOffset(from.position, from.rotation, to.position, to.rotation);
+        }
+
+        public static Pose RelativeOffset(Vector3 fromPosition, Quaternion fromRotation, Vector3 toPosition, Quaternion toRotation)
+        {
+            Quaternion inverseTo = Quaternion.Inverse(toRotation);
+            Vector3 relativePosition = inverseTo * (fromPosition - toPosition);
             Quaternion relativeRotation = inverseTo * fromRotation;
 
             return new Pose(relativePosition, relativeRotation);
@@ -29,6 +39,7 @@ namespace PoseAuthoring
                 reference.position + reference.rotation * offset.position,
                 reference.rotation * offset.rotation);
         }
+
 
     }
 }
