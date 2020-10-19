@@ -25,15 +25,17 @@ namespace PoseAuthoring
 
         private Pose currentOffset;
 
+        private Pose? grabOffset;
+
         private void OnEnable()
         {
             grabber.OnGrabAttemp += GrabAttemp;
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            Application.onBeforeRender += AttachToObject;
-            puppet.OnPuppetPreUpdate += AttachToObject;
+            puppet.OnPuppetPreUpdate += PreAttachToObject;
             puppet.OnPuppetUpdated += AttachToObjectOffseted;
+            Application.onBeforeRender += PostAttachToObject;
         }
 
         private void OnDisable()
@@ -42,9 +44,9 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            Application.onBeforeRender -= AttachToObject;
-            puppet.OnPuppetPreUpdate -= AttachToObject;
+            puppet.OnPuppetPreUpdate -= PreAttachToObject;
             puppet.OnPuppetUpdated -= AttachToObjectOffseted;
+            Application.onBeforeRender -= PostAttachToObject;
         }
 
 
@@ -62,12 +64,14 @@ namespace PoseAuthoring
                     grabbedGhost = ghost;
                     poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
 
-                    snapBack = grabbable.CanMove && snappable.HandSnapBacks;
+                    snapBack = snappable.HandSnapBacks;
                     grabStartTime = Time.timeSinceLevelLoad;
 
                     handLockFactor = fingerLockFactor = 1f;
 
                     this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
+
+                    grabOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
                     isGrabbing = true;
                 }
             }
@@ -107,38 +111,60 @@ namespace PoseAuthoring
             }
         }
 
+        private void PreAttachToObject()
+        {
+            if (isGrabbing)
+            {
+                //moves it back into place
+                offset.localRotation = currentOffset.rotation;
+                offset.localPosition = currentOffset.position;
+            }
+        }
+
         private void AttachToObjectOffseted()
         {
             if (grabbedGhost != null)
             {
                 if (snapBack)
                 {
-                    handLockFactor = AdjustSnapback(grabStartTime);
+                    handLockFactor = AdjustSnapbackTime(grabStartTime);
                 }
                 
                 this.puppet.LerpBones(poseInVolume, fingerLockFactor);
-                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
 
                 if (isGrabbing 
                     && !snapBack)
                 {
                     this.transform.localRotation = currentOffset.rotation;
                     this.transform.localPosition = currentOffset.position;
+                } 
+                else if(isGrabbing 
+                    && snapBack)
+                {
+                    this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, grabOffset.Value.rotation, handLockFactor);
+                    this.transform.localPosition = Vector3.Lerp(this.transform.localPosition, grabOffset.Value.position, handLockFactor);
+                }
+                else
+                {
+                    this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, handLockFactor);
                 }
             }
         }
 
-        private void AttachToObject()
+        public Transform offset;
+
+
+        private void PostAttachToObject()
         {
             if (isGrabbing
                 && grabbedGhost != null)
             {
-                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f);
+                currentOffset = new Pose(offset.localPosition, offset.localRotation);
+                this.puppet.LerpOffset(poseInVolume, grabbedGhost.RelativeTo, 1f, offset);
             }
-            currentOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
         }
 
-        private float AdjustSnapback(float grabStartTime)
+        private float AdjustSnapbackTime(float grabStartTime)
         {
             return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
         }

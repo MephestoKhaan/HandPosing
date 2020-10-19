@@ -288,6 +288,24 @@ namespace PoseAuthoring
         }
 
 
+        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float weight, Transform t)
+        {
+            Pose worldGrip = WorldGripPose;
+
+            Quaternion rotationDif = Quaternion.Inverse(t.rotation) * this.gripPoint.rotation;
+            Quaternion desiredRotation = (relativeTo.rotation * pose.relativeGripRot) * rotationDif;
+            Quaternion trackedRot = rotationDif * worldGrip.rotation;
+            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, weight);
+            t.rotation = finalRot;
+
+            Vector3 positionDif = t.position - this.gripPoint.position;
+            Vector3 desiredPosition = relativeTo.TransformPoint(pose.relativeGripPos) + positionDif;
+            Vector3 trackedPosition = worldGrip.position + positionDif;
+            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, weight);
+            t.position = finalPos;
+        }
+
+
         public HandSnapPose CurrentPoseVisual(Transform relativeTo)
         {
             HandSnapPose pose = new HandSnapPose();
