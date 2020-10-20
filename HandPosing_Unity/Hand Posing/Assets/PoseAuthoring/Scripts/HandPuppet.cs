@@ -62,7 +62,6 @@ namespace PoseAuthoring
 
         private bool _trackingHands;
         private bool _usingOVRUpdates;
-        private bool _poseWasUpdated;
 
         private void Awake()
         {
@@ -132,7 +131,6 @@ namespace PoseAuthoring
 
         private void Update()
         {
-            _poseWasUpdated = false;
             if (!_usingOVRUpdates)
             {
                 UpdateHandPose();
@@ -141,12 +139,6 @@ namespace PoseAuthoring
 
         private void UpdateHandPose()
         {
-            if(_poseWasUpdated)
-            {
-               // return;
-            }
-            _poseWasUpdated = true;
-
             if (trackedHand != null
                 && trackedHand.IsInitialized
                 && trackedHand.IsDataValid)
