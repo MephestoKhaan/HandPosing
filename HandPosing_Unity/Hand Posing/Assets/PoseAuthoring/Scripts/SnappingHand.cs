@@ -29,6 +29,7 @@ namespace PoseAuthoring
         private Pose? _grabOffset;
         private Pose _prevOffset;
 
+        private Coroutine _lastUpdateRoutine;
 
         private void OnEnable()
         {
@@ -36,10 +37,13 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            //puppet.OnPuppetPreUpdate += UndoVisualAttach;
             puppet.OnPoseUpdated += AttachToObjectOffseted;
             Application.onBeforeRender += VisuallyAttach;
-            StartCoroutine("LastUpdate");
+
+            if(_lastUpdateRoutine == null)
+            {
+                _lastUpdateRoutine = StartCoroutine(LastUpdate());
+            }
         }
 
         private void OnDisable()
@@ -48,10 +52,14 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            //puppet.OnPuppetPreUpdate -= UndoVisualAttach;
             puppet.OnPoseUpdated -= AttachToObjectOffseted;
             Application.onBeforeRender -= VisuallyAttach;
-            StopCoroutine("LastUpdate");
+
+            if (_lastUpdateRoutine != null)
+            {
+                StopCoroutine(_lastUpdateRoutine);
+                _lastUpdateRoutine = null;
+            }
         }
 
         #region grabber callbacks
@@ -139,7 +147,6 @@ namespace PoseAuthoring
             }
         }
 
-
         private void UndoVisualAttach()
         {
             if (_isGrabbing)
@@ -148,18 +155,16 @@ namespace PoseAuthoring
             }
         }
 
-
         private void AttachToObjectOffseted()
         {
             if (_grabbedGhost != null)
             {
+                this.puppet.LerpBones(_poseInGhost, _bonesOverrideFactor);
+                 
                 if (_snapBack)
                 {
                     _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
                 }
-
-                this.puppet.LerpBones(_poseInGhost, _bonesOverrideFactor);
-
                 if(_isGrabbing)
                 {
                     if (_snapBack)
@@ -169,7 +174,7 @@ namespace PoseAuthoring
                     }
                     else
                     {
-                        this.transform.SetPose(_prevOffset, Space.Self);
+                        this.transform.SetPose(_grabOffset.Value, Space.Self);
                     }
                 }
                 else
