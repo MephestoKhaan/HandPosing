@@ -127,7 +127,7 @@ namespace PoseAuthoring
 
         #endregion
 
-        private YieldInstruction _endOfFrame = new WaitForEndOfFrame();
+        private static YieldInstruction _endOfFrame = new WaitForEndOfFrame();
         private IEnumerator LastUpdate()
         {
             while (true)
