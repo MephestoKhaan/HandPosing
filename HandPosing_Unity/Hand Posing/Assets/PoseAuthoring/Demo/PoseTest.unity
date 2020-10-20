@@ -766,7 +766,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498266807}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.69, y: 0, z: 0.143}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.07, y: 0.1, z: 0.07}
   m_Children: []
   m_Father: {fileID: 924816150}
@@ -2381,9 +2381,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1248587805}
   - component: {fileID: 1248587804}
-  - component: {fileID: 1248587803}
   - component: {fileID: 1248587802}
   - component: {fileID: 1248587801}
+  - component: {fileID: 1248587803}
   m_Layer: 0
   m_Name: SnappableCube (3)
   m_TagString: Untagged
@@ -2440,7 +2440,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1248587800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1248587804
@@ -2528,9 +2528,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1506398626}
   - component: {fileID: 1506398628}
-  - component: {fileID: 1506398623}
   - component: {fileID: 1506398627}
   - component: {fileID: 1506398624}
+  - component: {fileID: 1506398623}
   m_Layer: 0
   m_Name: SnappableCube
   m_TagString: Untagged
@@ -2547,7 +2547,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1506398622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!145 &1506398624
@@ -2741,9 +2741,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1562091171}
   - component: {fileID: 1562091170}
-  - component: {fileID: 1562091169}
   - component: {fileID: 1562091168}
   - component: {fileID: 1562091167}
+  - component: {fileID: 1562091169}
   m_Layer: 0
   m_Name: SnappableCube (4)
   m_TagString: Untagged
@@ -2800,7 +2800,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1562091166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1562091170
@@ -2844,9 +2844,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1578624148}
   - component: {fileID: 1578624147}
-  - component: {fileID: 1578624146}
   - component: {fileID: 1578624145}
   - component: {fileID: 1578624144}
+  - component: {fileID: 1578624146}
   m_Layer: 0
   m_Name: SnappableCube (1)
   m_TagString: Untagged
@@ -2903,7 +2903,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1578624143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1578624147
@@ -3724,9 +3724,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1987249417}
   - component: {fileID: 1987249416}
-  - component: {fileID: 1987249415}
   - component: {fileID: 1987249414}
   - component: {fileID: 1987249413}
+  - component: {fileID: 1987249415}
   m_Layer: 0
   m_Name: SnappableCube (2)
   m_TagString: Untagged
@@ -3783,7 +3783,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1987249412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
+  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1987249416
