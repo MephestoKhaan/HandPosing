@@ -127,6 +127,9 @@ namespace PoseAuthoring
 
         #endregion
 
+
+        #region snap lifecycle
+
         private static YieldInstruction _endOfFrame = new WaitForEndOfFrame();
         private IEnumerator LastUpdate()
         {
@@ -188,5 +191,6 @@ namespace PoseAuthoring
         {
             return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / snapbackTime);
         }
+        #endregion
     }
 }

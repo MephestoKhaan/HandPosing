@@ -9,7 +9,7 @@ namespace Interaction.Grabbables
         public override void GrabBegin(Grabber hand, Collider grabPoint)
         {
             base.GrabBegin(hand, grabPoint);
-            _body.isKinematic = true;
+            _body.isKinematic = false;
         }
 
         public override void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)

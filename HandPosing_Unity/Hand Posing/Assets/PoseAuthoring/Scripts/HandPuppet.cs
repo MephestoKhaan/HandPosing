@@ -41,7 +41,6 @@ namespace PoseAuthoring
             }
         }
 
-        public System.Action OnPuppetPreUpdate;
         public System.Action OnPoseUpdated;
 
         private class BoneCollection : Dictionary<BoneId, BoneMap> { };
@@ -133,8 +132,6 @@ namespace PoseAuthoring
 
         private void Update()
         {
-            OnPuppetPreUpdate?.Invoke();
-
             _poseWasUpdated = false;
             if (!_usingOVRUpdates)
             {
