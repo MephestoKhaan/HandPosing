@@ -55,8 +55,6 @@ namespace Interaction
         {
             _grabbedBy = hand;
             _grabbedCollider = grabPoint;
-
-            _body.isKinematic = true;
         }
 
         public virtual void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
@@ -65,15 +63,12 @@ namespace Interaction
             _body.velocity = linearVelocity;
             _body.angularVelocity = angularVelocity;
 
-
             _grabbedBy = null;
             _grabbedCollider = null;
         }
 
         public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
         {
-            this.transform.position = desiredPos;
-            this.transform.rotation = desiredRot;
         }
 
         protected virtual void Awake()

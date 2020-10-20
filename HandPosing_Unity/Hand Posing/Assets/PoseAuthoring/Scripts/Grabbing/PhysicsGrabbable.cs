@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-namespace Interaction
+namespace Interaction.Grabbables
 {
     public class PhysicsGrabbable : Grabbable
     {
@@ -11,10 +11,8 @@ namespace Interaction
 
         private GameObject savedJointHolder;
 
-
         private Joint _desiredJoint;
         private Joint _joint;
-        private Pose? desiredPhysicsPose;
 
         protected override void Awake()
         {
@@ -49,24 +47,11 @@ namespace Interaction
                 Destroy(_joint);
                 _joint = null;
             }
-            desiredPhysicsPose = null;
 
             base.GrabEnd(linearVelocity, angularVelocity);
         }
 
-        public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
-        {
-            // desiredPhysicsPose = new Pose(desiredPos, desiredRot);
-        }
-
-        /*private void FixedUpdate()
-        {
-            if (desiredPhysicsPose.HasValue)
-            {
-                GrabbedBody.MoveRotation(desiredPhysicsPose.Value.rotation);
-                GrabbedBody.MovePosition(desiredPhysicsPose.Value.position);
-            }
-        }*/
+        public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot){}
 
         private Joint CreateDefaultJoint()
         {
