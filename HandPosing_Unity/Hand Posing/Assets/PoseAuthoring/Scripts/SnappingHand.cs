@@ -7,6 +7,7 @@ using Grabbable = Interaction.Grabbable;
 
 namespace PoseAuthoring
 {
+    [DefaultExecutionOrder(10)]
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
@@ -31,30 +32,28 @@ namespace PoseAuthoring
 
         private Coroutine _lastUpdateRoutine;
 
-        private void OnEnable()
+        private void Start()
         {
             grabber.OnGrabAttemp += GrabAttemp;
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnPoseUpdated += AttachToObjectOffseted;
             Application.onBeforeRender += VisuallyAttach;
-
-            if(_lastUpdateRoutine == null)
+            puppet.OnPoseUpdated += AttachToObjectOffseted;
+            if (_lastUpdateRoutine == null)
             {
                 _lastUpdateRoutine = StartCoroutine(LastUpdate());
             }
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             grabber.OnGrabAttemp -= GrabAttemp;
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnPoseUpdated -= AttachToObjectOffseted;
             Application.onBeforeRender -= VisuallyAttach;
-
+            puppet.OnPoseUpdated -= AttachToObjectOffseted;
             if (_lastUpdateRoutine != null)
             {
                 StopCoroutine(_lastUpdateRoutine);

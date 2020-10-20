@@ -143,8 +143,9 @@ namespace PoseAuthoring
         {
             if(_poseWasUpdated)
             {
-                return;
+               // return;
             }
+            _poseWasUpdated = true;
 
             if (trackedHand != null
                 && trackedHand.IsInitialized
@@ -157,7 +158,6 @@ namespace PoseAuthoring
                 DisableHandTracked();
             }
 
-            _poseWasUpdated = true;
 
             OnPoseUpdated?.Invoke();
         }
