@@ -86,7 +86,7 @@ namespace PoseAuthoring
 
         public void RefreshPose(Transform relativeTo)
         {
-            _snapPoseVolume.pose = Puppet.CurrentPoseVisual(relativeTo);
+            _snapPoseVolume.pose = Puppet.VisualPose(relativeTo);
         }
 
 

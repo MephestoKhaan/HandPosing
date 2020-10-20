@@ -33,7 +33,7 @@ namespace PoseAuthoring
 
         public HandGhost AddPose(HandPuppet puppet)
         {
-            HandSnapPose pose = puppet.CurrentPoseVisual(this.transform);
+            HandSnapPose pose = puppet.VisualPose(this.transform);
             HandGhost ghost = Instantiate(handProvider.GetHand(pose.handeness), this.transform);
             ghost.SetPose(pose, this.transform);
             this.ghosts.Add(ghost);

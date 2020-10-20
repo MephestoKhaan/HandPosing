@@ -4,9 +4,17 @@ namespace PoseAuthoring
 {
     public static class Utils
     {
-        public static void SetPose(this Transform transform, Pose pose)
+        public static void SetPose(this Transform transform, Pose pose, Space space = Space.World)
         {
-            transform.SetPositionAndRotation(pose.position, pose.rotation);
+            if(space == Space.World)
+            {
+                transform.SetPositionAndRotation(pose.position, pose.rotation);
+            }
+            else
+            {
+                transform.localRotation = pose.rotation;
+                transform.localPosition = pose.position;
+            }
         }
 
         public static Pose RelativeOffset(this Transform to, Transform from)
