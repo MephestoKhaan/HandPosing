@@ -41,6 +41,15 @@ namespace PoseAuthoring
             }
         }
 
+        public bool IsTrackingHands
+        {
+            get
+            {
+                return _trackingHands;
+            }
+        }
+
+
         public System.Action OnPoseUpdated;
 
         private class BoneCollection : Dictionary<BoneId, BoneMap> { };
@@ -51,12 +60,23 @@ namespace PoseAuthoring
         private Pose _originalGripOffset;
         private Pose _pupettedGripOffset;
 
+        private Pose _localControlledOffset;
+        private Pose _localTrackedOffset;
+
         private Pose TrackedGripPose
         {
             get
             {
                 Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
                 return this.handAnchor.GlobalPose(offset);
+            }
+        }
+
+        public Pose LocalPose
+        {
+            get
+            {
+                return _trackingHands ? _localTrackedOffset : _localControlledOffset;
             }
         }
 
@@ -105,11 +125,19 @@ namespace PoseAuthoring
 
         private void Start()
         {
-            _originalHandOffset =  HandOffsetMapping();
-            _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
-            _pupettedGripOffset = OffsetedGripPose(trackedHandOffset.positionOffset, 
+            StorePoses();
+        }
+
+        private void StorePoses()
+        {
+            _localControlledOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
+            _localTrackedOffset = new Pose(trackedHandOffset.positionOffset + this.transform.localPosition,
                 trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f));
 
+            _originalHandOffset = HandOffsetMapping();
+            _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
+            _pupettedGripOffset = OffsetedGripPose(trackedHandOffset.positionOffset,
+                trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f));
         }
 
         private Pose OffsetedGripPose(Vector3 posOffset, Quaternion rotOffset)
@@ -245,10 +273,8 @@ namespace PoseAuthoring
             }
         }
 
-        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float weight, Transform transform = null)
+        public void LerpOffset(HandSnapPose pose, Transform relativeTo, float weight)
         {
-            transform = transform ?? this.transform;
-
             Pose worldGrip = TrackedGripPose;
 
             Quaternion rotationDif = Quaternion.Inverse(transform.rotation) * this.gripPoint.rotation;

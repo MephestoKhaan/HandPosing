@@ -30,6 +30,16 @@ namespace PoseAuthoring
         private Pose? _grabOffset;
         private Pose _prevOffset;
 
+
+        private bool IsSnapGrabbing
+        {
+            get
+            {
+                return _isGrabbing
+                    && _grabbedGhost != null;
+            }
+        }
+
         private Coroutine _lastUpdateRoutine;
 
         private void Start()
@@ -39,7 +49,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded += GrabEnded;
 
             Application.onBeforeRender += VisuallyAttach;
-            puppet.OnPoseUpdated += AttachToObjectOffseted;
+            puppet.OnPoseUpdated += AfterPuppetUpdate;
             if (_lastUpdateRoutine == null)
             {
                 _lastUpdateRoutine = StartCoroutine(LastUpdate());
@@ -53,7 +63,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded -= GrabEnded;
 
             Application.onBeforeRender -= VisuallyAttach;
-            puppet.OnPoseUpdated -= AttachToObjectOffseted;
+            puppet.OnPoseUpdated -= AfterPuppetUpdate;
             if (_lastUpdateRoutine != null)
             {
                 StopCoroutine(_lastUpdateRoutine);
@@ -74,6 +84,7 @@ namespace PoseAuthoring
 
                 this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, _offsetOverrideFactor);
                 _grabOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
+                //TODO grabOffset could be the GRIP position instead
 
                 _snapBack = grabbable.Snappable.HandSnapBacks;
                 _grabStartTime = Time.timeSinceLevelLoad;
@@ -115,7 +126,7 @@ namespace PoseAuthoring
             {
                 HandSnapPose userPose = this.puppet.TrackedPose(snappable.transform);
                 HandGhost ghost = snappable.FindBestGhost(userPose, out float score, out var bestPlace);
-                if(ghost != null)
+                if (ghost != null)
                 {
                     HandSnapPose ghostPose = ghost.AdjustPlace(bestPlace);
                     return (ghost, ghostPose);
@@ -139,21 +150,36 @@ namespace PoseAuthoring
             }
         }
 
+        private void UndoVisualAttach()
+        {
+            if (IsSnapGrabbing)
+            {
+                this.transform.SetPose(_prevOffset, Space.Self);
+            }
+        }
+
         private void VisuallyAttach()
         {
-            if (_isGrabbing
-                && _grabbedGhost != null)
+            if (IsSnapGrabbing)
             {
                 _prevOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
                 this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, 1f);
             }
         }
 
-        private void UndoVisualAttach()
+        private void LateUpdate()
         {
-            if (_isGrabbing)
+            if (!this.puppet.IsTrackingHands)
             {
-                this.transform.SetPose(_prevOffset, Space.Self);
+                AttachToObjectOffseted();
+            }
+        }
+
+        private void AfterPuppetUpdate()
+        {
+            if (this.puppet.IsTrackingHands)
+            {
+                AttachToObjectOffseted();
             }
         }
 
@@ -162,17 +188,16 @@ namespace PoseAuthoring
             if (_grabbedGhost != null)
             {
                 this.puppet.LerpBones(_poseInGhost, _bonesOverrideFactor);
-                 
                 if (_snapBack)
                 {
                     _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
                 }
-                if(_isGrabbing)
+                if (_isGrabbing)
                 {
                     if (_snapBack)
                     {
-                        this.transform.localRotation = Quaternion.Lerp(this.transform.localRotation, _grabOffset.Value.rotation, _offsetOverrideFactor);
-                        this.transform.localPosition = Vector3.Lerp(this.transform.localPosition, _grabOffset.Value.position, _offsetOverrideFactor);
+                        this.transform.localRotation = Quaternion.Lerp(this.puppet.LocalPose.rotation, _grabOffset.Value.rotation, _offsetOverrideFactor);
+                        this.transform.localPosition = Vector3.Lerp(this.puppet.LocalPose.position, _grabOffset.Value.position, _offsetOverrideFactor);
                     }
                     else
                     {
