@@ -83,7 +83,7 @@ namespace PoseAuthoring
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
                 this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, _offsetOverrideFactor);
-                _grabOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
+                _grabOffset = this.puppet.RelativeGrip();
                 //TODO grabOffset could be the GRIP position instead
 
                 _snapBack = grabbable.Snappable.HandSnapBacks;
@@ -196,12 +196,14 @@ namespace PoseAuthoring
                 {
                     if (_snapBack)
                     {
-                        this.transform.localRotation = Quaternion.Lerp(this.puppet.LocalPose.rotation, _grabOffset.Value.rotation, _offsetOverrideFactor);
-                        this.transform.localPosition = Vector3.Lerp(this.puppet.LocalPose.position, _grabOffset.Value.position, _offsetOverrideFactor);
+                        this.puppet.LerpOffset(_grabOffset.Value, _offsetOverrideFactor);
+                        //this.transform.localRotation = Quaternion.Lerp(this.puppet.LocalPose.rotation, _grabOffset.Value.rotation, _offsetOverrideFactor);
+                        //this.transform.localPosition = Vector3.Lerp(this.puppet.LocalPose.position, _grabOffset.Value.position, _offsetOverrideFactor);
                     }
                     else
                     {
-                        this.transform.SetPose(_grabOffset.Value, Space.Self);
+                        this.puppet.LerpOffset(_grabOffset.Value, _offsetOverrideFactor);
+                        //this.transform.SetPose(_grabOffset.Value, Space.Self);
                     }
                 }
                 else

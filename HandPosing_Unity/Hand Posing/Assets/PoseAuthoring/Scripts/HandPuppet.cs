@@ -140,6 +140,7 @@ namespace PoseAuthoring
                 trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f));
         }
 
+
         private Pose OffsetedGripPose(Vector3 posOffset, Quaternion rotOffset)
         {
             Transform hand = trackedHandOffset.transform;
@@ -271,6 +272,29 @@ namespace PoseAuthoring
                     }
                 }
             }
+        }
+
+
+        public Pose RelativeGrip()
+        {
+            return this.handAnchor.RelativeOffset(this.gripPoint);
+        }
+
+        public void LerpOffset(Pose pose, float weight)
+        {
+            Pose worldGrip = TrackedGripPose;
+
+            Quaternion rotationDif = Quaternion.Inverse(transform.rotation) * this.gripPoint.rotation;
+            Quaternion desiredRotation = (this.Anchor.rotation * pose.rotation) * rotationDif;
+            Quaternion trackedRot = rotationDif * worldGrip.rotation;
+            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, weight);
+            transform.rotation = finalRot;
+
+            Vector3 positionDif = transform.position - this.gripPoint.position;
+            Vector3 desiredPosition = this.Anchor.TransformPoint(pose.position) + positionDif;
+            Vector3 trackedPosition = worldGrip.position + positionDif;
+            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, weight);
+            transform.position = finalPos;
         }
 
         public void LerpOffset(HandSnapPose pose, Transform relativeTo, float weight)
