@@ -33,8 +33,8 @@ namespace PoseAuthoring
             
             if (grabbable != null && grabbable.Snappable != null)
             {
-                HandSnapPose userPose = this.puppetHand.CurrentPoseTracked(grabbable.Snappable.transform);
-                HandGhost ghost = grabbable.Snappable.FindNearsetGhost(userPose, out float score, out var bestPose);
+                HandSnapPose userPose = this.puppetHand.TrackedPose(grabbable.Snappable.transform);
+                HandGhost ghost = grabbable.Snappable.FindBestGhost(userPose, out float score, out var bestPose);
                 if (ghost != previousGhost)
                 {
                     previousGhost?.Highlight(false);

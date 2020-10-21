@@ -1,123 +1,210 @@
 using UnityEngine;
+using System.Collections;
 
 using Grabber = Interaction.Grabber;
 using Grabbable = Interaction.Grabbable;
 
+
 namespace PoseAuthoring
 {
-    [DefaultExecutionOrder(50)]
+    [DefaultExecutionOrder(10)]
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
         private Grabber grabber;
         [SerializeField]
         private HandPuppet puppet;
+        [Space]
+        [SerializeField]
+        private float snapbackTime = 0.33f;
 
-        private const float SNAPBACK_TIME = 0.4f;
+        private HandGhost _grabbedGhost;
+        private HandSnapPose _poseInGhost;
 
-        private HandGhost grabbedGhost;
-        private HandSnapPose poseInVolume;
-        private float fingerLockFactor;
-        private float handLockFactor;
-        private float grabStartTime;
-        private bool snapBack;
-        private bool physicsGrab;
+        private float _bonesOverrideFactor;
+        private float _offsetOverrideFactor;
 
-        private void OnEnable()
+        private float _grabStartTime;
+        private bool _snapBack;
+        private bool _isGrabbing;
+        private Pose _grabOffset;
+        private Pose _prevOffset;
+
+        private bool IsSnapping
+        {
+            get
+            {
+                return _isGrabbing
+                    && _grabbedGhost != null;
+            }
+        }
+
+        private Coroutine _lastUpdateRoutine;
+
+        private void Start()
         {
             grabber.OnGrabAttemp += GrabAttemp;
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            puppet.OnPostupdated += SnapToGrabbable;
+            Application.onBeforeRender += VisuallyAttach;
+            puppet.OnPoseUpdated += AfterPuppetUpdate;
+            if (_lastUpdateRoutine == null)
+            {
+                _lastUpdateRoutine = StartCoroutine(LastUpdate());
+            }
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             grabber.OnGrabAttemp -= GrabAttemp;
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            puppet.OnPostupdated -= SnapToGrabbable;
+            Application.onBeforeRender -= VisuallyAttach;
+            puppet.OnPoseUpdated -= AfterPuppetUpdate;
+            if (_lastUpdateRoutine != null)
+            {
+                StopCoroutine(_lastUpdateRoutine);
+                _lastUpdateRoutine = null;
+            }
         }
+
+        #region grabber callbacks
 
         private void GrabStarted(Grabbable grabbable)
         {
-            SnappableObject snappable = grabbable.Snappable;
-
-            if (snappable != null)
+            var ghostPose = GhostForGrabbable(grabbable);
+            if (ghostPose.HasValue)
             {
-                HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
+                _grabbedGhost = ghostPose.Value.Item1;
+                _poseInGhost = ghostPose.Value.Item2;
+                _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
-                if (ghost != null)
-                {
-                    grabbedGhost = ghost;
-                    poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
+                this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
+                _grabOffset = this.puppet.GripOffset;
 
-                    snapBack = grabbable.CanMove && snappable.HandSnapBacks;
-                    grabStartTime = Time.timeSinceLevelLoad;
-
-                    handLockFactor = 1f;
-                    fingerLockFactor = 1f;
-                    physicsGrab = grabbable.PhysicsMove;
-                    this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
-                }
+                _snapBack = grabbable.Snappable.HandSnapBacks;
+                _grabStartTime = Time.timeSinceLevelLoad;
+                _isGrabbing = true;
             }
         }
 
         private void GrabEnded(Grabbable grabbable)
         {
-            grabbedGhost = null;
-            snapBack = false;
-            physicsGrab = false;
-        }
-
-        private void LateUpdate()
-        {
-            if(physicsGrab)
-            {
-                SnapToGrabbable();
-            }
-        }
-
-        private void SnapToGrabbable()
-        {
-            if (grabbedGhost != null)
-            {
-                if(snapBack)
-                {
-                    handLockFactor = 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / SNAPBACK_TIME);
-                }
-                this.puppet.TransitionToPose(poseInVolume, grabbedGhost.RelativeTo, fingerLockFactor, handLockFactor);
-            }
+            _isGrabbing = false;
+            _grabbedGhost = null;
         }
 
         private void GrabAttemp(Grabbable grabbable, float amount)
         {
-            snapBack = false;
+            _snapBack = false;
+            var ghostPose = GhostForGrabbable(grabbable);
+            if (ghostPose.HasValue)
+            {
+                _grabbedGhost = ghostPose.Value.Item1;
+                _poseInGhost = ghostPose.Value.Item2;
+                _offsetOverrideFactor = _bonesOverrideFactor = amount;
+            }
+            else
+            {
+                _grabbedGhost = null;
+                _offsetOverrideFactor = _bonesOverrideFactor = 0f;
+            }
+        }
+
+        private (HandGhost, HandSnapPose)? GhostForGrabbable(Grabbable grabbable)
+        {
             if (grabbable == null)
             {
-                grabbedGhost = null;
-                return;
+                return null;
             }
             SnappableObject snappable = grabbable.Snappable;
             if (snappable != null)
             {
-                HandSnapPose userPose = this.puppet.CurrentPoseTracked(snappable.transform);
-                HandGhost ghost = snappable.FindNearsetGhost(userPose, out float score, out var bestPlace);
+                HandSnapPose userPose = this.puppet.TrackedPose(snappable.transform);
+                HandGhost ghost = snappable.FindBestGhost(userPose, out float score, out var bestPlace);
                 if (ghost != null)
                 {
-                    grabbedGhost = ghost;
-                    poseInVolume = grabbedGhost.AdjustPlace(bestPlace);
-                    handLockFactor = fingerLockFactor = amount;
+                    HandSnapPose ghostPose = ghost.AdjustPlace(bestPlace);
+                    return (ghost, ghostPose);
+                }
+            }
+            return null;
+        }
+
+        #endregion
+
+
+        #region snap lifecycle
+
+        private static YieldInstruction _endOfFrame = new WaitForEndOfFrame();
+        private IEnumerator LastUpdate()
+        {
+            while (true)
+            {
+                yield return _endOfFrame;
+                UndoVisualAttach();
+            }
+        }
+
+        private void UndoVisualAttach()
+        {
+            if (IsSnapping)
+            {
+                this.transform.SetPose(_prevOffset, Space.Self);
+            }
+        }
+
+        private void VisuallyAttach()
+        {
+            if (IsSnapping)
+            {
+                _prevOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
+                this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            if (!this.puppet.IsTrackingHands)
+            {
+                AttachToObjectOffseted();
+            }
+        }
+
+        private void AfterPuppetUpdate()
+        {
+            if (this.puppet.IsTrackingHands)
+            {
+                AttachToObjectOffseted();
+            }
+        }
+
+        private void AttachToObjectOffseted()
+        {
+            if (_grabbedGhost != null)
+            {
+                this.puppet.LerpBones(_poseInGhost, _bonesOverrideFactor);
+                if (_snapBack)
+                {
+                    _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
+                }
+                if (_isGrabbing)
+                {
+                    this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
                 }
                 else
                 {
-                    grabbedGhost = null;
-                    handLockFactor = fingerLockFactor = 0f; //TODO: animate?
+                    this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
                 }
             }
         }
+
+        private float AdjustSnapbackTime(float grabStartTime)
+        {
+            return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / snapbackTime);
+        }
+        #endregion
     }
 }

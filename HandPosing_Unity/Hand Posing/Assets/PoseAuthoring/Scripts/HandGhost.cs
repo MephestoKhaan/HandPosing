@@ -66,7 +66,7 @@ namespace PoseAuthoring
 
         public void SetPose(HandSnapPose userPose, Transform relativeTo)
         {
-            Puppet.TransitionToPose(userPose, relativeTo);
+            Puppet.LerpToPose(userPose, relativeTo);
             RelativeTo = relativeTo;
             _snapPoseVolume = new VolumetricPose()
             {
@@ -86,7 +86,7 @@ namespace PoseAuthoring
 
         public void RefreshPose(Transform relativeTo)
         {
-            _snapPoseVolume.pose = Puppet.CurrentPoseVisual(relativeTo);
+            _snapPoseVolume.pose = Puppet.VisualPose(relativeTo);
         }
 
 
