@@ -27,11 +27,10 @@ namespace PoseAuthoring
         private float _grabStartTime;
         private bool _snapBack;
         private bool _isGrabbing;
-        private Pose? _grabOffset;
+        private Pose _grabOffset;
         private Pose _prevOffset;
 
-
-        private bool IsSnapGrabbing
+        private bool IsSnapping
         {
             get
             {
@@ -82,9 +81,8 @@ namespace PoseAuthoring
                 _poseInGhost = ghostPose.Value.Item2;
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
-                this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, _offsetOverrideFactor);
-                _grabOffset = this.puppet.RelativeGrip();
-                //TODO grabOffset could be the GRIP position instead
+                this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
+                _grabOffset = this.puppet.GripOffset;
 
                 _snapBack = grabbable.Snappable.HandSnapBacks;
                 _grabStartTime = Time.timeSinceLevelLoad;
@@ -152,7 +150,7 @@ namespace PoseAuthoring
 
         private void UndoVisualAttach()
         {
-            if (IsSnapGrabbing)
+            if (IsSnapping)
             {
                 this.transform.SetPose(_prevOffset, Space.Self);
             }
@@ -160,10 +158,10 @@ namespace PoseAuthoring
 
         private void VisuallyAttach()
         {
-            if (IsSnapGrabbing)
+            if (IsSnapping)
             {
                 _prevOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
-                this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, 1f);
+                this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo);
             }
         }
 
@@ -194,21 +192,11 @@ namespace PoseAuthoring
                 }
                 if (_isGrabbing)
                 {
-                    if (_snapBack)
-                    {
-                        this.puppet.LerpOffset(_grabOffset.Value, _offsetOverrideFactor);
-                        //this.transform.localRotation = Quaternion.Lerp(this.puppet.LocalPose.rotation, _grabOffset.Value.rotation, _offsetOverrideFactor);
-                        //this.transform.localPosition = Vector3.Lerp(this.puppet.LocalPose.position, _grabOffset.Value.position, _offsetOverrideFactor);
-                    }
-                    else
-                    {
-                        this.puppet.LerpOffset(_grabOffset.Value, _offsetOverrideFactor);
-                        //this.transform.SetPose(_grabOffset.Value, Space.Self);
-                    }
+                    this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
                 }
                 else
                 {
-                    this.puppet.LerpOffset(_poseInGhost, _grabbedGhost.RelativeTo, _offsetOverrideFactor);
+                    this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
                 }
             }
         }
