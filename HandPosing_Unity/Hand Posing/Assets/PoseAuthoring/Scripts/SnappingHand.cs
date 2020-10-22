@@ -152,7 +152,7 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-                this.transform.SetPose(_prevOffset, Space.Self);
+                this.puppet.LerpGripOffset(_prevOffset, 1f);
             }
         }
 
@@ -160,7 +160,7 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-                _prevOffset = new Pose(this.transform.localPosition, this.transform.localRotation);
+                _prevOffset = this.puppet.GripOffset;
                 this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo);
             }
         }
