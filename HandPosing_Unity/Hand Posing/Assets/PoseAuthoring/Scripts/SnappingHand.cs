@@ -152,7 +152,7 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-                this.puppet.LerpGripOffset(_prevOffset, 1f);
+               this.puppet.LerpGripOffset(_prevOffset, 1f);
             }
         }
 
@@ -160,8 +160,13 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-                _prevOffset = this.puppet.GripOffset;
-                this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo);
+                _prevOffset = this.puppet.GripOffset; 
+                //this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo); return;
+
+                HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
+                _grabbedGhost.CalculateBestPlace(handPose, out Pose place);
+                HandSnapPose ghostPose = _grabbedGhost.AdjustPlace(place);
+                this.puppet.LerpGripOffset(ghostPose, 1f, _grabbedGhost.RelativeTo);
             }
         }
 
