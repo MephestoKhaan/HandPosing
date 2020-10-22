@@ -36,14 +36,14 @@ namespace PoseAuthoring.Editor
         {
             CylinderSurface cylinder = ghost.SnapPoseVolume.Volume;
             EditorGUI.BeginChangeCheck();
-            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, Quaternion.identity);
+            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, ghost.RelativeTo.rotation);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(ghost, "Change Start Cylinder Position");
                 cylinder.StartPoint = startPosition;
             }
             EditorGUI.BeginChangeCheck();
-            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, Quaternion.identity);
+            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, ghost.RelativeTo.rotation);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(ghost, "Change Start Cylinder Position");
