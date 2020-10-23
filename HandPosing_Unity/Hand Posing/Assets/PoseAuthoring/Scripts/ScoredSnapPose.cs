@@ -1,4 +1,6 @@
-﻿namespace PoseAuthoring
+﻿using UnityEngine;
+
+namespace PoseAuthoring
 {
     public struct ScoredSnapPose
     {

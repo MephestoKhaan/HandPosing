@@ -20,12 +20,6 @@ namespace PoseAuthoring
         [InspectorButton("CreateDuplicate")]
         public string Duplicate;
 
-        public enum SnapDirection
-        {
-            Any,
-            Forward,
-            Backward
-        }
 
         [SerializeField]
         private VolumetricPose _snapPoseVolume;
@@ -146,7 +140,7 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, Pose? measuringPoint = null, SnapDirection direction = SnapDirection.Any)
+        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, Pose? measuringPoint = null)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
 
@@ -163,42 +157,25 @@ namespace PoseAuthoring
                 measuringPoint = new Pose(globalPosDesired, globalRotDesired);
             }
 
-
             float scoreWeight = _snappable.PositionRotationWeight;
-
-            float forwardScore = -1f;
-            float backwardScore = -1f;
-            Pose? forwardPose = null;
-            Pose? backwardPose = null;
-
-            /*if(direction == SnapDirection.Any 
-                || direction == SnapDirection.Forward)*/
-            {
-                var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
-                var nearestPlace = NearestPlaceAtVolume(userPose, snapPose);
-                forwardPose = GetBestPlace(similarPlace, nearestPlace, measuringPoint.Value, scoreWeight, out float bestScore);
-            }
+            var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
+            var nearestPlace = NearestPlaceAtVolume(userPose, snapPose);
+            Pose bestForwardPlace = GetBestPlace(similarPlace, nearestPlace, measuringPoint.Value, scoreWeight, out float bestScore);
 
             if (_snapPoseVolume.handCanInvert)
-                /* && (direction == SnapDirection.Any
-                || direction == SnapDirection.Backward))*/
             {
                 HandSnapPose invertedPose = _snapPoseVolume.InvertedPose(RelativeTo);
+
                 var similarInvertedPlace = SimilarPlaceAtVolume(userPose, invertedPose);
                 var nearestInvertedPlace = NearestPlaceAtVolume(userPose, invertedPose);
-                backwardPose = GetBestPlace(similarInvertedPlace, nearestInvertedPlace, measuringPoint.Value, scoreWeight, out float bestInvertedScore);
-            }
+                var bestInvertedPlace = GetBestPlace(similarInvertedPlace, nearestInvertedPlace, measuringPoint.Value, scoreWeight, out float bestInvertedScore);
 
-            if(forwardScore >= backwardScore)
-            {
-                return new ScoredSnapPose(AdjustPlace(forwardPose.Value), 
-                    forwardScore, false);
+                if (bestInvertedScore > bestScore)
+                {
+                    return new ScoredSnapPose(AdjustPlace(bestInvertedPlace), bestInvertedScore, true);
+                }
             }
-            else
-            {
-                return new ScoredSnapPose(AdjustPlace(backwardPose.Value), 
-                    backwardScore, true);
-            }
+            return new ScoredSnapPose(AdjustPlace(bestForwardPlace), bestScore, false);
         }
 
         private Pose GetBestPlace(Pose a, Pose b, Pose comparer, float normalisedWeight, out float bestScore)
@@ -254,7 +231,7 @@ namespace PoseAuthoring
             return new Pose(surfacePoint, surfaceRotation);
         }
 
-        public HandSnapPose AdjustPlace(Pose volumePlace)
+        private HandSnapPose AdjustPlace(Pose volumePlace)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
             snapPose.relativeGripPos = RelativeTo.InverseTransformPoint(volumePlace.position);
