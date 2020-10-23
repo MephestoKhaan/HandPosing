@@ -29,7 +29,6 @@ namespace PoseAuthoring
         private bool _snapsBack;
         private Pose _grabOffset;
         private Pose _prevOffset;
-        private Pose _prevVisualPose;
 
         private bool IsSnapping
         {
