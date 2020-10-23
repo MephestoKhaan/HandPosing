@@ -67,28 +67,22 @@ namespace PoseAuthoring
             return ghost;
         }
 
-        public HandGhost FindBestGhost(HandSnapPose userPose, out float score, out Pose bestPlace)
+        public HandGhost FindBestGhost(HandSnapPose userPose, out ScoredSnapPose bestSnapPose)
         {
-            float maxScore = 0f;
             HandGhost nearestGhost = null;
-            bestPlace = new Pose();
+            ScoredSnapPose bestPlace = ScoredSnapPose.Null();
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.CalculateBestPlace(userPose, out var place, null);
-                if (poseScore > maxScore)
+                ScoredSnapPose snapPose = ghost.CalculateBestPlace(userPose, null);
+                if (snapPose.Score > bestPlace.Score)
                 {
                     nearestGhost = ghost;
-                    maxScore = poseScore;
-                    bestPlace = place;
+                    bestPlace = snapPose;
                 }
             }
-            score = maxScore;
+            bestSnapPose = bestPlace;
             return nearestGhost;
         }
-
-
-
-
 
         public void LoadFromAsset()
         {

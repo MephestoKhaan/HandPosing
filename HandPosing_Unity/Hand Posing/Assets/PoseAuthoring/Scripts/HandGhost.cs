@@ -140,16 +140,14 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public float CalculateBestPlace(HandSnapPose userPose, out Pose bestPlace, Pose? measuringPoint = null)
+        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, Pose? measuringPoint = null)
         {
-            float bestScore = 0f;
             HandSnapPose snapPose = _snapPoseVolume.pose;
 
             if (snapPose.handeness != userPose.handeness
                 && !_snapPoseVolume.ambydextrous)
             {
-                bestPlace = new Pose(Vector3.zero, Quaternion.identity);
-                return bestScore;
+                return ScoredSnapPose.Null();
             }
 
             if(!measuringPoint.HasValue)
@@ -160,10 +158,9 @@ namespace PoseAuthoring
             }
 
             float scoreWeight = _snappable.PositionRotationWeight;
-
             var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
             var nearestPlace = NearestPlaceAtVolume(userPose, snapPose);
-            bestPlace = GetBestPlace(similarPlace, nearestPlace, measuringPoint.Value, scoreWeight, out bestScore);
+            Pose bestForwardPlace = GetBestPlace(similarPlace, nearestPlace, measuringPoint.Value, scoreWeight, out float bestScore);
 
             if (_snapPoseVolume.handCanInvert)
             {
@@ -175,11 +172,10 @@ namespace PoseAuthoring
 
                 if (bestInvertedScore > bestScore)
                 {
-                    bestPlace = bestInvertedPlace;
-                    return bestInvertedScore;
+                    return new ScoredSnapPose(bestInvertedPlace, bestInvertedScore, true);
                 }
             }
-            return bestScore;
+            return new ScoredSnapPose(bestForwardPlace, bestScore, false);
         }
 
         private Pose GetBestPlace(Pose a, Pose b, Pose comparer, float normalisedWeight, out float bestScore)

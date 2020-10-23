@@ -125,10 +125,10 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandSnapPose userPose = this.puppet.TrackedPose(snappable.transform);
-                HandGhost ghost = snappable.FindBestGhost(userPose, out float score, out var bestPlace);
+                HandGhost ghost = snappable.FindBestGhost(userPose, out ScoredSnapPose bestPose);
                 if (ghost != null)
                 {
-                    HandSnapPose ghostPose = ghost.AdjustPlace(bestPlace);
+                    HandSnapPose ghostPose = ghost.AdjustPlace(bestPose.SnapPose);
                     return (ghost, ghostPose);
                 }
             }
@@ -167,8 +167,8 @@ namespace PoseAuthoring
                 if(_grabbedGhost.Snappable.HandSlides)
                 {
                     HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
-                    _grabbedGhost.CalculateBestPlace(handPose, out Pose place, this.puppet.Grip.GetPose());
-                    HandSnapPose ghostPose = _grabbedGhost.AdjustPlace(place);
+                    ScoredSnapPose bestPlace = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose());
+                    HandSnapPose ghostPose = _grabbedGhost.AdjustPlace(bestPlace.SnapPose);
                     this.puppet.LerpGripOffset(ghostPose, 1f, _grabbedGhost.RelativeTo);
                 }
                 else
