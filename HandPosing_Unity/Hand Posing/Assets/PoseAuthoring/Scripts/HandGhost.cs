@@ -56,7 +56,20 @@ namespace PoseAuthoring
                 return _puppet;
             }
         }
+
+        private SnappableObject _snappable;
+        public SnappableObject Snappable
+        {
+            get
+            {
+                return _snappable;
+            }
+        }
+
+
         private int colorIndex;
+
+
 
         private void Awake()
         {
@@ -64,10 +77,12 @@ namespace PoseAuthoring
             Highlight(false);
         }
 
-        public void SetPose(HandSnapPose userPose, Transform relativeTo)
+        public void SetPose(HandSnapPose userPose, SnappableObject snappable)
         {
-            Puppet.LerpToPose(userPose, relativeTo);
-            RelativeTo = relativeTo;
+            Puppet.LerpToPose(userPose, snappable.transform);
+            RelativeTo = snappable.transform;
+            _snappable = snappable;
+
             _snapPoseVolume = new VolumetricPose()
             {
                 pose = userPose,
@@ -76,9 +91,9 @@ namespace PoseAuthoring
             };
         }
 
-        public void SetPoseVolume(VolumetricPose poseVolume, Transform relativeTo)
+        public void SetPoseVolume(VolumetricPose poseVolume, SnappableObject snappable)
         {
-            SetPose(poseVolume.pose, relativeTo);
+            SetPose(poseVolume.pose, snappable);
             _snapPoseVolume = poseVolume;
             _snapPoseVolume.volume.transform = Puppet.Grip;
 
@@ -88,7 +103,6 @@ namespace PoseAuthoring
         {
             _snapPoseVolume.pose = Puppet.VisualPose(relativeTo);
         }
-
 
         public void Highlight(float amount)
         {
@@ -116,7 +130,7 @@ namespace PoseAuthoring
         public void CreateDuplicate()
         {
             HandGhost ghost = Instantiate(this, this.transform.parent);
-            ghost.SetPoseVolume(this._snapPoseVolume, this.transform);
+            ghost.SetPoseVolume(this._snapPoseVolume, _snappable);
             ghost.transform.SetPositionAndRotation(this.transform.position, this.transform.rotation);
         }
 
@@ -126,7 +140,7 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public float CalculateBestPlace(HandSnapPose userPose, out Pose bestPlace)
+        public float CalculateBestPlace(HandSnapPose userPose, out Pose bestPlace, Pose? measuringPoint = null)
         {
             float bestScore = 0f;
             HandSnapPose snapPose = _snapPoseVolume.pose;
@@ -138,13 +152,18 @@ namespace PoseAuthoring
                 return bestScore;
             }
 
-            Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
-            Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
-            Pose desiredPlace = new Pose(globalPosDesired, globalRotDesired);
+            if(!measuringPoint.HasValue)
+            {
+                Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
+                Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
+                measuringPoint = new Pose(globalPosDesired, globalRotDesired);
+            }
+
+            float scoreWeight = _snappable.PositionRotationWeight;
 
             var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
             var nearestPlace = NearestPlaceAtVolume(userPose, snapPose);
-            bestPlace = GetBestPlace(similarPlace, nearestPlace, desiredPlace, out bestScore);
+            bestPlace = GetBestPlace(similarPlace, nearestPlace, measuringPoint.Value, scoreWeight, out bestScore);
 
             if (_snapPoseVolume.handCanInvert)
             {
@@ -152,25 +171,23 @@ namespace PoseAuthoring
 
                 var similarInvertedPlace = SimilarPlaceAtVolume(userPose, invertedPose);
                 var nearestInvertedPlace = NearestPlaceAtVolume(userPose, invertedPose);
-                var bestInvertedPlace = GetBestPlace(similarInvertedPlace, nearestInvertedPlace, desiredPlace, out float bestInvertedScore);
+                var bestInvertedPlace = GetBestPlace(similarInvertedPlace, nearestInvertedPlace, measuringPoint.Value, scoreWeight, out float bestInvertedScore);
 
                 if (bestInvertedScore > bestScore)
                 {
                     bestPlace = bestInvertedPlace;
                     return bestInvertedScore;
                 }
-
             }
-
             return bestScore;
         }
 
-        private Pose GetBestPlace(Pose a, Pose b, Pose comparer, out float bestScore)
+        private Pose GetBestPlace(Pose a, Pose b, Pose comparer, float normalisedWeight, out float bestScore)
         {
             float aScore = Score(comparer, a);
             float bScore = Score(comparer, b);
 
-            if (aScore >= bScore)
+            if (aScore * normalisedWeight >= bScore * (1f- normalisedWeight))
             {
                 bestScore = aScore;
                 return a;

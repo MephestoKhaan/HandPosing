@@ -14,10 +14,28 @@ namespace PoseAuthoring
         [Space]
         [SerializeField]
         private bool canSnapBack = true;
+        [SerializeField]
+        private bool canSlide = false;
+        [SerializeField]
+        [Range(0f,1f)]
+        private float positionToRotationWeight = 0.5f;
 
         private List<HandGhost> ghosts = new List<HandGhost>();
 
-
+        public float PositionRotationWeight
+        {
+            get
+            {
+                return positionToRotationWeight;
+            }
+        }
+        public bool HandSlides
+        {
+            get
+            {
+                return canSlide;
+            }
+        }
         public bool HandSnapBacks
         {
             get
@@ -35,7 +53,7 @@ namespace PoseAuthoring
         {
             HandSnapPose pose = puppet.VisualPose(this.transform);
             HandGhost ghost = Instantiate(handProvider.GetHand(pose.handeness), this.transform);
-            ghost.SetPose(pose, this.transform);
+            ghost.SetPose(pose, this);
             this.ghosts.Add(ghost);
             return ghost;
         }
@@ -43,7 +61,7 @@ namespace PoseAuthoring
         private HandGhost AddPose(VolumetricPose poseVolume)
         {
             HandGhost ghost = Instantiate(handProvider.GetHand(poseVolume.pose.handeness), this.transform);
-            ghost.SetPoseVolume(poseVolume, this.transform);
+            ghost.SetPoseVolume(poseVolume, this);
             this.ghosts.Add(ghost);
 
             return ghost;
@@ -56,7 +74,7 @@ namespace PoseAuthoring
             bestPlace = new Pose();
             foreach (var ghost in this.ghosts)
             {
-                float poseScore = ghost.CalculateBestPlace(userPose, out var place);
+                float poseScore = ghost.CalculateBestPlace(userPose, out var place, null);
                 if (poseScore > maxScore)
                 {
                     nearestGhost = ghost;
@@ -67,6 +85,10 @@ namespace PoseAuthoring
             score = maxScore;
             return nearestGhost;
         }
+
+
+
+
 
         public void LoadFromAsset()
         {
