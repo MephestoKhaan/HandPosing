@@ -53,5 +53,5 @@ MonoBehaviour:
       _endPoint: {x: 0.09471667, y: -0.009091459, z: -0.03639824}
       _angle: 360
     ambydextrous: 0
-    handCanInvert: 0
+    handCanInvert: 1
     maxDistance: 0.1

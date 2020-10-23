@@ -199,12 +199,12 @@ namespace Interaction
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if ( _prevFlex <= GrabThresold.x 
+            else if (_prevFlex <= GrabThresold.x
                 && prevFlex > GrabThresold.x)
             {
                 GrabEnd();
             }
-            
+
             if (GrabbedObject == null && _prevFlex > 0)
             {
                 _nearGrab = true;
@@ -225,7 +225,7 @@ namespace Interaction
                 return;
             }
 
-            (Grabbable, Collider)  closestGrabbable = FindClosestGrabbable();
+            (Grabbable, Collider) closestGrabbable = FindClosestGrabbable();
             if (closestGrabbable.Item1 != null)
             {
                 OnGrabAttemp?.Invoke(closestGrabbable.Item1, factor);
@@ -236,7 +236,7 @@ namespace Interaction
             }
         }
 
-        protected virtual void GrabBegin()
+        private void GrabBegin()
         {
             Grabbable closestGrabbable;
             Collider closestGrabbableCollider;
@@ -245,13 +245,21 @@ namespace Interaction
             ForceGrab(closestGrabbable, closestGrabbableCollider);
         }
 
-        public void ForceGrab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
+        private void ForceGrab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
         {
             GrabVolumeEnable(false);
 
             if (closestGrabbable != null)
             {
                 Grab(closestGrabbable, closestGrabbableCollider);
+            }
+        }
+
+        public void ResetGrab()
+        {
+            if (_grabbedObj != null)
+            {
+                ForceGrab(_grabbedObj, FindClosestCollider(_grabbedObj, out float score));
             }
         }
 
@@ -263,24 +271,39 @@ namespace Interaction
 
             foreach (Grabbable grabbable in _grabCandidates.Keys)
             {
-                for (int j = 0; j < grabbable.GrabPoints.Length; ++j)
+                Collider collider = FindClosestCollider(grabbable, out float distance);
+                if (distance < closestMagSq)
                 {
-                    Collider grabbableCollider = grabbable.GrabPoints[j];
-                    if (grabbableCollider == null)
-                    {
-                        continue;
-                    }
-                    Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(_gripTransform.position);
-                    float grabbableMagSq = (_gripTransform.position - closestPointOnBounds).sqrMagnitude;
-                    if (grabbableMagSq < closestMagSq)
-                    {
-                        closestMagSq = grabbableMagSq;
-                        closestGrabbable = grabbable;
-                        closestGrabbableCollider = grabbableCollider;
-                    }
+                    closestMagSq = distance;
+                    closestGrabbable = grabbable;
+                    closestGrabbableCollider = collider;
                 }
             }
             return (closestGrabbable, closestGrabbableCollider);
+        }
+
+        private Collider FindClosestCollider(Grabbable grabbable, out float score)
+        {
+            float closestMagSq = float.MaxValue;
+            Collider closestGrabbableCollider = null;
+
+            for (int j = 0; j < grabbable.GrabPoints.Length; ++j)
+            {
+                Collider grabbableCollider = grabbable.GrabPoints[j];
+                if (grabbableCollider == null)
+                {
+                    continue;
+                }
+                Vector3 closestPointOnBounds = grabbableCollider.ClosestPointOnBounds(_gripTransform.position);
+                float grabbableMagSq = (_gripTransform.position - closestPointOnBounds).sqrMagnitude;
+                if (grabbableMagSq < closestMagSq)
+                {
+                    closestMagSq = grabbableMagSq;
+                    closestGrabbableCollider = grabbableCollider;
+                }
+            }
+            score = closestMagSq;
+            return closestGrabbableCollider;
         }
 
         private void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
