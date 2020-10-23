@@ -17,6 +17,18 @@ namespace PoseAuthoring
             }
         }
 
+        public static Pose GetPose(this Transform transform, Space space = Space.World)
+        {
+            if (space == Space.World)
+            {
+                return new Pose(transform.position, transform.rotation);
+            }
+            else
+            {
+                return new Pose(transform.localPosition, transform.localRotation);
+            }
+        }
+
         public static Pose RelativeOffset(this Transform to, Transform from)
         {
             return RelativeOffset(from.position, from.rotation, to.position, to.rotation);
