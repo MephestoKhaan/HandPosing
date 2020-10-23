@@ -19,7 +19,7 @@ namespace PoseAuthoring
         private float snapbackTime = 0.33f;
 
         private HandGhost _grabbedGhost;
-        private HandSnapPose _poseInGhost;
+        private ScoredSnapPose _grabPose;
 
         private float _bonesOverrideFactor;
         private float _offsetOverrideFactor;
@@ -78,10 +78,10 @@ namespace PoseAuthoring
             if (ghostPose.HasValue)
             {
                 _grabbedGhost = ghostPose.Value.Item1;
-                _poseInGhost = ghostPose.Value.Item2;
+                _grabPose = ghostPose.Value.Item2;
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
-                this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
+                this.puppet.LerpGripOffset(_grabPose.SnapPose, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
                 _grabOffset = this.puppet.GripOffset;
 
                 _snapsBack = _grabbedGhost.Snappable.HandSnapBacks;
@@ -104,7 +104,7 @@ namespace PoseAuthoring
             if (ghostPose.HasValue)
             {
                 _grabbedGhost = ghostPose.Value.Item1;
-                _poseInGhost = ghostPose.Value.Item2;
+                _grabPose = ghostPose.Value.Item2;
                 _offsetOverrideFactor = _bonesOverrideFactor = amount;
             }
             else
@@ -114,7 +114,7 @@ namespace PoseAuthoring
             }
         }
 
-        private (HandGhost, HandSnapPose)? GhostForGrabbable(Grabbable grabbable)
+        private (HandGhost, ScoredSnapPose)? GhostForGrabbable(Grabbable grabbable)
         {
             if (grabbable == null)
             {
@@ -127,8 +127,7 @@ namespace PoseAuthoring
                 HandGhost ghost = snappable.FindBestGhost(userPose, out ScoredSnapPose bestPose);
                 if (ghost != null)
                 {
-                    HandSnapPose ghostPose = bestPose.SnapPose;
-                    return (ghost, ghostPose);
+                    return (ghost, bestPose);
                 }
             }
             return null;
@@ -172,7 +171,7 @@ namespace PoseAuthoring
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_poseInGhost, 1f, _grabbedGhost.RelativeTo); 
+                    this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo); 
                 }
             }
         }
@@ -197,7 +196,7 @@ namespace PoseAuthoring
         {
             if (_grabbedGhost != null)
             {
-                this.puppet.LerpBones(_poseInGhost, _bonesOverrideFactor);
+                this.puppet.LerpBones(_grabPose.SnapPose, _bonesOverrideFactor);
                 if (_snapsBack)
                 {
                     _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
@@ -208,7 +207,7 @@ namespace PoseAuthoring
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_poseInGhost, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
+                    this.puppet.LerpGripOffset(_grabPose.SnapPose, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
                 }
             }
         }
