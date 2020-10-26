@@ -3,7 +3,7 @@ using System.Collections;
 
 using Grabber = Interaction.Grabber;
 using Grabbable = Interaction.Grabbable;
-
+using System.Collections.Generic;
 
 namespace PoseAuthoring
 {
@@ -48,6 +48,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded += GrabEnded;
 
             Application.onBeforeRender += VisuallyAttach;
+            puppet.OnPoseWillUpdate += SnapSlide;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
             if (_lastUpdateRoutine == null)
             {
@@ -62,6 +63,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded -= GrabEnded;
 
             Application.onBeforeRender -= VisuallyAttach;
+            puppet.OnPoseWillUpdate -= SnapSlide;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
             if (_lastUpdateRoutine != null)
             {
@@ -152,7 +154,7 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-               this.puppet.LerpGripOffset(_prevOffset, 1f);
+                this.puppet.LerpGripOffset(_prevOffset, 1f);
             }
         }
 
@@ -160,18 +162,19 @@ namespace PoseAuthoring
         {
             if (IsSnapping)
             {
-                _prevOffset = this.puppet.GripOffset; 
+                _prevOffset = this.puppet.GripOffset;
 
-                if(_grabbedGhost.Snappable.HandSlides)
+                if (false)//_grabbedGhost.Snappable.HandSlides)
                 {
                     HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
                     ScoredSnapPose bestPlace = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose(), _grabPose.Direction);
                     HandSnapPose ghostPose = bestPlace.SnapPose;
                     this.puppet.LerpGripOffset(ghostPose, 1f, _grabbedGhost.RelativeTo);
+
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo); 
+                    this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo);
                 }
             }
         }
@@ -181,6 +184,49 @@ namespace PoseAuthoring
             if (!this.puppet.IsTrackingHands)
             {
                 AttachToObjectOffseted();
+            }
+        }
+
+        bool _physicsUpdated;
+
+        private void FixedUpdate()
+        {
+            if (_isGrabbing&& _grabbedGhost.Snappable.HandSlides)
+            {
+                Joint[] joints = _grabbedGhost.RelativeTo.GetComponents<Joint>();
+                Joint grabJoint = null;
+                Rigidbody rb = this.puppet.GetComponent<Rigidbody>();
+                for(int i = joints.Length-1; i >= 0; i--)
+                {
+                    if(joints[i].connectedBody == rb)
+                    {
+                        grabJoint = joints[i];
+                        break;
+                    }
+                }
+
+                if (grabJoint != null)
+                {
+                    grabJoint.anchor = _grabPose.SnapPose.relativeGripPos;
+                    grabJoint.connectedAnchor = this.puppet.transform.InverseTransformPoint(this.puppet.Grip.position);
+                }
+            }
+            _physicsUpdated = true;
+        }
+
+        private void SnapSlide()
+        {
+            if(!_physicsUpdated)
+            {
+                return;
+            }
+            _physicsUpdated = false;
+            if (_isGrabbing 
+                && _grabbedGhost.Snappable.HandSlides)
+            {
+                HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
+                _grabPose = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose(), _grabPose.Direction);
+                
             }
         }
 
@@ -203,7 +249,8 @@ namespace PoseAuthoring
                 }
                 if (_isGrabbing)
                 {
-                    this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
+                    //this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
+                    //SnapSlide();
                 }
                 else
                 {

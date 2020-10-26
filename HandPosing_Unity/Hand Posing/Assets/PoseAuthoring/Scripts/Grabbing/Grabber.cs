@@ -255,14 +255,6 @@ namespace Interaction
             }
         }
 
-        public void ResetGrab()
-        {
-            if (_grabbedObj != null)
-            {
-                ForceGrab(_grabbedObj, FindClosestCollider(_grabbedObj, out float score));
-            }
-        }
-
         public (Grabbable, Collider) FindClosestGrabbable()
         {
             float closestMagSq = float.MaxValue;

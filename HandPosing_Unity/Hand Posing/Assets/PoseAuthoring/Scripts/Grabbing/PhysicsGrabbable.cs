@@ -7,7 +7,7 @@ namespace Interaction.Grabbables
     public class PhysicsGrabbable : Grabbable
     {
         [SerializeField]
-        private Joint _preconfiguredJoint;
+        private Joint customJoint;
 
         private GameObject savedJointHolder;
 
@@ -17,9 +17,9 @@ namespace Interaction.Grabbables
         protected override void Awake()
         {
             base.Awake();
-            if (_preconfiguredJoint != null)
+            if (customJoint != null)
             {
-                _desiredJoint = CopyCustomJoint(_preconfiguredJoint);
+                _desiredJoint = CopyCustomJoint(customJoint);
             }
         }
 
@@ -37,6 +37,10 @@ namespace Interaction.Grabbables
             }
 
             _joint.connectedBody = hand.GetComponent<Rigidbody>();
+            _joint.autoConfigureConnectedAnchor = false;
+            _joint.anchor = Vector3.zero;
+            _joint.connectedAnchor = hand.transform.InverseTransformPoint(_joint.transform.position);
+
             _body.isKinematic = false;
         }
 
