@@ -48,7 +48,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded += GrabEnded;
 
             Application.onBeforeRender += VisuallyAttach;
-            puppet.OnPoseWillUpdate += SnapSlide;
+            //puppet.OnPoseWillUpdate += SnapSlide;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
             if (_lastUpdateRoutine == null)
             {
@@ -63,7 +63,7 @@ namespace PoseAuthoring
             grabber.OnGrabEnded -= GrabEnded;
 
             Application.onBeforeRender -= VisuallyAttach;
-            puppet.OnPoseWillUpdate -= SnapSlide;
+            //puppet.OnPoseWillUpdate -= SnapSlide;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
             if (_lastUpdateRoutine != null)
             {
@@ -187,46 +187,13 @@ namespace PoseAuthoring
             }
         }
 
-        bool _physicsUpdated;
-
-        private void FixedUpdate()
-        {
-            if (_isGrabbing&& _grabbedGhost.Snappable.HandSlides)
-            {
-                Joint[] joints = _grabbedGhost.RelativeTo.GetComponents<Joint>();
-                Joint grabJoint = null;
-                Rigidbody rb = this.puppet.GetComponent<Rigidbody>();
-                for(int i = joints.Length-1; i >= 0; i--)
-                {
-                    if(joints[i].connectedBody == rb)
-                    {
-                        grabJoint = joints[i];
-                        break;
-                    }
-                }
-
-                if (grabJoint != null)
-                {
-                    grabJoint.anchor = _grabPose.SnapPose.relativeGripPos;
-                    grabJoint.connectedAnchor = this.puppet.transform.InverseTransformPoint(this.puppet.Grip.position);
-                }
-            }
-            _physicsUpdated = true;
-        }
-
         private void SnapSlide()
         {
-            if(!_physicsUpdated)
-            {
-                return;
-            }
-            _physicsUpdated = false;
             if (_isGrabbing 
                 && _grabbedGhost.Snappable.HandSlides)
             {
                 HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
                 _grabPose = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose(), _grabPose.Direction);
-                
             }
         }
 
@@ -242,15 +209,15 @@ namespace PoseAuthoring
         {
             if (_grabbedGhost != null)
             {
-                this.puppet.LerpBones(_grabPose.SnapPose, _bonesOverrideFactor);
+                this.puppet.LerpBones(_grabPose.SnapPose.Bones, _bonesOverrideFactor);
                 if (_snapsBack)
                 {
                     _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
                 }
                 if (_isGrabbing)
                 {
-                    //this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
-                    //SnapSlide();
+                    this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
+                    SnapSlide();
                 }
                 else
                 {

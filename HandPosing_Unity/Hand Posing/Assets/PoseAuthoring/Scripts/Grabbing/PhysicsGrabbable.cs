@@ -38,7 +38,7 @@ namespace Interaction.Grabbables
 
             _joint.connectedBody = hand.GetComponent<Rigidbody>();
             _joint.autoConfigureConnectedAnchor = false;
-            _joint.anchor = Vector3.zero;
+            _joint.anchor =  Vector3.zero;
             _joint.connectedAnchor = hand.transform.InverseTransformPoint(_joint.transform.position);
 
             _body.isKinematic = false;

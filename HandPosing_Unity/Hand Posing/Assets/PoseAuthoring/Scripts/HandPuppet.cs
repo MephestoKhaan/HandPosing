@@ -237,15 +237,15 @@ namespace PoseAuthoring
 
         public void LerpToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
-            LerpBones(pose, bonesWeight);
+            LerpBones(pose.Bones, bonesWeight);
             LerpGripOffset(pose, positionWeight, relativeTo);
         }
 
-        public void LerpBones(HandSnapPose pose, float weight)
+        public void LerpBones(List<BoneRotation> bones, float weight)
         {
             if (weight > 0f)
             {
-                foreach (var bone in pose.Bones)
+                foreach (var bone in bones)
                 {
                     BoneId boneId = bone.boneID;
                     if (_bonesCollection.ContainsKey(boneId))
