@@ -845,7 +845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2fa2bd22c944846b34678beaf51089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preconfiguredJoint: {fileID: 563200581}
+  customJoint: {fileID: 563200581}
 --- !u!153 &563200579
 ConfigurableJoint:
   m_ObjectHideFlags: 0
@@ -1049,7 +1049,7 @@ ConfigurableJoint:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
-  m_EnablePreprocessing: 0
+  m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!1001 &666972207
@@ -1699,7 +1699,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920525599}
   m_LocalRotation: {x: -0, y: 0.43526575, z: -0, w: 0.90030205}
-  m_LocalPosition: {x: 0.28, y: 0, z: -0.82}
+  m_LocalPosition: {x: 0.28, y: 0.4, z: -0.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 920166013}
@@ -3004,7 +3004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2fa2bd22c944846b34678beaf51089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preconfiguredJoint: {fileID: 1606317567}
+  customJoint: {fileID: 1606317567}
 --- !u!54 &1606317565
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3659,7 +3659,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2fa2bd22c944846b34678beaf51089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _preconfiguredJoint: {fileID: 1857934470}
+  customJoint: {fileID: 0}
 --- !u!54 &1857934469
 Rigidbody:
   m_ObjectHideFlags: 0

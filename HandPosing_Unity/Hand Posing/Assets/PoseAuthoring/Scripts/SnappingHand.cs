@@ -48,7 +48,6 @@ namespace PoseAuthoring
             grabber.OnGrabEnded += GrabEnded;
 
             Application.onBeforeRender += VisuallyAttach;
-            //puppet.OnPoseWillUpdate += SnapSlide;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
             if (_lastUpdateRoutine == null)
             {
@@ -63,7 +62,6 @@ namespace PoseAuthoring
             grabber.OnGrabEnded -= GrabEnded;
 
             Application.onBeforeRender -= VisuallyAttach;
-            //puppet.OnPoseWillUpdate -= SnapSlide;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
             if (_lastUpdateRoutine != null)
             {
