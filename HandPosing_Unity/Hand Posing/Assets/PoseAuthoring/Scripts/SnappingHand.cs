@@ -3,7 +3,6 @@ using System.Collections;
 
 using Grabber = Interaction.Grabber;
 using Grabbable = Interaction.Grabbable;
-using System.Collections.Generic;
 
 namespace PoseAuthoring
 {
@@ -30,6 +29,8 @@ namespace PoseAuthoring
         private Pose _grabOffset;
         private Pose _prevOffset;
 
+        private Coroutine _lastUpdateRoutine;
+
         private bool IsSnapping
         {
             get
@@ -39,7 +40,16 @@ namespace PoseAuthoring
             }
         }
 
-        private Coroutine _lastUpdateRoutine;
+        private bool IsSliding
+        {
+            get
+            {
+                return _isGrabbing 
+                    && _grabbedGhost != null 
+                    && _grabbedGhost.Snappable.HandSlides;
+            }
+        }
+
 
         private void Start()
         {
@@ -47,8 +57,9 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            Application.onBeforeRender += OnBeforeRender;
+            puppet.OnPoseBeforeUpdate += BeforePuppetUpdate;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
+            Application.onBeforeRender += OnBeforeRender;
             if (_lastUpdateRoutine == null)
             {
                 _lastUpdateRoutine = StartCoroutine(LastUpdateLoop());
@@ -61,8 +72,9 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            Application.onBeforeRender -= OnBeforeRender;
+            puppet.OnPoseBeforeUpdate -= BeforePuppetUpdate;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
+            Application.onBeforeRender -= OnBeforeRender;
             if (_lastUpdateRoutine != null)
             {
                 StopCoroutine(_lastUpdateRoutine);
@@ -147,6 +159,23 @@ namespace PoseAuthoring
 
         #region snap lifecycle
 
+        private bool _physicsUpdated;
+        private void FixedUpdate()
+        {
+            _physicsUpdated = true;
+        }
+
+        //Occurs before anchors are updated
+        private void BeforePuppetUpdate()
+        {
+            if(_physicsUpdated && IsSliding)
+            {
+                ReAttachPhysics();
+            }
+            _physicsUpdated = false;
+        }
+
+
         //Occurs before grabbing
         private void AfterPuppetUpdate()
         {
@@ -208,11 +237,22 @@ namespace PoseAuthoring
 
         private void SnapSlide()
         {
-            if (_grabbedGhost != null 
-                && _grabbedGhost.Snappable.HandSlides)
+            if (IsSliding)
             {
                 HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
                 _grabPose = _grabbedGhost.CalculateBestPlace(handPose, _grabPose.Direction);
+            }
+        }
+
+        private void ReAttachPhysics()
+        {
+            Joint[] joints = _grabbedGhost.RelativeTo.GetComponents<Joint>();
+            foreach (var joint in joints)
+            {
+                if (joint.connectedBody?.transform == this.grabber.transform)
+                {
+                    joint.anchor = joint.transform.InverseTransformPoint(this.grabber.transform.position);
+                }
             }
         }
 

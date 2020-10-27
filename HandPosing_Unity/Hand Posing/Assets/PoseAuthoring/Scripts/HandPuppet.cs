@@ -47,6 +47,7 @@ namespace PoseAuthoring
             }
         }
 
+        public System.Action OnPoseBeforeUpdate;
         public System.Action OnPoseUpdated;
 
         private class BoneCollection : Dictionary<BoneId, BoneMap> { };
@@ -141,6 +142,7 @@ namespace PoseAuthoring
 
         private void Update()
         {
+            OnPoseBeforeUpdate?.Invoke();
             if (!_usingOVRUpdates)
             {
                 UpdateHandPose();
