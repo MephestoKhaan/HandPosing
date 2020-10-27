@@ -47,11 +47,11 @@ namespace PoseAuthoring
             grabber.OnGrabStarted += GrabStarted;
             grabber.OnGrabEnded += GrabEnded;
 
-            Application.onBeforeRender += VisuallyAttach;
+            Application.onBeforeRender += OnBeforeRender;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
             if (_lastUpdateRoutine == null)
             {
-                _lastUpdateRoutine = StartCoroutine(LastUpdate());
+                _lastUpdateRoutine = StartCoroutine(LastUpdateLoop());
             }
         }
 
@@ -61,12 +61,22 @@ namespace PoseAuthoring
             grabber.OnGrabStarted -= GrabStarted;
             grabber.OnGrabEnded -= GrabEnded;
 
-            Application.onBeforeRender -= VisuallyAttach;
+            Application.onBeforeRender -= OnBeforeRender;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
             if (_lastUpdateRoutine != null)
             {
                 StopCoroutine(_lastUpdateRoutine);
                 _lastUpdateRoutine = null;
+            }
+        }
+
+        private static YieldInstruction _endOfFrame = new WaitForEndOfFrame();
+        private IEnumerator LastUpdateLoop()
+        {
+            while (true)
+            {
+                yield return _endOfFrame;
+                OnEndOfFrame();
             }
         }
 
@@ -137,33 +147,16 @@ namespace PoseAuthoring
 
         #region snap lifecycle
 
-        private static YieldInstruction _endOfFrame = new WaitForEndOfFrame();
-        private IEnumerator LastUpdate()
+        //Occurs before grabbing
+        private void AfterPuppetUpdate()
         {
-            while (true)
+            if (this.puppet.IsTrackingHands)
             {
-                yield return _endOfFrame;
-                UndoVisualAttach();
+                AttachToObjectOffseted();
             }
         }
 
-        private void UndoVisualAttach()
-        {
-            if (IsSnapping)
-            {
-                this.puppet.LerpGripOffset(_prevOffset, 1f);
-            }
-        }
-
-        private void VisuallyAttach()
-        {
-            if (IsSnapping)
-            {
-                _prevOffset = this.puppet.GripOffset;
-                this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo);
-            }
-        }
-
+        //Occurs after animations
         private void LateUpdate()
         {
             if (!this.puppet.IsTrackingHands)
@@ -172,13 +165,25 @@ namespace PoseAuthoring
             }
         }
 
-        private void AfterPuppetUpdate()
+        private void OnBeforeRender()
         {
-            if (this.puppet.IsTrackingHands)
+            if (IsSnapping)
             {
-                AttachToObjectOffseted();
+                _prevOffset = this.puppet.GripOffset;
+                this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo);
             }
         }
+
+        private void OnEndOfFrame()
+        {
+            if (IsSnapping)
+            {
+                this.puppet.LerpGripOffset(_prevOffset, 1f);
+            }
+        }
+        #endregion
+
+        #region snap methods
 
         private void AttachToObjectOffseted()
         {
