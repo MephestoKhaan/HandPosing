@@ -57,7 +57,7 @@ namespace PoseAuthoring
             }
         }
 
-        public SnappableObject Snappable {  get; private set;  }
+        public SnappableObject Snappable { get; private set; }
 
 
         private int colorIndex; //TODO external
@@ -97,7 +97,7 @@ namespace PoseAuthoring
 
         public void Highlight(float amount)
         {
-            if(handRenderer != null)
+            if (handRenderer != null)
             {
                 Color color = Color.Lerp(defaultColor, highlightedColor, amount);
                 handRenderer.material.SetColor(colorIndex, color);
@@ -131,7 +131,7 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, Pose? measuringPoint = null, SnapDirection direction = SnapDirection.Any)
+        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, SnapDirection direction = SnapDirection.Any)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
 
@@ -141,31 +141,29 @@ namespace PoseAuthoring
                 return ScoredSnapPose.Null();
             }
 
-            if(!measuringPoint.HasValue)
-            {
-                Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
-                Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
-                measuringPoint = new Pose(globalPosDesired, globalRotDesired);
-            }
+            Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
+            Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
+            Pose measuringPoint = new Pose(globalPosDesired, globalRotDesired);
+
 
             float scoreWeight = Snappable.PositionRotationWeight;
             ScoredSnapPose? bestForwardPose = null;
             ScoredSnapPose? bestBackwardPose = null;
 
-            if (direction == SnapDirection.Any 
-                ||direction == SnapDirection.Forward)
+            if (direction == SnapDirection.Any
+                || direction == SnapDirection.Forward)
             {
-                bestForwardPose =  ComparePoses(userPose, snapPose, measuringPoint.Value, scoreWeight, SnapDirection.Forward);
+                bestForwardPose = ComparePoses(userPose, snapPose, measuringPoint, scoreWeight, SnapDirection.Forward);
             }
 
             if (_snapPoseVolume.handCanInvert
-                && (direction == SnapDirection.Any 
+                && (direction == SnapDirection.Any
                 || direction == SnapDirection.Backward))
             {
                 HandSnapPose invertedPose = _snapPoseVolume.InvertedPose(RelativeTo);
-                bestBackwardPose = ComparePoses(userPose, invertedPose, measuringPoint.Value, scoreWeight, SnapDirection.Backward);
+                bestBackwardPose = ComparePoses(userPose, invertedPose, measuringPoint, scoreWeight, SnapDirection.Backward);
 
-                if(!bestForwardPose.HasValue 
+                if (!bestForwardPose.HasValue
                     || bestBackwardPose.Value.Score > bestForwardPose.Value.Score)
                 {
                     return bestBackwardPose.Value;
@@ -188,7 +186,7 @@ namespace PoseAuthoring
         {
             float aScore = Score(comparer, a);
             float bScore = Score(comparer, b);
-            if (aScore * normalisedWeight >= bScore * (1f- normalisedWeight))
+            if (aScore * normalisedWeight >= bScore * (1f - normalisedWeight))
             {
                 bestScore = aScore;
                 return a;

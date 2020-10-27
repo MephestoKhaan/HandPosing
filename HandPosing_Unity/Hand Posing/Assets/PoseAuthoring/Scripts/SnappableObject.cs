@@ -73,7 +73,7 @@ namespace PoseAuthoring
             ScoredSnapPose bestPlace = ScoredSnapPose.Null();
             foreach (var ghost in this.ghosts)
             {
-                ScoredSnapPose snapPose = ghost.CalculateBestPlace(userPose, null);
+                ScoredSnapPose snapPose = ghost.CalculateBestPlace(userPose);
                 if (snapPose.Score > bestPlace.Score)
                 {
                     nearestGhost = ghost;

@@ -172,16 +172,6 @@ namespace PoseAuthoring
             }
         }
 
-        private void SnapSlide()
-        {
-            if (_isGrabbing 
-                && _grabbedGhost.Snappable.HandSlides)
-            {
-                HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
-                _grabPose = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose(), _grabPose.Direction);
-            }
-        }
-
         private void AfterPuppetUpdate()
         {
             if (this.puppet.IsTrackingHands)
@@ -208,6 +198,16 @@ namespace PoseAuthoring
                 {
                     this.puppet.LerpGripOffset(_grabPose.SnapPose, _offsetOverrideFactor, _grabbedGhost.RelativeTo);
                 }
+            }
+        }
+
+        private void SnapSlide()
+        {
+            if (_isGrabbing
+                && _grabbedGhost.Snappable.HandSlides)
+            {
+                HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
+                _grabPose = _grabbedGhost.CalculateBestPlace(handPose, _grabPose.Direction);
             }
         }
 
