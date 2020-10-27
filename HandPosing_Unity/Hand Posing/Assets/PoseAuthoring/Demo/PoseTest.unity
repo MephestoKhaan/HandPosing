@@ -341,7 +341,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &241413833
 MonoBehaviour:
@@ -556,7 +556,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &341260606
 MonoBehaviour:
@@ -831,7 +831,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 0
-  canSlide: 1
+  slideThresold: 1
   positionToRotationWeight: 1
 --- !u!114 &563200578
 MonoBehaviour:
@@ -1698,14 +1698,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 920525599}
-  m_LocalRotation: {x: -0, y: 0.43526575, z: -0, w: 0.90030205}
-  m_LocalPosition: {x: 0.28, y: 0.4, z: -0.82}
+  m_LocalRotation: {x: 0, y: 0.5091165, z: 0, w: 0.8606976}
+  m_LocalPosition: {x: 0.582, y: 0.247, z: -1.131}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 920166013}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 51.604004, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 61.21, z: 0}
 --- !u!1 &920457041
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,7 +1877,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 0
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &924816148
 MonoBehaviour:
@@ -2439,7 +2439,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &1248587803
 MonoBehaviour:
@@ -2615,7 +2615,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!54 &1506398628
 Rigidbody:
@@ -2803,7 +2803,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &1562091169
 MonoBehaviour:
@@ -2908,7 +2908,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &1578624146
 MonoBehaviour:
@@ -2990,7 +2990,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 0
-  canSlide: 1
+  slideThresold: 0.95
   positionToRotationWeight: 1
 --- !u!114 &1606317564
 MonoBehaviour:
@@ -3128,7 +3128,7 @@ ConfigurableJoint:
   m_BreakForce: Infinity
   m_BreakTorque: Infinity
   m_EnableCollision: 0
-  m_EnablePreprocessing: 1
+  m_EnablePreprocessing: 0
   m_MassScale: 1
   m_ConnectedMassScale: 1
 --- !u!1 &1611183238
@@ -3618,7 +3618,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1857934465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.897, y: 1.5056025, z: -0.528}
+  m_LocalPosition: {x: 0.679, y: 1.5056025, z: -1.025}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 666972208}
@@ -3645,7 +3645,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &1857934468
 MonoBehaviour:
@@ -3687,7 +3687,7 @@ ConfigurableJoint:
   m_Anchor: {x: 0, y: 0, z: 0}
   m_Axis: {x: 1, y: 0, z: 0}
   m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0.897, y: 1.5056025, z: -0.528}
+  m_ConnectedAnchor: {x: 0.679, y: 1.5056025, z: -1.025}
   serializedVersion: 2
   m_SecondaryAxis: {x: 0, y: 1, z: 0}
   m_XMotion: 0
@@ -4064,7 +4064,7 @@ MonoBehaviour:
   handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
   StorePoses: 
   canSnapBack: 1
-  canSlide: 0
+  slideThresold: 0
   positionToRotationWeight: 0.5
 --- !u!114 &1987249415
 MonoBehaviour:
@@ -4879,7 +4879,12 @@ PrefabInstance:
     - target: {fileID: 4635681503502107842, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
         type: 3}
       propertyPath: grabThresoldController.y
-      value: 0.85
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 4635681503502107842, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
+        type: 3}
+      propertyPath: grabThresoldController.x
+      value: 0.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 886cb81ddb5a38541bfc87cbb5fabfd5, type: 3}
@@ -5080,12 +5085,17 @@ PrefabInstance:
     - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: grabThresoldController.y
-      value: 0.85
+      value: 0.95
       objectReference: {fileID: 0}
     - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: test
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: grabThresoldController.x
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 9204550037820855142, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}

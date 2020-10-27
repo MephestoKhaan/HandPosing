@@ -15,7 +15,8 @@ namespace PoseAuthoring
         [SerializeField]
         private bool canSnapBack = true;
         [SerializeField]
-        private bool canSlide = false;
+        [Range(0f, 1f)]
+        private float slideThresold = 0f;
         [SerializeField]
         [Range(0f,1f)]
         private float positionToRotationWeight = 0.5f;
@@ -29,11 +30,11 @@ namespace PoseAuthoring
                 return positionToRotationWeight;
             }
         }
-        public bool HandSlides
+        public float SlideThresold
         {
             get
             {
-                return canSlide;
+                return slideThresold;
             }
         }
         public bool HandSnapBacks

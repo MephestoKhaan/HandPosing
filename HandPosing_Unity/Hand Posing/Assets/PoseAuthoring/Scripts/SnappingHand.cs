@@ -45,7 +45,7 @@ namespace PoseAuthoring
             get
             {
                 return IsSnapping
-                    && _grabbedGhost.Snappable.HandSlides;
+                    &&  grabber.AccotedFlex() <= _grabbedGhost.Snappable.SlideThresold;
             }
         }
 

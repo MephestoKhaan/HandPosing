@@ -35,7 +35,7 @@ namespace Interaction
         private bool _operatingWithoutOVRCameraRig = true;
         private bool alreadyUpdated = false;
 
-        public Vector2 GrabThresold { get; private set; }
+        private Vector2 GrabThresold { get; set; }
 
         public Action<Grabbable> OnGrabStarted;
         public Action<Grabbable, float> OnGrabAttemp;
@@ -127,7 +127,7 @@ namespace Interaction
 
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
-            CheckForGrabOrRelease(prevFlex);
+            CheckForGrabOrRelease(prevFlex, _prevFlex);
 
             MoveGrabbedObject(transform.position, transform.rotation);
         }
@@ -145,6 +145,13 @@ namespace Interaction
                 GrabThresold = grabThresoldController;
                 return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, m_controller);
             }
+        }
+
+
+        public float AccotedFlex()
+        {
+            return GrabThresold.x + _prevFlex * (1f - GrabThresold.x);
+
         }
 
         void OnDestroy()
@@ -191,24 +198,24 @@ namespace Interaction
             }
         }
 
-        protected void CheckForGrabOrRelease(float prevFlex)
+        protected void CheckForGrabOrRelease(float prevFlex, float currentFlex)
         {
-            if (_prevFlex >= GrabThresold.y
-                && prevFlex < GrabThresold.y)
+            if (prevFlex < GrabThresold.y
+                && currentFlex >= GrabThresold.y)
             {
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if (_prevFlex <= GrabThresold.x
-                && prevFlex > GrabThresold.x)
+            else if (prevFlex > GrabThresold.x 
+                && currentFlex <= GrabThresold.x)
             {
                 GrabEnd();
             }
 
-            if (GrabbedObject == null && _prevFlex > 0)
+            if (GrabbedObject == null && currentFlex > 0)
             {
                 _nearGrab = true;
-                NearGrab(_prevFlex / GrabThresold.y);
+                NearGrab(currentFlex / GrabThresold.y);
             }
             else if (_nearGrab)
             {

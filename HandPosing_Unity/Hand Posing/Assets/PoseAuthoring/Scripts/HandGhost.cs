@@ -170,6 +170,11 @@ namespace PoseAuthoring
             return bestForwardPose ?? bestBackwardPose.Value;
         }
 
+        public Vector3 NearestInVolume(Vector3 worldPoint)
+        {
+            return _snapPoseVolume.volume.NearestPointInSurface(worldPoint);
+        }
+
         private ScoredSnapPose ComparePoses(HandSnapPose userPose, HandSnapPose snapPose, Pose measuringPoint, float scoreWeight, SnapDirection direction)
         {
             var similarPlace = SimilarPlaceAtVolume(userPose, snapPose);
@@ -211,11 +216,6 @@ namespace PoseAuthoring
             Quaternion surfaceRotation = _snapPoseVolume.volume.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
 
             return new Pose(surfacePoint, surfaceRotation);
-        }
-
-        public Vector3 NearestInVolume(Vector3 a)
-        {
-            return _snapPoseVolume.volume.NearestPointInSurface(a); 
         }
 
         private Pose SimilarPlaceAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
