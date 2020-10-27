@@ -208,7 +208,7 @@ namespace PoseAuthoring
 
         private void SnapSlide()
         {
-            if (_isGrabbing
+            if (_grabbedGhost != null 
                 && _grabbedGhost.Snappable.HandSlides)
             {
                 HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);

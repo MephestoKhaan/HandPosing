@@ -8,8 +8,6 @@ namespace Interaction.Grabbables
         [SerializeField]
         private Joint customJoint;
 
-        private GameObject savedJointHolder;
-
         private Joint _desiredJoint;
         private Joint _joint;
 
@@ -65,7 +63,7 @@ namespace Interaction.Grabbables
 
         protected Joint CopyCustomJoint(Joint joint)
         {
-            savedJointHolder = new GameObject();
+            GameObject savedJointHolder = new GameObject();
             savedJointHolder.transform.SetParent(this.transform);
             Rigidbody body = savedJointHolder.AddComponent<Rigidbody>();
             body.isKinematic = true;
