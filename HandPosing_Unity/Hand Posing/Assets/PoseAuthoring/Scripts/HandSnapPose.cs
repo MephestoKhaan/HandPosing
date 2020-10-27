@@ -35,6 +35,13 @@ namespace PoseAuthoring
                 return _bones;
             }
         }
+
+        public Pose ToPose(Transform relativeTo)
+        {
+            Vector3 globalPosDesired = relativeTo.TransformPoint(relativeGripPos);
+            Quaternion globalRotDesired = relativeTo.rotation * relativeGripRot;
+            return new Pose(globalPosDesired, globalRotDesired);
+        }
     }
 
 }

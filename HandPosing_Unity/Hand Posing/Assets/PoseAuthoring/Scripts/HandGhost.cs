@@ -131,7 +131,7 @@ namespace PoseAuthoring
             handRenderer = this.GetComponentInChildren<SkinnedMeshRenderer>();
         }
 
-        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, SnapDirection direction = SnapDirection.Any)
+        public ScoredSnapPose CalculateBestPlace(HandSnapPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any)
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
 
@@ -141,19 +141,16 @@ namespace PoseAuthoring
                 return ScoredSnapPose.Null();
             }
 
-            Vector3 globalPosDesired = RelativeTo.TransformPoint(userPose.relativeGripPos);
-            Quaternion globalRotDesired = RelativeTo.rotation * userPose.relativeGripRot;
-            Pose measuringPoint = new Pose(globalPosDesired, globalRotDesired);
+            Pose measuringPoint = userPose.ToPose(RelativeTo);
+            scoreWeight = scoreWeight ?? this.Snappable.PositionRotationWeight;
 
-
-            float scoreWeight = Snappable.PositionRotationWeight;
             ScoredSnapPose? bestForwardPose = null;
             ScoredSnapPose? bestBackwardPose = null;
 
             if (direction == SnapDirection.Any
                 || direction == SnapDirection.Forward)
             {
-                bestForwardPose = ComparePoses(userPose, snapPose, measuringPoint, scoreWeight, SnapDirection.Forward);
+                bestForwardPose = ComparePoses(userPose, snapPose, measuringPoint, scoreWeight.Value, SnapDirection.Forward);
             }
 
             if (_snapPoseVolume.handCanInvert
@@ -161,7 +158,7 @@ namespace PoseAuthoring
                 || direction == SnapDirection.Backward))
             {
                 HandSnapPose invertedPose = _snapPoseVolume.InvertedPose(RelativeTo);
-                bestBackwardPose = ComparePoses(userPose, invertedPose, measuringPoint, scoreWeight, SnapDirection.Backward);
+                bestBackwardPose = ComparePoses(userPose, invertedPose, measuringPoint, scoreWeight.Value, SnapDirection.Backward);
 
                 if (!bestForwardPose.HasValue
                     || bestBackwardPose.Value.Score > bestForwardPose.Value.Score)
@@ -214,6 +211,11 @@ namespace PoseAuthoring
             Quaternion surfaceRotation = _snapPoseVolume.volume.CalculateRotationOffset(surfacePoint, RelativeTo) * baseRot;
 
             return new Pose(surfacePoint, surfaceRotation);
+        }
+
+        public Vector3 NearestInVolume(Vector3 a)
+        {
+            return _snapPoseVolume.volume.NearestPointInSurface(a); 
         }
 
         private Pose SimilarPlaceAtVolume(HandSnapPose userPose, HandSnapPose snapPose)
