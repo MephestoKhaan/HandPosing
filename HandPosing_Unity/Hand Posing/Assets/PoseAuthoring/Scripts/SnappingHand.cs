@@ -132,7 +132,6 @@ namespace PoseAuthoring
             }
             return null;
         }
-
         #endregion
 
 
@@ -161,19 +160,7 @@ namespace PoseAuthoring
             if (IsSnapping)
             {
                 _prevOffset = this.puppet.GripOffset;
-
-                if (false)//_grabbedGhost.Snappable.HandSlides)
-                {
-                    HandSnapPose handPose = this.puppet.TrackedPose(_grabbedGhost.RelativeTo);
-                    ScoredSnapPose bestPlace = _grabbedGhost.CalculateBestPlace(handPose, this.puppet.Grip.GetPose(), _grabPose.Direction);
-                    HandSnapPose ghostPose = bestPlace.SnapPose;
-                    this.puppet.LerpGripOffset(ghostPose, 1f, _grabbedGhost.RelativeTo);
-
-                }
-                else
-                {
-                    this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo);
-                }
+                this.puppet.LerpGripOffset(_grabPose.SnapPose, 1f, _grabbedGhost.RelativeTo);
             }
         }
 
