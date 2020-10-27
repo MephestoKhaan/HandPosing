@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using UnityEngine;
 
-
 namespace Interaction.Grabbables
 {
     public class PhysicsGrabbable : Grabbable
@@ -27,9 +26,9 @@ namespace Interaction.Grabbables
         {
             base.GrabBegin(hand, grabPoint);
 
-            if(_desiredJoint != null)
+            if (_desiredJoint != null)
             {
-                _joint = CloneComponent(_desiredJoint, this.gameObject) as Joint;
+                _joint = CloneJoint(_desiredJoint, this.gameObject) as Joint;
             }
             else
             {
@@ -38,8 +37,8 @@ namespace Interaction.Grabbables
 
             _joint.connectedBody = hand.GetComponent<Rigidbody>();
             _joint.autoConfigureConnectedAnchor = false;
-            _joint.anchor =  Vector3.zero;
-            _joint.connectedAnchor = hand.transform.InverseTransformPoint(_joint.transform.position);
+            _joint.anchor = _joint.transform.InverseTransformPoint(hand.transform.position);
+            _joint.connectedAnchor = Vector3.zero;
 
             _body.isKinematic = false;
         }
@@ -55,7 +54,7 @@ namespace Interaction.Grabbables
             base.GrabEnd(linearVelocity, angularVelocity);
         }
 
-        public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot){}
+        public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot) { }
 
         private Joint CreateDefaultJoint()
         {
@@ -70,34 +69,27 @@ namespace Interaction.Grabbables
             savedJointHolder.transform.SetParent(this.transform);
             Rigidbody body = savedJointHolder.AddComponent<Rigidbody>();
             body.isKinematic = true;
-            CloneComponent(joint, savedJointHolder);
+            CloneJoint(joint, savedJointHolder);
             savedJointHolder.name = "Saved Joint";
             savedJointHolder.SetActive(false);
             Destroy(joint);
             return savedJointHolder.GetComponent<Joint>();
         }
 
-        public static Component CloneComponent(Component source, GameObject destination)
+        public static Component CloneJoint(Joint joint, GameObject destination)
         {
-            Component tmpComponent = destination.gameObject.AddComponent(source.GetType());
+            System.Type jointType = typeof(Joint);
+            Component clone = destination.gameObject.AddComponent(joint.GetType());
 
-            PropertyInfo[] foundProperties = source.GetType().GetProperties();
-            for (int i = 0; i < foundProperties.Length; i++)
+            foreach (var foundProperty in joint.GetType().GetProperties())
             {
-                PropertyInfo foundProperty = foundProperties[i];
-                if (foundProperty.CanWrite)
+                if (foundProperty.DeclaringType.IsSubclassOf(jointType)
+                    && foundProperty.CanWrite)
                 {
-                    foundProperty.SetValue(tmpComponent, foundProperty.GetValue(source, null), null);
+                    foundProperty.SetValue(clone, foundProperty.GetValue(joint, null), null);
                 }
             }
-
-            FieldInfo[] foundFields = source.GetType().GetFields();
-            for (int i = 0; i < foundFields.Length; i++)
-            {
-                FieldInfo foundField = foundFields[i];
-                foundField.SetValue(tmpComponent, foundField.GetValue(source));
-            }
-            return tmpComponent;
+            return clone;
         }
 
     }
