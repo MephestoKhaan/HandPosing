@@ -2,7 +2,7 @@
 
 namespace PoseAuthoring
 {
-    public static class Utils
+    public static class PoseUtils
     {
         public static void SetPose(this Transform transform, Pose pose, Space space = Space.World)
         {
@@ -59,7 +59,5 @@ namespace PoseAuthoring
                 reference.position + reference.rotation * offset.position,
                 reference.rotation * offset.rotation);
         }
-
-
     }
 }
