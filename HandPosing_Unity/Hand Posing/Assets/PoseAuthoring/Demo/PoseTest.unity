@@ -352,7 +352,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 241413831}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &241413834
@@ -553,7 +553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumetricPosesCollection: {fileID: 11400000, guid: 8148609fadd631042b1de1bd80e0a61a,
     type: 2}
-  handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
+  handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 1
   slideThresold: 0
@@ -567,7 +567,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 341260604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &341260607
@@ -1272,10 +1272,10 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 877416938}
-  m_Text: "<b><color=red>The lever</color></b> \nThis lever uses joints and physics...
-    \nand the hand slides to match the rotation!\nThe bar on the left only slides
-    when you are not grasping with full strength.\nYou can set up any custom Joint
-    to grab physic objects.\n"
+  m_Text: "<b><color=red>Sliding</color></b> \nThis lever uses joints and physics...
+    \nand the hand slides to match the rotation!\n\nThe bar on the left only slides
+    when you are not grasping with full strength.\nTry pushing it against the level
+    base and let go your grasp a bit.\n"
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -1876,7 +1876,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumetricPosesCollection: {fileID: 11400000, guid: 6bde19845efeee1438530fd692c7db84,
     type: 2}
-  handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
+  handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 0
   slideThresold: 0
@@ -1890,7 +1890,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 924816146}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &924816149
@@ -2452,7 +2452,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1248587800}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1248587804
@@ -2559,7 +2559,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1506398622}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!145 &1506398624
@@ -2816,7 +2816,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1562091166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1562091170
@@ -2921,7 +2921,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1578624143}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1578624147
@@ -3524,9 +3524,9 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1834789221}
-  m_Text: "<b><color=red>The cylinder</color></b> \nShows how one single pose can
-    be <b>inverted</b>\nTry grabbing it upside down!\nAlso as opposed to <b>the ring</b>
-    the hand does not\nsnaps back to tracked position when holding it."
+  m_Text: "<b><color=red>Inverting poses</color></b> \nShows how one single pose
+    can be <b>inverted</b>\nTry grabbing it upside down!\nAlso as opposed to <b>the
+    ring</b> the hand does not\nsnaps back to tracked position when holding it."
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -3644,7 +3644,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volumetricPosesCollection: {fileID: 11400000, guid: a3ea2779a839d19428b770dcdc29d2da,
     type: 2}
-  handProvider: {fileID: 11400000, guid: 08ec3a1947e56384890cae5faad8abf6, type: 2}
+  handProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   canSnapBack: 1
   slideThresold: 0
@@ -3704,9 +3704,9 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1873745287}
-  m_Text: "<b><color=red>The ring</color></b> \nIs an example on how to duplicate
-    poses\nto support different rotations. Study the <b>Ghost Hands</b>\nunder it
-    to see how it works."
+  m_Text: "<b><color=red>Snap back and volumes</color></b> \nIs an example on how
+    to duplicate poses\nto support different rotations. Study the <b>Ghost Hands</b>\nunder
+    it to see how it works."
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
@@ -3982,7 +3982,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1987249412}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b06de32a0360cb547a5952e481357dfb, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!54 &1987249416
@@ -4137,10 +4137,10 @@ TextMesh:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2052618170}
-  m_Text: "<b><color=red>The Watering Can</color></b> \ndoes <b>not</b> have any
-    poses.\nTry to grab it and see what happens!\n\nTo create a pose in play mode,
-    pretend that you are \nholding it with one hand and press Space.\nThen check
-    the <b>Ghost Hand</b> in the hierarchy\nif you want to make any tweaks."
+  m_Text: "<b><color=red>Create your own</color></b> \ndoes <b>not</b> have any poses.\nTry
+    to grab it and see what happens!\n\nTo create a pose in play mode, pretend that
+    you are \nholding it with one hand and press Space.\nThen check the <b>Ghost
+    Hand</b> in the hierarchy\nif you want to make any tweaks."
   m_OffsetZ: 0
   m_CharacterSize: 1
   m_LineSpacing: 1
