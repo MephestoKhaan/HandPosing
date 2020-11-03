@@ -2,7 +2,7 @@
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace PoseAuthoring.Editor
+namespace PoseAuthoring.PoseVolumes.Editor
 {
     [CustomEditor(typeof(HandGhost))]
     [CanEditMultipleObjects]

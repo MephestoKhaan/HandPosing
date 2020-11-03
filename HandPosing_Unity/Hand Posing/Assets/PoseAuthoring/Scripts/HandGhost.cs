@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using PoseAuthoring.PoseVolumes;
+using UnityEngine;
 using static PoseAuthoring.ScoredSnapPose;
 
 namespace PoseAuthoring
@@ -135,8 +136,7 @@ namespace PoseAuthoring
         {
             HandSnapPose snapPose = _snapPoseVolume.pose;
 
-            if (snapPose.handeness != userPose.handeness
-                && !_snapPoseVolume.ambydextrous)
+            if (snapPose.handeness != userPose.handeness)
             {
                 return ScoredSnapPose.Null();
             }

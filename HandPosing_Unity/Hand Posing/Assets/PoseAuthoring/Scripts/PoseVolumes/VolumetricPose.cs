@@ -1,14 +1,12 @@
 ﻿using System;
-using UnityEngine;
 
-namespace PoseAuthoring
+namespace PoseAuthoring.PoseVolumes
 {
     [Serializable]
     public struct VolumetricPose
     {
         public HandSnapPose pose;
         public CylinderSurface volume;
-        public bool ambydextrous;
         public bool handCanInvert;
         public float maxDistance;
 
@@ -16,7 +14,7 @@ namespace PoseAuthoring
         {
             get
             {
-                return volume;
+                return volume; 
             }
             set
             {
@@ -24,24 +22,15 @@ namespace PoseAuthoring
             }
         }
 
-
-        public HandSnapPose InvertedPose(Transform relativeTo) //relativeTo probably not needed
+        public HandSnapPose InvertedPose(UnityEngine.Transform relativeTo) //relativeTo probably not needed
         {
-            HandSnapPose invertedPose = pose;
-            Quaternion globalRot = relativeTo.rotation * invertedPose.relativeGripRot;
-
-            Quaternion invertedRot = Quaternion.AngleAxis(180f, volume.StartAngleDir) * globalRot;
-            invertedPose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * invertedRot;
-
-            return invertedPose;
+            return Volume.InvertedPose(relativeTo, pose);
         }
-
 
         public VolumetricPose Clone()
         {
             return new VolumetricPose()
             {
-                ambydextrous = this.ambydextrous,
                 handCanInvert = this.handCanInvert,
                 maxDistance = this.maxDistance,
                 pose = this.pose,

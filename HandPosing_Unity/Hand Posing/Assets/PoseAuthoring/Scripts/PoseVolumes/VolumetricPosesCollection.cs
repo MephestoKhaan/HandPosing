@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
-namespace PoseAuthoring
+namespace PoseAuthoring.PoseVolumes
 {
     [CreateAssetMenu(menuName = "PoseAuthoring/Volumetric Poses Collection")]
     public class VolumetricPosesCollection : ScriptableObject

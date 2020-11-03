@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PoseAuthoring.PoseVolumes;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace PoseAuthoring

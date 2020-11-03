@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-namespace PoseAuthoring
+namespace PoseAuthoring.PoseVolumes
 {
     [System.Serializable]
-    public class CylinderSurface
+    public class CylinderSurface : AbstractSurface
     {
         [SerializeField]
         private Vector3 _startPoint;
@@ -12,21 +12,15 @@ namespace PoseAuthoring
         [SerializeField]
         private float _angle;
 
-        public Transform transform { private get; set; }
-
-        public CylinderSurface(Transform grip)
+        public CylinderSurface(Transform grip) : base(grip)
         {
-            this.transform = grip;
-
             _angle = 230f;
             _startPoint = Vector3.up * 0.2f;
             _endPoint = Vector3.down * 0.2f;
         }
 
-        public CylinderSurface(CylinderSurface other)
+        public CylinderSurface(CylinderSurface other) : base(other)
         {
-            this.transform = other.transform;
-
             _angle = other.Angle;
             _startPoint = other._startPoint;
             _endPoint = other._endPoint;
@@ -43,6 +37,7 @@ namespace PoseAuthoring
                 return Vector3.ProjectOnPlane(transform.transform.position - StartPoint, Direction).normalized;
             }
         }
+
         public Vector3 EndAngleDir
         {
             get
@@ -162,6 +157,19 @@ namespace PoseAuthoring
             }
         }
 
+        public override HandSnapPose InvertedPose(Transform relativeTo, HandSnapPose pose)
+        {
+            HandSnapPose invertedPose = pose;
+            Quaternion globalRot = relativeTo.rotation * invertedPose.relativeGripRot;
+
+            Quaternion invertedRot = Quaternion.AngleAxis(180f, StartAngleDir) * globalRot;
+            invertedPose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * invertedRot;
+
+            return invertedPose;
+        }
+
+
+
         public CylinderSurface MakeSinglePoint()
         {
             _startPoint = _endPoint = Vector3.zero;
@@ -172,7 +180,6 @@ namespace PoseAuthoring
         public Vector3 PointAltitude(Vector3 point)
         {
             Vector3 start = StartPoint;
-            Vector3 dir = Direction;
             Vector3 projectedPoint = start + Vector3.Project(point - start, Direction);
             return projectedPoint;
         }
