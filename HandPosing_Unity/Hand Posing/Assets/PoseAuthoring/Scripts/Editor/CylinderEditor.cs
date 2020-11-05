@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace PoseAuthoring.PoseVolumes.Editor
 {
-    [CustomEditor(typeof(HandGhost))]
+    [CustomEditor(typeof(CylinderSurface))]
     [CanEditMultipleObjects]
     public class CylinderEditor : UnityEditor.Editor
     {
@@ -22,38 +22,36 @@ namespace PoseAuthoring.PoseVolumes.Editor
 
         public void OnSceneGUI()
         {
-            HandGhost ghost = (target as HandGhost);
+            CylinderSurface surface = (target as CylinderSurface);
 
-            DrawEndsCaps(ghost);
-            DrawArcEditor(ghost);
+            DrawEndsCaps(surface);
+            DrawArcEditor(surface);
             if (Event.current.type == EventType.Repaint)
             {
-                DrawCylinderVolume(ghost);
+                DrawCylinderVolume(surface);
             }
         }
 
-        private void DrawEndsCaps(HandGhost ghost)
+        private void DrawEndsCaps(CylinderSurface cylinder)
         {
-            CylinderSurface cylinder = ghost.SnapPoseVolume.Volume;
             EditorGUI.BeginChangeCheck();
-            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, ghost.RelativeTo.rotation);
+            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, cylinder.transform.rotation);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(ghost, "Change Start Cylinder Position");
+                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
                 cylinder.StartPoint = startPosition;
             }
             EditorGUI.BeginChangeCheck();
-            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, ghost.RelativeTo.rotation);
+            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, cylinder.transform.rotation);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(ghost, "Change Start Cylinder Position");
+                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
                 cylinder.EndPoint = endPosition;
             }
         }
 
-        private void DrawCylinderVolume(HandGhost ghost)
+        private void DrawCylinderVolume(CylinderSurface cylinder)
         {
-            CylinderSurface cylinder = ghost.SnapPoseVolume.Volume;
             Vector3 start = cylinder.StartPoint;
             Vector3 end = cylinder.EndPoint;
             float radious = cylinder.Radious;
@@ -92,9 +90,8 @@ namespace PoseAuthoring.PoseVolumes.Editor
 
         }
 
-        private void DrawArcEditor(HandGhost ghost)
+        private void DrawArcEditor(CylinderSurface cylinder)
         {
-            CylinderSurface cylinder = ghost.SnapPoseVolume.Volume;
             float radious = cylinder.Radious;
             topArc.angle = cylinder.Angle;
             topArc.radius = radious;
@@ -111,7 +108,7 @@ namespace PoseAuthoring.PoseVolumes.Editor
                 topArc.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(ghost, "Change Cylinder Properties");
+                    Undo.RecordObject(cylinder, "Change Cylinder Properties");
                     cylinder.Angle = topArc.angle;
                     radious = topArc.radius;
                 }

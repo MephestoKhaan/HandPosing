@@ -1,4 +1,5 @@
-﻿using PoseAuthoring.PoseVolumes;
+﻿using PoseAuthoring.PoseRecording;
+using PoseAuthoring.PoseVolumes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,105 +8,68 @@ namespace PoseAuthoring
     public class SnappableObject : MonoBehaviour
     {
         [SerializeField]
-        private VolumetricPosesCollection volumetricPosesCollection;
-        [SerializeField]
-        public HandProvider handProvider;
+        private HandPosesCollection posesCollection;
+
+        [Space]
         [InspectorButton("SaveToAsset")]
         public string StorePoses;
-        [Space]
-        [SerializeField]
-        private bool canSnapBack = true;
-        [SerializeField]
-        [Range(0f, 1f)]
-        private float slideThresold = 0f;
-        [SerializeField]
-        [Range(0f,1f)]
-        private float positionToRotationWeight = 0.5f;
+        [InspectorButton("LoadFromAsset")]
+        public string LoadPoses;
 
-        private List<HandGhost> ghosts = new List<HandGhost>();
+        private List<SnapPose> snapPoses = new List<SnapPose>();
 
-        public float PositionRotationWeight
+        public SnapPose FindBestSnapPose(HandPose userPose, out ScoredHandPose bestHandPose)
         {
-            get
+            SnapPose bestSnap = null;
+            bestHandPose = ScoredHandPose.Null();
+            foreach (var snapPose in this.snapPoses)
             {
-                return positionToRotationWeight;
-            }
-        }
-        public float SlideThresold
-        {
-            get
-            {
-                return slideThresold;
-            }
-        }
-        public bool HandSnapBacks
-        {
-            get
-            {
-                return canSnapBack;
-            }
-        }
-
-        private void Start()
-        {
-            LoadFromAsset();
-        }
-
-        public HandGhost AddPose(HandPuppet puppet)
-        {
-            HandSnapPose pose = puppet.VisualPose(this.transform);
-            HandGhost ghost = Instantiate(handProvider.GetHand(pose.handeness), this.transform);
-            ghost.SetPose(pose, this);
-            this.ghosts.Add(ghost);
-            return ghost;
-        }
-
-        private HandGhost AddPose(VolumetricPose poseVolume)
-        {
-            HandGhost ghost = Instantiate(handProvider.GetHand(poseVolume.pose.handeness), this.transform);
-            ghost.SetPoseVolume(poseVolume, this);
-            this.ghosts.Add(ghost);
-
-            return ghost;
-        }
-
-        public HandGhost FindBestGhost(HandSnapPose userPose, out ScoredSnapPose bestSnapPose)
-        {
-            HandGhost nearestGhost = null;
-            ScoredSnapPose bestPlace = ScoredSnapPose.Null();
-            foreach (var ghost in this.ghosts)
-            {
-                ScoredSnapPose snapPose = ghost.CalculateBestPlace(userPose);
-                if (snapPose.Score > bestPlace.Score)
+                ScoredHandPose pose = snapPose.CalculateBestPlace(userPose);
+                if (pose.Score > bestHandPose.Score)
                 {
-                    nearestGhost = ghost;
-                    bestPlace = snapPose;
+                    bestSnap = snapPose;
+                    bestHandPose = pose;
                 }
             }
-            bestSnapPose = bestPlace;
-            return nearestGhost;
+            return bestSnap;
+        }
+
+        public SnapPose AddPose(HandPuppet puppet)
+        {
+            HandPose pose = puppet.TrackedPose(this.transform, true);
+            return AddPose(pose);
+        }
+
+        public SnapPose AddPose(HandPose pose)
+        {
+            GameObject go = new GameObject("Snap Point");
+            go.transform.SetParent(this.transform, false);
+            SnapPose record = go.AddComponent<SnapPose>();
+            record.LoadPose(pose, this.transform);
+            this.snapPoses.Add(record);
+            return record;
         }
 
         public void LoadFromAsset()
         {
-            if(volumetricPosesCollection != null)
+            if(posesCollection != null)
             {
-                foreach (var volumetricPose in volumetricPosesCollection.Poses)
+                foreach (var handPose in posesCollection.Poses)
                 {
-                    AddPose(volumetricPose.Clone());
+                    AddPose(handPose);
                 }
             }
         }
 
         public void SaveToAsset()
         {
-            List<VolumetricPose> volumetricPoses = new List<VolumetricPose>();
-            foreach (var ghost in this.GetComponentsInChildren<HandGhost>())
+            List<HandPose> savedPoses = new List<HandPose>();
+            foreach (var snap in this.GetComponentsInChildren<SnapPose>())
             {
-                ghost.RefreshPose(this.transform);
-                volumetricPoses.Add(ghost.SnapPoseVolume);
+                //ghost.RefreshPose(this.transform);
+                savedPoses.Add(snap.SavePose());
             }
-            volumetricPosesCollection.StorePoses(volumetricPoses);
+            posesCollection.StorePoses(savedPoses);
         }
     }
 }

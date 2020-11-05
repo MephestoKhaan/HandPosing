@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace PoseAuthoring
 {
@@ -34,4 +35,38 @@ namespace PoseAuthoring
             }
         }
     }
+
+    [System.Serializable]
+    public class BoneCollection : Dictionary<OVRSkeleton.BoneId, BoneMap>, ISerializationCallbackReceiver
+    {
+        [SerializeField]
+        [HideInInspector]
+        private List<OVRSkeleton.BoneId> serialisedKeys = new List<OVRSkeleton.BoneId>();
+        [SerializeField]
+        [HideInInspector]
+        private List<BoneMap> serialisedValues = new List<BoneMap>();
+
+        public void OnAfterDeserialize()
+        {
+            if(serialisedKeys != null)
+            {
+                this.Clear();
+                for(int i = 0; i < serialisedKeys.Count; i++)
+                {
+                    this.Add(serialisedKeys[i], serialisedValues[i]);
+                }
+            }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            serialisedValues.Clear();
+            serialisedKeys.Clear();
+            foreach (var item in this)
+            {
+                serialisedKeys.Add(item.Key);
+                serialisedValues.Add(item.Value);
+            }
+        }
+    };
 }

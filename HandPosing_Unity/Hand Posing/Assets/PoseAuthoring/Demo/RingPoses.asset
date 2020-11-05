@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 25bcb0be89a14974394477d4cfa62871, type: 3}
   m_Name: RingPoses
   m_EditorClassIdentifier: 
   _poses:
@@ -48,11 +48,6 @@ MonoBehaviour:
         rotation: {x: -0.07248274, y: 0.021723935, z: -0.42662743, w: 0.90125656}
       - boneID: 18
         rotation: {x: 0.0011481079, y: -0.04870131, z: -0.123484224, w: 0.99115014}
-    volume:
-      _startPoint: {x: -0.08790329, y: -0.08019784, z: -0.09881686}
-      _endPoint: {x: -0.09131284, y: -0.07225652, z: -0.10180068}
-      _angle: 249.73135
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -90,11 +85,6 @@ MonoBehaviour:
         rotation: {x: -0.081259094, y: 0.013221891, z: -0.5607993, w: 0.8238484}
       - boneID: 18
         rotation: {x: 0.0019079597, y: -0.045687143, z: -0.35601184, w: 0.933362}
-    volume:
-      _startPoint: {x: 0.06491257, y: 0.03353723, z: 0.11839664}
-      _endPoint: {x: 0.061323527, y: 0.040874623, z: 0.11791253}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -132,11 +122,6 @@ MonoBehaviour:
         rotation: {x: -0.08044515, y: 0.014113085, z: -0.5475947, w: 0.8327482}
       - boneID: 18
         rotation: {x: 0.001614648, y: -0.047221646, z: -0.26466632, w: 0.96318185}
-    volume:
-      _startPoint: {x: 0.036587637, y: -0.06854063, z: -0.11979991}
-      _endPoint: {x: 0.040103517, y: -0.06241963, z: -0.12189849}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -174,11 +159,6 @@ MonoBehaviour:
         rotation: {x: -0.08044515, y: 0.014113085, z: -0.5475947, w: 0.8327482}
       - boneID: 18
         rotation: {x: 0.001614648, y: -0.047221646, z: -0.26466632, w: 0.96318185}
-    volume:
-      _startPoint: {x: 0.036587637, y: -0.06854063, z: -0.11979991}
-      _endPoint: {x: 0.040103517, y: -0.06241963, z: -0.12189849}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -216,11 +196,6 @@ MonoBehaviour:
         rotation: {x: -0.07248274, y: 0.021723935, z: -0.42662743, w: 0.90125656}
       - boneID: 18
         rotation: {x: 0.0011481079, y: -0.04870131, z: -0.123484224, w: 0.99115014}
-    volume:
-      _startPoint: {x: -0.08790329, y: -0.08019784, z: -0.09881686}
-      _endPoint: {x: -0.09131284, y: -0.07225652, z: -0.10180068}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -258,11 +233,6 @@ MonoBehaviour:
         rotation: {x: -0.081259094, y: 0.013221891, z: -0.5607993, w: 0.8238484}
       - boneID: 18
         rotation: {x: 0.0019079597, y: -0.045687143, z: -0.35601184, w: 0.933362}
-    volume:
-      _startPoint: {x: 0.06491257, y: 0.03353723, z: 0.11839664}
-      _endPoint: {x: 0.061323527, y: 0.040874623, z: 0.11791253}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -300,11 +270,6 @@ MonoBehaviour:
         rotation: {x: -0.08044515, y: 0.014113085, z: -0.5475947, w: 0.8327482}
       - boneID: 18
         rotation: {x: 0.001614648, y: -0.047221646, z: -0.26466632, w: 0.96318185}
-    volume:
-      _startPoint: {x: -0.038810696, y: 0.063689396, z: 0.12595245}
-      _endPoint: {x: -0.03720432, y: 0.0680477, z: 0.12413266}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1
   - pose:
@@ -342,10 +307,5 @@ MonoBehaviour:
         rotation: {x: -0.08044515, y: 0.014113085, z: -0.5475947, w: 0.8327482}
       - boneID: 18
         rotation: {x: 0.001614648, y: -0.047221646, z: -0.26466632, w: 0.96318185}
-    volume:
-      _startPoint: {x: -0.038810696, y: 0.063689396, z: 0.12595245}
-      _endPoint: {x: -0.03720432, y: 0.0680477, z: 0.12413266}
-      _angle: 250
-    ambydextrous: 0
     handCanInvert: 0
     maxDistance: 0.1

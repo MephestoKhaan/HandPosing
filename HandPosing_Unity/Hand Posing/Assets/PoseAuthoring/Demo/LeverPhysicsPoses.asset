@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 25bcb0be89a14974394477d4cfa62871, type: 3}
   m_Name: LeverPhysicsPoses
   m_EditorClassIdentifier: 
   _poses:
@@ -48,10 +48,5 @@ MonoBehaviour:
         rotation: {x: -0.07467735, y: 0.019796174, z: -0.45870885, w: 0.8852218}
       - boneID: 18
         rotation: {x: 0.0016516951, y: -0.047055673, z: -0.2760848, w: 0.95997936}
-    volume:
-      _startPoint: {x: -0.033172403, y: -0.008647177, z: 0.018156683}
-      _endPoint: {x: 0.04713129, y: -0.008926032, z: -0.016099252}
-      _angle: 360
-    ambydextrous: 0
     handCanInvert: 1
     maxDistance: 0.1

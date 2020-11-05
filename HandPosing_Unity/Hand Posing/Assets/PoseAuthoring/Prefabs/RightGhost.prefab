@@ -376,6 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trackedHand: {fileID: 0}
+  animator: {fileID: 0}
   handAnchor: {fileID: 7166070815929903276}
   gripPoint: {fileID: 6947336271118645116}
   handeness: 1
@@ -430,6 +431,54 @@ MonoBehaviour:
   - id: 18
     transform: {fileID: 7165968319813253816}
     rotationOffset: {x: 0, y: 0, z: 0}
+  _bonesCache:
+    serialisedKeys: 020000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e000000100000001100000012000000
+    serialisedValues:
+    - id: 2
+      transform: {fileID: 7164180164629477100}
+      rotationOffset: {x: 240, y: 20, z: -180}
+    - id: 4
+      transform: {fileID: 7164296433768481468}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 5
+      transform: {fileID: 7164477314064904910}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 6
+      transform: {fileID: 7164498366076339162}
+      rotationOffset: {x: -90, y: 180, z: 0}
+    - id: 7
+      transform: {fileID: 7164119800825959154}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 8
+      transform: {fileID: 7164451739871274804}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 9
+      transform: {fileID: 7164108969234105498}
+      rotationOffset: {x: -90, y: 180, z: 0}
+    - id: 10
+      transform: {fileID: 7164406978306318838}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 11
+      transform: {fileID: 7164511554363597156}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 12
+      transform: {fileID: 7164389691833429856}
+      rotationOffset: {x: -90, y: 180, z: 0}
+    - id: 13
+      transform: {fileID: 7165902854948334230}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 14
+      transform: {fileID: 7164646113136286382}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 16
+      transform: {fileID: 7164335203531819350}
+      rotationOffset: {x: -180, y: 180, z: 0}
+    - id: 17
+      transform: {fileID: 7164628736816548236}
+      rotationOffset: {x: 0, y: 0, z: 0}
+    - id: 18
+      transform: {fileID: 7165968319813253816}
+      rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7362165940787128986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,25 +491,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01943e3692b5ed04fb45ec65e898cc44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handRenderer: {fileID: 7100964493634904582}
-  highlightedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  defaultColor: {r: 0, g: 0, b: 1, a: 1}
-  colorProperty: _RimColor
-  StaticPose: 
-  Duplicate: 
-  _snapPoseVolume:
-    pose:
-      relativeGripPos: {x: 0, y: 0, z: 0}
-      relativeGripRot: {x: 0, y: 0, z: 0, w: 0}
-      handeness: 0
-      _bones: []
-    volume:
-      _startPoint: {x: 0, y: 0, z: 0}
-      _endPoint: {x: 0, y: 0, z: 0}
-      _angle: 0
-    ambydextrous: 0
-    handCanInvert: 0
-    maxDistance: 0
+  puppet: {fileID: 3041629361329141844}
 --- !u!1 &7161748250141499802
 GameObject:
   m_ObjectHideFlags: 0

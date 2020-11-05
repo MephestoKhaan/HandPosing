@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using static OVRSkeleton;
-using static PoseAuthoring.HandSnapPose;
+using static PoseAuthoring.HandPose;
 
 namespace PoseAuthoring
 {
@@ -24,6 +24,13 @@ namespace PoseAuthoring
         [SerializeField]
         private List<BoneMap> boneMaps;
 
+        public List<BoneMap> Bones
+        {
+            get
+            {
+                return boneMaps;
+            }
+        }
 
         public Transform Grip
         {
@@ -50,8 +57,18 @@ namespace PoseAuthoring
         public System.Action OnPoseBeforeUpdate;
         public System.Action OnPoseUpdated;
 
-        private class BoneCollection : Dictionary<BoneId, BoneMap> { };
-        private BoneCollection _bonesCollection;
+        private BoneCollection _bonesCache;
+        private BoneCollection BonesCache
+        {
+            get
+            {
+                if(_bonesCache == null)
+                {
+                    _bonesCache = CacheBones();
+                }
+                return _bonesCache;
+            }
+        }
 
         private HandMap _originalHandOffset;
         private Pose _originalGripOffset;
@@ -66,23 +83,23 @@ namespace PoseAuthoring
             }
         }
 
-
         private bool _trackingHands;
         private bool _usingOVRUpdates;
 
         private void Awake()
         {
-            _bonesCollection = InitializeBones();
-
             if (trackedHand == null)
             {
                 this.enabled = false;
             }
-
-            InitializeOVRUpdates();
+            else
+            {
+                InitializeOVRUpdates();
+            }
+            CacheGripOffsets();
         }
 
-        private BoneCollection InitializeBones()
+        private BoneCollection CacheBones()
         {
             var bonesCollection = new BoneCollection();
             foreach (var boneMap in boneMaps)
@@ -90,7 +107,6 @@ namespace PoseAuthoring
                 BoneId id = boneMap.id;
                 bonesCollection.Add(id, boneMap);
             }
-
             return bonesCollection;
         }
 
@@ -108,14 +124,7 @@ namespace PoseAuthoring
             }
         }
 
-
-
-        private void Start()
-        {
-            StorePoses();
-        }
-
-        private void StorePoses()
+        private void CacheGripOffsets()
         {
             _originalHandOffset = HandOffsetMapping();
             _originalGripOffset = GripOffset;
@@ -210,11 +219,11 @@ namespace PoseAuthoring
             for (int i = 0; i < skeleton.Bones.Count; ++i)
             {
                 BoneId boneId = skeleton.Bones[i].Id;
-                if (_bonesCollection.ContainsKey(boneId))
+                if (BonesCache.ContainsKey(boneId))
                 {
-                    Transform boneTransform = _bonesCollection[boneId].transform;
+                    Transform boneTransform = BonesCache[boneId].transform;
                     boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
-                        _bonesCollection[boneId].RotationOffset);
+                        BonesCache[boneId].RotationOffset);
                 }
                 else if (trackedHandOffset.id == boneId) //TODO, do I REALLY want to move this?
                 {
@@ -235,7 +244,7 @@ namespace PoseAuthoring
 
         #region pose lerping
 
-        public void LerpToPose(HandSnapPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
+        public void LerpToPose(HandPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
             LerpBones(pose.Bones, bonesWeight);
             LerpGripOffset(pose, positionWeight, relativeTo);
@@ -248,9 +257,9 @@ namespace PoseAuthoring
                 foreach (var bone in bones)
                 {
                     BoneId boneId = bone.boneID;
-                    if (_bonesCollection.ContainsKey(boneId))
+                    if (BonesCache.ContainsKey(boneId))
                     {
-                        Transform boneTransform = _bonesCollection[boneId].transform;
+                        Transform boneTransform = BonesCache[boneId].transform;
                         boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, bone.rotation, weight);
                     }
                 }
@@ -259,10 +268,9 @@ namespace PoseAuthoring
 
 
 
-        public void LerpGripOffset(HandSnapPose pose, float weight, Transform relativeTo)
+        public void LerpGripOffset(HandPose pose, float weight, Transform relativeTo)
         {
-            Pose offset = new Pose(pose.relativeGripPos, pose.relativeGripRot);
-            LerpGripOffset(offset, weight, relativeTo);
+            LerpGripOffset(pose.relativeGrip, weight, relativeTo);
         }
 
         public void LerpGripOffset(Pose pose, float weight, Transform relativeTo = null)
@@ -288,42 +296,25 @@ namespace PoseAuthoring
 
         #region currentPoses
 
-        public HandSnapPose TrackedPose(Transform relativeTo, bool includeBones = false)
+        public HandPose TrackedPose(Transform relativeTo, bool includeBones = false)
         {
             Pose worldGrip = TrackedGripPose;
             Vector3 trackedGripPosition = worldGrip.position;
             Quaternion trackedGripRotation = worldGrip.rotation;
 
-            HandSnapPose pose = new HandSnapPose();
-            pose.relativeGripPos = relativeTo.InverseTransformPoint(trackedGripPosition);
-            pose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * trackedGripRotation;
+            HandPose pose = new HandPose();
+            pose.relativeGrip.position = relativeTo.InverseTransformPoint(trackedGripPosition);
+            pose.relativeGrip.rotation = Quaternion.Inverse(relativeTo.rotation) * trackedGripRotation;
             pose.handeness = this.handeness;
 
             if(includeBones)
             {
-                foreach (var bone in _bonesCollection)
+                foreach (var bone in BonesCache)
                 {
                     BoneMap boneMap = bone.Value;
                     Quaternion rotation = boneMap.transform.localRotation;
                     pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
                 }
-            }
-
-            return pose;
-        }
-
-        public HandSnapPose VisualPose(Transform relativeTo)
-        {
-            HandSnapPose pose = new HandSnapPose();
-            pose.relativeGripPos = relativeTo.InverseTransformPoint(this.gripPoint.position);
-            pose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * this.gripPoint.rotation;
-            pose.handeness = this.handeness;
-
-            foreach (var bone in _bonesCollection)
-            {
-                BoneMap boneMap = bone.Value;
-                Quaternion rotation = boneMap.transform.localRotation;
-                pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
             }
             return pose;
         }

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d7005bbd0f6d5943ba9c4843ccf5dfa, type: 3}
+  m_Script: {fileID: 11500000, guid: 25bcb0be89a14974394477d4cfa62871, type: 3}
   m_Name: BarPoses
   m_EditorClassIdentifier: 
   _poses:
@@ -48,10 +48,5 @@ MonoBehaviour:
         rotation: {x: -0.080293186, y: 0.014276634, z: -0.5451504, w: 0.8343622}
       - boneID: 18
         rotation: {x: 0.0016013664, y: -0.04727929, z: -0.26058066, w: 0.9642924}
-    volume:
-      _startPoint: {x: 0.3220778, y: 0.03618619, z: -0.352342}
-      _endPoint: {x: -1.0844933, y: -0.13455963, z: 1.0591831}
-      _angle: 360
-    ambydextrous: 0
     handCanInvert: 1
     maxDistance: 0.1

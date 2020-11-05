@@ -3,7 +3,7 @@
 namespace PoseAuthoring.PoseVolumes
 {
     [System.Serializable]
-    public class CylinderSurface : AbstractSurface
+    public class CylinderSurface : SnapSurface
     {
         [SerializeField]
         private Vector3 _startPoint;
@@ -12,29 +12,15 @@ namespace PoseAuthoring.PoseVolumes
         [SerializeField]
         private float _angle;
 
-        public CylinderSurface(Transform grip) : base(grip)
-        {
-            _angle = 230f;
-            _startPoint = Vector3.up * 0.2f;
-            _endPoint = Vector3.down * 0.2f;
-        }
-
-        public CylinderSurface(CylinderSurface other) : base(other)
-        {
-            _angle = other.Angle;
-            _startPoint = other._startPoint;
-            _endPoint = other._endPoint;
-        }
-
         public Vector3 StartAngleDir
         {
             get
             {
-                if(this.transform == null)
+                if(this.GripPoint == null)
                 {
                     return Vector3.forward;
                 }
-                return Vector3.ProjectOnPlane(transform.transform.position - StartPoint, Direction).normalized;
+                return Vector3.ProjectOnPlane(GripPoint.transform.position - StartPoint, Direction).normalized;
             }
         }
 
@@ -50,9 +36,9 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                if(this.transform != null)
+                if(this.GripPoint != null)
                 {
-                    return this.transform.TransformPoint(_startPoint);
+                    return this.GripPoint.TransformPoint(_startPoint);
                 }
                 else
                 {
@@ -61,9 +47,9 @@ namespace PoseAuthoring.PoseVolumes
             }
             set
             {
-                if (this.transform != null)
+                if (this.GripPoint != null)
                 {
-                    _startPoint = this.transform.InverseTransformPoint(value);
+                    _startPoint = this.GripPoint.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -76,9 +62,9 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                if (this.transform != null)
+                if (this.GripPoint != null)
                 {
-                    return this.transform.TransformPoint(_endPoint);
+                    return this.GripPoint.TransformPoint(_endPoint);
                 }
                 else
                 {
@@ -87,9 +73,9 @@ namespace PoseAuthoring.PoseVolumes
             }
             set
             {
-                if (this.transform != null)
+                if (this.GripPoint != null)
                 {
-                    _endPoint = this.transform.InverseTransformPoint(value);
+                    _endPoint = this.GripPoint.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -114,13 +100,13 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                if (this.transform == null)
+                if (this.GripPoint == null)
                 {
                     return 0f;
                 }
                 Vector3 start = StartPoint;
-                Vector3 projectedPoint = start + Vector3.Project(this.transform.position - start, Direction);
-                return Vector3.Distance(projectedPoint, this.transform.position);
+                Vector3 projectedPoint = start + Vector3.Project(this.GripPoint.position - start, Direction);
+                return Vector3.Distance(projectedPoint, this.GripPoint.position);
             }
         }
 
@@ -139,7 +125,7 @@ namespace PoseAuthoring.PoseVolumes
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this.transform?this.transform.up:Vector3.up;
+                    return this.GripPoint?this.GripPoint.up:Vector3.up;
                 }
                 return dir.normalized;
             }
@@ -157,24 +143,15 @@ namespace PoseAuthoring.PoseVolumes
             }
         }
 
-        public override HandSnapPose InvertedPose(Transform relativeTo, HandSnapPose pose)
+        public override HandPose InvertedPose(Transform relativeTo, HandPose pose)
         {
-            HandSnapPose invertedPose = pose;
-            Quaternion globalRot = relativeTo.rotation * invertedPose.relativeGripRot;
+            HandPose invertedPose = pose;
+            Quaternion globalRot = relativeTo.rotation * invertedPose.relativeGrip.rotation;
 
             Quaternion invertedRot = Quaternion.AngleAxis(180f, StartAngleDir) * globalRot;
-            invertedPose.relativeGripRot = Quaternion.Inverse(relativeTo.rotation) * invertedRot;
+            invertedPose.relativeGrip.rotation = Quaternion.Inverse(relativeTo.rotation) * invertedRot;
 
             return invertedPose;
-        }
-
-
-
-        public CylinderSurface MakeSinglePoint()
-        {
-            _startPoint = _endPoint = Vector3.zero;
-            Angle = 0f;
-            return this;
         }
 
         public Vector3 PointAltitude(Vector3 point)
@@ -184,7 +161,7 @@ namespace PoseAuthoring.PoseVolumes
             return projectedPoint;
         }
 
-        public Vector3 NearestPointInSurface(Vector3 targetPosition)
+        public override Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
             Vector3 start = StartPoint;
             Vector3 dir = Direction;
@@ -219,12 +196,30 @@ namespace PoseAuthoring.PoseVolumes
             return surfacePoint;
         }
 
-        public Quaternion CalculateRotationOffset(Vector3 surfacePoint, Transform relativeTo)
+        public override Quaternion CalculateRotationOffset(Vector3 surfacePoint, Transform relativeTo)
         {
-            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.transform.position - StartPoint, Direction);
+            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.GripPoint.position - StartPoint, Direction);
             Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
 
             return Quaternion.FromToRotation(recordedDirection, desiredDirection);
+        }
+
+
+        public override Pose SimilarPlaceAtVolume(Pose userPose, Pose snapPose, Transform relativeTo)
+        {
+            Vector3 desiredPos = userPose.position;
+            Quaternion desiredRot = userPose.rotation;
+            Quaternion baseRot = snapPose.rotation;
+
+            Quaternion rotDif = (desiredRot) * Quaternion.Inverse(baseRot);
+            Vector3 desiredDirection = (rotDif * Rotation) * Vector3.forward;
+            Vector3 projectedDirection = Vector3.ProjectOnPlane(desiredDirection, Direction).normalized;
+
+            Vector3 altitudePoint = PointAltitude(desiredPos);
+            Vector3 surfacePoint = NearestPointInSurface(altitudePoint + projectedDirection * Radious);
+            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint, relativeTo) * baseRot;
+
+            return new Pose(surfacePoint, surfaceRotation);
         }
     }
 }

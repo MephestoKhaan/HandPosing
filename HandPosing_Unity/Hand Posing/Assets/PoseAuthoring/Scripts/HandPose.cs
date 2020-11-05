@@ -11,15 +11,14 @@ namespace PoseAuthoring
     }
 
     [System.Serializable]
-    public struct HandSnapPose
+    public struct HandPose
     {
         public enum Handeness
         {
-            Left,Right
+            Left, Right
         }
 
-        public Vector3 relativeGripPos;
-        public Quaternion relativeGripRot;
+        public Pose relativeGrip;
         public Handeness handeness;
 
         [SerializeField]
@@ -28,7 +27,7 @@ namespace PoseAuthoring
         {
             get
             {
-                if(_bones == null)
+                if (_bones == null)
                 {
                     _bones = new List<BoneRotation>();
                 }
@@ -38,9 +37,17 @@ namespace PoseAuthoring
 
         public Pose ToPose(Transform relativeTo)
         {
-            Vector3 globalPosDesired = relativeTo.TransformPoint(relativeGripPos);
-            Quaternion globalRotDesired = relativeTo.rotation * relativeGripRot;
+            Vector3 globalPosDesired = relativeTo.TransformPoint(relativeGrip.position);
+            Quaternion globalRotDesired = relativeTo.rotation * relativeGrip.rotation;
             return new Pose(globalPosDesired, globalRotDesired);
+        }
+
+        public HandPose AdjustPose(Pose pose, Transform relativeTo)
+        {
+            HandPose snapPose = this;
+            snapPose.relativeGrip.position = relativeTo.InverseTransformPoint(pose.position);
+            snapPose.relativeGrip.rotation = Quaternion.Inverse(relativeTo.rotation) * pose.rotation;
+            return snapPose;
         }
     }
 
