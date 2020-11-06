@@ -1,5 +1,4 @@
 ﻿using PoseAuthoring.PoseRecording;
-using PoseAuthoring.PoseVolumes;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +8,8 @@ namespace PoseAuthoring
     {
         [SerializeField]
         private HandPosesCollection posesCollection;
+        [SerializeField]
+        private HandGhostProvider ghostProvider;
 
         [Space]
         [InspectorButton("SaveToAsset")]
@@ -16,11 +17,12 @@ namespace PoseAuthoring
         [InspectorButton("LoadFromAsset")]
         public string LoadPoses;
 
-        private List<SnapPose> snapPoses = new List<SnapPose>();
+        [SerializeField]
+        private List<SnapPoint> snapPoses = new List<SnapPoint>();
 
-        public SnapPose FindBestSnapPose(HandPose userPose, out ScoredHandPose bestHandPose)
+        public SnapPoint FindBestSnapPose(HandPose userPose, out ScoredHandPose bestHandPose)
         {
-            SnapPose bestSnap = null;
+            SnapPoint bestSnap = null;
             bestHandPose = ScoredHandPose.Null();
             foreach (var snapPose in this.snapPoses)
             {
@@ -34,42 +36,53 @@ namespace PoseAuthoring
             return bestSnap;
         }
 
-        public SnapPose AddPose(HandPuppet puppet)
+        public SnapPoint AddSnapPoint(HandPuppet puppet)
         {
             HandPose pose = puppet.TrackedPose(this.transform, true);
-            return AddPose(pose);
+            SnapPoint record = GenerateSnapPoint();
+            record.SetPose(pose, this.transform);
+            record.LoadGhost(ghostProvider);
+            return record;
         }
 
-        public SnapPose AddPose(HandPose pose)
+        private SnapPoint LoadSnapPoint(SnapPointData data)
+        {
+            SnapPoint record = GenerateSnapPoint();
+            record.LoadData(data, this.transform);
+            record.LoadGhost(ghostProvider);
+            return record;
+        }
+
+        private SnapPoint GenerateSnapPoint()
         {
             GameObject go = new GameObject("Snap Point");
             go.transform.SetParent(this.transform, false);
-            SnapPose record = go.AddComponent<SnapPose>();
-            record.LoadPose(pose, this.transform);
+            SnapPoint record = go.AddComponent<SnapPoint>();
             this.snapPoses.Add(record);
             return record;
         }
 
-        public void LoadFromAsset()
+#if UNITY_EDITOR
+        private void LoadFromAsset()
         {
             if(posesCollection != null)
             {
                 foreach (var handPose in posesCollection.Poses)
                 {
-                    AddPose(handPose);
+                    LoadSnapPoint(handPose);
                 }
             }
         }
 
-        public void SaveToAsset()
+        private void SaveToAsset()
         {
-            List<HandPose> savedPoses = new List<HandPose>();
-            foreach (var snap in this.GetComponentsInChildren<SnapPose>())
+            List<SnapPointData> savedPoses = new List<SnapPointData>();
+            foreach (var snap in this.GetComponentsInChildren<SnapPoint>())
             {
-                //ghost.RefreshPose(this.transform);
-                savedPoses.Add(snap.SavePose());
+                savedPoses.Add(snap.SaveData());
             }
             posesCollection.StorePoses(savedPoses);
         }
+#endif
     }
 }

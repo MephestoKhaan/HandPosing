@@ -3,20 +3,43 @@
 namespace PoseAuthoring.PoseVolumes
 {
     [System.Serializable]
+    public class CylinderSurfaceData : SnapSurfaceData
+    {
+        public Vector3 startPoint;
+        public Vector3 endPoint;
+        public float angle;
+    }
+
+    [System.Serializable]
     public class CylinderSurface : SnapSurface
     {
         [SerializeField]
-        private Vector3 _startPoint;
-        [SerializeField]
-        private Vector3 _endPoint;
-        [SerializeField]
-        private float _angle;
+        private CylinderSurfaceData _data = new CylinderSurfaceData();
+
+        public override SnapSurfaceData Data
+        {
+            get
+            {
+                return _data;
+            }
+            set
+            {
+                if (value is CylinderSurfaceData)
+                {
+                    this._data = value as CylinderSurfaceData;
+                }
+                else
+                {
+                    Debug.LogError("Invalid Data", this);
+                }
+            }
+        }
 
         public Vector3 StartAngleDir
         {
             get
             {
-                if(this.GripPoint == null)
+                if (this.GripPoint == null)
                 {
                     return Vector3.forward;
                 }
@@ -36,24 +59,24 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                if(this.GripPoint != null)
+                if (this.GripPoint != null)
                 {
-                    return this.GripPoint.TransformPoint(_startPoint);
+                    return this.GripPoint.TransformPoint(_data.startPoint);
                 }
                 else
                 {
-                    return _startPoint;
+                    return _data.startPoint;
                 }
             }
             set
             {
                 if (this.GripPoint != null)
                 {
-                    _startPoint = this.GripPoint.InverseTransformPoint(value);
+                    _data.startPoint = this.GripPoint.InverseTransformPoint(value);
                 }
                 else
                 {
-                    _startPoint = value;
+                    _data.startPoint = value;
                 }
             }
         }
@@ -64,22 +87,22 @@ namespace PoseAuthoring.PoseVolumes
             {
                 if (this.GripPoint != null)
                 {
-                    return this.GripPoint.TransformPoint(_endPoint);
+                    return this.GripPoint.TransformPoint(_data.endPoint);
                 }
                 else
                 {
-                    return _endPoint;
+                    return _data.endPoint;
                 }
             }
             set
             {
                 if (this.GripPoint != null)
                 {
-                    _endPoint = this.GripPoint.InverseTransformPoint(value);
+                    _data.endPoint = this.GripPoint.InverseTransformPoint(value);
                 }
                 else
                 {
-                    _endPoint = value;
+                    _data.endPoint = value;
                 }
             }
         }
@@ -88,11 +111,11 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                return _angle;
+                return _data.angle;
             }
             set
             {
-                _angle = Mathf.Repeat(value, 360f);
+                _data.angle = Mathf.Repeat(value, 360f);
             }
         }
 
@@ -125,7 +148,7 @@ namespace PoseAuthoring.PoseVolumes
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this.GripPoint?this.GripPoint.up:Vector3.up;
+                    return this.GripPoint ? this.GripPoint.up : Vector3.up;
                 }
                 return dir.normalized;
             }
@@ -135,7 +158,7 @@ namespace PoseAuthoring.PoseVolumes
         {
             get
             {
-                if(_startPoint == _endPoint)
+                if (_data.startPoint == _data.endPoint)
                 {
                     return Quaternion.LookRotation(Vector3.forward);
                 }

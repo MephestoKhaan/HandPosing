@@ -26,7 +26,7 @@ namespace PoseAuthoring
         public void RecordPose()
         {
             Grabbable grabbable = grabber.FindClosestGrabbable().Item1;
-            grabbable?.Snappable?.AddPose(puppetHand);
+            grabbable?.Snappable?.AddSnapPoint(puppetHand);
         }
     }
 }

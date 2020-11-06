@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
-using static PoseAuthoring.HandPose;
+﻿using UnityEngine;
 
 namespace PoseAuthoring
 {
@@ -16,20 +14,5 @@ namespace PoseAuthoring
         {
             return handeness == Handeness.Right ? rightHand : leftHand;
         }
-
-        #region singleton
-        static HandGhostProvider _instance = null;
-        public static HandGhostProvider Instance
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = Resources.FindObjectsOfTypeAll<HandGhostProvider>().FirstOrDefault();
-                }
-                return _instance;
-            }
-        }
-        #endregion
     }
 }

@@ -3,7 +3,19 @@ using UnityEngine;
 
 namespace PoseAuthoring.PoseRecording
 {
-    public class SnapPose : MonoBehaviour
+    [System.Serializable]
+    public struct SnapPointData
+    {
+        public HandPose pose;
+        public SnapSurfaceData surfaceData;
+        public bool canInvert;
+        public float maxDistance;
+        public float positionRotationWeight;
+        public bool snapsBack;
+        public float slideThresold;
+    }
+
+    public class SnapPoint : MonoBehaviour
     {
         [SerializeField]
         private Transform relativeTo;
@@ -12,21 +24,20 @@ namespace PoseAuthoring.PoseRecording
 
         [Space]
         [SerializeField]
-        private SnapSurface surface;
+        private SnapSurface surface; //TODO how to save?
         [SerializeField]
         private HandGhost ghost;
 
-        //TODO needs saving? maybe even the surface
         [Space]
         [SerializeField]
         private bool canInvert = false;
+        [SerializeField]
+        private bool snapsBack = false;
         [SerializeField]
         private float maxDistance = 0.1f;
         [SerializeField]
         [Range(0f, 1f)]
         private float positionRotationWeight = 0.5f;
-        [SerializeField]
-        private bool snapsBack = false;
         [SerializeField]
         [Range(0f, 1f)]
         private float slideThresold = 0f;
@@ -43,7 +54,7 @@ namespace PoseAuthoring.PoseRecording
 
         private void OnValidate()
         {
-            if(ghost != _previousGhost)
+            if (ghost != _previousGhost)
             {
                 WireGhost();
             }
@@ -51,7 +62,7 @@ namespace PoseAuthoring.PoseRecording
             {
                 WireSurface();
             }
-            if(_previousRelativeTo != relativeTo)
+            if (_previousRelativeTo != relativeTo)
             {
                 WireGhost();
                 WireSurface();
@@ -61,30 +72,55 @@ namespace PoseAuthoring.PoseRecording
 
         private void RefreshGhostPose()
         {
-            pose = ghost.ReadPose(relativeTo);
+            this.pose = ghost.ReadPose(relativeTo);
         }
 
-        public HandPose SavePose()
+        public SnapPointData SaveData()
         {
-            return pose;
+            return new SnapPointData()
+            {
+                pose = this.pose,
+                surfaceData = this.surface.Data,
+                canInvert = this.canInvert,
+                maxDistance = this.maxDistance,
+                positionRotationWeight = this.positionRotationWeight,
+                snapsBack = this.snapsBack,
+                slideThresold = this.slideThresold
+            };
         }
 
-        public void LoadPose(HandPose snapPose, Transform relativeTo)
+        public void LoadData(SnapPointData data, Transform relativeTo)
+        {
+            SetPose(data.pose, relativeTo);
+            this.canInvert = data.canInvert;
+            this.maxDistance = data.maxDistance;
+            this.positionRotationWeight = data.positionRotationWeight;
+            this.snapsBack = data.snapsBack;
+            this.slideThresold = data.slideThresold;
+            //this.surface.Data = data.surfaceData;
+        }
+
+        public void SetPose(HandPose snapPose, Transform relativeTo)
         {
             pose = snapPose;
             this.relativeTo = relativeTo;
 
-            this.transform.localPosition = snapPose.relativeGrip.position;
-            this.transform.localRotation = snapPose.relativeGrip.rotation;
-
-            LoadGhost();
-            LoadDefaultSurface();
+            this.transform.localPosition = pose.relativeGrip.position;
+            this.transform.localRotation = pose.relativeGrip.rotation;
         }
 
-        public void LoadGhost()
+        public void LoadGhost(HandGhostProvider ghostProvider)
         {
-            ghost = Instantiate(HandGhostProvider.Instance.GetHand(pose.handeness), this.transform);
-            WireGhost();
+            HandGhost ghostPrototype = ghostProvider?.GetHand(pose.handeness);
+            if(ghostPrototype != null)
+            {
+                ghost = Instantiate(ghostPrototype, this.transform);
+                WireGhost();
+            }
+            else
+            {
+                Debug.LogError("No HandGhostProvider", this);
+            }
         }
 
         private void LoadDefaultSurface()
@@ -97,12 +133,12 @@ namespace PoseAuthoring.PoseRecording
         {
             if (_previousGhost != null)
             {
-                _previousGhost.OnDirty -= RefreshGhostPose;
+                _previousGhost.OnDirtyBones -= RefreshGhostPose;
             }
             if (ghost != null)
             {
                 ghost.SetPose(pose, relativeTo);
-                ghost.OnDirty += RefreshGhostPose;
+                ghost.OnDirtyBones += RefreshGhostPose;
             }
             _previousGhost = ghost;
         }

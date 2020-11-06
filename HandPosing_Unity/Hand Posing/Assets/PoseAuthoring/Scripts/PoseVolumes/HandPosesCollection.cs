@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace PoseAuthoring.PoseVolumes
+namespace PoseAuthoring.PoseRecording
 {
     [CreateAssetMenu(menuName = "PoseAuthoring/Hand Poses Collection")]
     public class HandPosesCollection : ScriptableObject
     {
         [SerializeField]
-        private List<HandPose> _poses;
+        private List<SnapPointData> _poses;
 
-        public List<HandPose> Poses
+        public List<SnapPointData> Poses
         {
             get
             {
@@ -17,7 +17,7 @@ namespace PoseAuthoring.PoseVolumes
             }
         }
 
-        public void StorePoses(List<HandPose> poses)
+        public void StorePoses(List<SnapPointData> poses)
         {
             _poses = poses;
 #if UNITY_EDITOR

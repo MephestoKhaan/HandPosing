@@ -3,6 +3,9 @@
 namespace PoseAuthoring.PoseVolumes
 {
     [System.Serializable]
+    public class SnapSurfaceData { }
+
+    [System.Serializable]
     public abstract class SnapSurface : MonoBehaviour
     {
         protected Transform GripPoint
@@ -15,6 +18,7 @@ namespace PoseAuthoring.PoseVolumes
 
         public Transform relativeTo;
 
+        public abstract SnapSurfaceData Data { get; set; }
 
         public abstract HandPose InvertedPose(HandPose pose);
         public abstract Vector3 NearestPointInSurface(Vector3 targetPosition);

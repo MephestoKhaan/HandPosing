@@ -18,7 +18,7 @@ namespace PoseAuthoring
         [SerializeField]
         private float snapbackTime = 0.33f;
 
-        private SnapPose _grabSnap;
+        private SnapPoint _grabSnap;
         private ScoredHandPose _grabPose;
 
         private float _bonesOverrideFactor;
@@ -131,7 +131,7 @@ namespace PoseAuthoring
             }
         }
 
-        private (SnapPose, ScoredHandPose)? SnapForGrabbable(Grabbable grabbable)
+        private (SnapPoint, ScoredHandPose)? SnapForGrabbable(Grabbable grabbable)
         {
             if (grabbable == null)
             {
@@ -141,7 +141,7 @@ namespace PoseAuthoring
             if (snappable != null)
             {
                 HandPose userPose = this.puppet.TrackedPose(snappable.transform);
-                SnapPose snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
+                SnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
                 if (snapPose != null)
                 {
                     return (snapPose, bestPose);

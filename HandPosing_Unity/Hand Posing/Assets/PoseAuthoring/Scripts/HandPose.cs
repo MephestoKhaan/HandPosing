@@ -3,6 +3,11 @@ using UnityEngine;
 
 namespace PoseAuthoring
 {
+    public enum Handeness
+    {
+        Left, Right
+    }
+
     [System.Serializable]
     public struct BoneRotation
     {
@@ -13,10 +18,6 @@ namespace PoseAuthoring
     [System.Serializable]
     public struct HandPose
     {
-        public enum Handeness
-        {
-            Left, Right
-        }
 
         public Pose relativeGrip;
         public Handeness handeness;
