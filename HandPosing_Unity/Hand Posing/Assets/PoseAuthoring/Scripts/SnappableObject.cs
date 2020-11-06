@@ -24,7 +24,7 @@ namespace PoseAuthoring
             bestHandPose = ScoredHandPose.Null();
             foreach (var snapPose in this.snapPoses)
             {
-                ScoredHandPose pose = snapPose.CalculateBestPlace(userPose);
+                ScoredHandPose pose = snapPose.CalculateBestPose(userPose);
                 if (pose.Score > bestHandPose.Score)
                 {
                     bestSnap = snapPose;

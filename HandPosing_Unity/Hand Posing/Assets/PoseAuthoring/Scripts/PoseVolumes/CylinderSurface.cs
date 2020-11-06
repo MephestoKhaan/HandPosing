@@ -143,7 +143,7 @@ namespace PoseAuthoring.PoseVolumes
             }
         }
 
-        public override HandPose InvertedPose(Transform relativeTo, HandPose pose)
+        public override HandPose InvertedPose(HandPose pose)
         {
             HandPose invertedPose = pose;
             Quaternion globalRot = relativeTo.rotation * invertedPose.relativeGrip.rotation;
@@ -196,7 +196,7 @@ namespace PoseAuthoring.PoseVolumes
             return surfacePoint;
         }
 
-        public override Quaternion CalculateRotationOffset(Vector3 surfacePoint, Transform relativeTo)
+        public override Quaternion CalculateRotationOffset(Vector3 surfacePoint)
         {
             Vector3 recordedDirection = Vector3.ProjectOnPlane(this.GripPoint.position - StartPoint, Direction);
             Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
@@ -205,7 +205,7 @@ namespace PoseAuthoring.PoseVolumes
         }
 
 
-        public override Pose SimilarPlaceAtVolume(Pose userPose, Pose snapPose, Transform relativeTo)
+        public override Pose SimilarPlaceAtVolume(Pose userPose, Pose snapPose)
         {
             Vector3 desiredPos = userPose.position;
             Quaternion desiredRot = userPose.rotation;
@@ -217,7 +217,7 @@ namespace PoseAuthoring.PoseVolumes
 
             Vector3 altitudePoint = PointAltitude(desiredPos);
             Vector3 surfacePoint = NearestPointInSurface(altitudePoint + projectedDirection * Radious);
-            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint, relativeTo) * baseRot;
+            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint) * baseRot;
 
             return new Pose(surfacePoint, surfaceRotation);
         }

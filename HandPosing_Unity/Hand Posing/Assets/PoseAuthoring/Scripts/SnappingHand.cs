@@ -45,7 +45,7 @@ namespace PoseAuthoring
             get
             {
                 return IsSnapping
-                    &&  grabber.AccotedFlex() <= _grabSnap.slideThresold;
+                    &&  grabber.AccotedFlex() <= _grabSnap.SlideThresold;
             }
         }
 
@@ -102,7 +102,7 @@ namespace PoseAuthoring
                 _grabPose = ghostPose.Value.Item2;
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
-                this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.relativeTo);
+                this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
                 _grabOffset = this.puppet.GripOffset;
                 _grabStartTime = Time.timeSinceLevelLoad;
                 _isGrabbing = true;
@@ -186,7 +186,7 @@ namespace PoseAuthoring
             if (IsSnapping)
             {
                 _prevOffset = this.puppet.GripOffset;
-                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.relativeTo);
+                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
             }
         }
 
@@ -206,7 +206,7 @@ namespace PoseAuthoring
             if (_grabSnap != null)
             {
                 this.puppet.LerpBones(_grabPose.Pose.Bones, _bonesOverrideFactor);
-                if (_grabSnap.snapsBack)
+                if (_grabSnap.SnapsBack)
                 {
                     _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
                 }
@@ -220,22 +220,22 @@ namespace PoseAuthoring
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.relativeTo);
+                    this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
                 }
             }
         }
 
         private void SlidePose()
         {
-            HandPose handPose = this.puppet.TrackedPose(_grabSnap.relativeTo);
-            _grabPose = _grabSnap.CalculateBestPlace(handPose, null, _grabPose.Direction);
+            HandPose handPose = this.puppet.TrackedPose(_grabSnap.RelativeTo);
+            _grabPose = _grabSnap.CalculateBestPose(handPose, null, _grabPose.Direction);
         }
 
         private void AttachPhysics()
         {
-            Vector3 grabPoint = _grabSnap.NearestInVolume(this.puppet.Grip.position);
+            Vector3 grabPoint = _grabSnap.NearestInSurface(this.puppet.Grip.position);
             Vector3 gripPos = this.grabber.transform.InverseTransformPoint(this.puppet.Grip.position);
-            Joint[] joints = _grabSnap.relativeTo.GetComponents<Joint>();
+            Joint[] joints = _grabSnap.RelativeTo.GetComponents<Joint>();
             foreach (var joint in joints)
             {
                 if (joint.connectedBody?.transform == this.grabber.transform)

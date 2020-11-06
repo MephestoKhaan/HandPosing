@@ -1,40 +1,67 @@
 ﻿using PoseAuthoring.PoseVolumes;
 using UnityEngine;
-using static PoseAuthoring.ScoredHandPose;
 
 namespace PoseAuthoring.PoseRecording
 {
     public class SnapPose : MonoBehaviour
     {
-        public Transform relativeTo;
-        public HandPose pose;
-        public SnapSurface snapSurface;
+        [SerializeField]
+        private Transform relativeTo;
+        [SerializeField]
+        private HandPose pose;
+
+        [Space]
+        [SerializeField]
+        private SnapSurface surface;
+        [SerializeField]
+        private HandGhost ghost;
 
         //TODO needs saving? maybe even the surface
         [Space]
-        public bool handCanInvert = false;
-        public float maxDistance = 0.1f;
-        public bool snapsBack = false;
-        [Range(0f, 1f)]
-        public float positionRotationWeight = 0.5f;
-        [Range(0f, 1f)]
-        public float slideThresold = 0f;
-
         [SerializeField]
-        private HandGhost _ghost;
+        private bool canInvert = false;
+        [SerializeField]
+        private float maxDistance = 0.1f;
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float positionRotationWeight = 0.5f;
+        [SerializeField]
+        private bool snapsBack = false;
+        [SerializeField]
+        [Range(0f, 1f)]
+        private float slideThresold = 0f;
+
+        public Transform RelativeTo { get => relativeTo; }
+        public bool SnapsBack { get => snapsBack; }
+        public float SlideThresold { get => slideThresold; }
+
         private HandGhost _previousGhost;
+        private SnapSurface _previousSurface;
+        private Transform _previousRelativeTo;
+
+        private Transform GripPoint { get => this.transform; }
 
         private void OnValidate()
         {
-            if(_ghost != _previousGhost)
+            if(ghost != _previousGhost)
             {
                 WireGhost();
+            }
+            if (surface != _previousSurface)
+            {
+                WireSurface();
+            }
+            if(_previousRelativeTo != relativeTo)
+            {
+                WireGhost();
+                WireSurface();
+                _previousRelativeTo = relativeTo;
             }
         }
 
         private void RefreshGhostPose()
         {
-            this.pose = _ghost.ReadPose(relativeTo);
+            pose = ghost.ReadPose(relativeTo);
         }
 
         public HandPose SavePose()
@@ -44,10 +71,9 @@ namespace PoseAuthoring.PoseRecording
 
         public void LoadPose(HandPose snapPose, Transform relativeTo)
         {
-            this.pose = snapPose;
+            pose = snapPose;
             this.relativeTo = relativeTo;
 
-            //TODO: not great
             this.transform.localPosition = snapPose.relativeGrip.position;
             this.transform.localRotation = snapPose.relativeGrip.rotation;
 
@@ -55,15 +81,16 @@ namespace PoseAuthoring.PoseRecording
             LoadDefaultSurface();
         }
 
-        private void LoadDefaultSurface()
-        {
-            this.snapSurface = this.gameObject.AddComponent<CylinderSurface>();
-        }
-
         public void LoadGhost()
         {
-            _ghost = Instantiate(HandGhostProvider.Instance.GetHand(pose.handeness), this.transform);
+            ghost = Instantiate(HandGhostProvider.Instance.GetHand(pose.handeness), this.transform);
             WireGhost();
+        }
+
+        private void LoadDefaultSurface()
+        {
+            surface = this.gameObject.AddComponent<CylinderSurface>();
+            WireSurface();
         }
 
         private void WireGhost()
@@ -72,19 +99,28 @@ namespace PoseAuthoring.PoseRecording
             {
                 _previousGhost.OnDirty -= RefreshGhostPose;
             }
-            if (_ghost != null)
+            if (ghost != null)
             {
-                _ghost.SetPose(pose, relativeTo);
-                _ghost.OnDirty += RefreshGhostPose;
+                ghost.SetPose(pose, relativeTo);
+                ghost.OnDirty += RefreshGhostPose;
             }
-            _previousGhost = _ghost;
+            _previousGhost = ghost;
+        }
+
+        private void WireSurface()
+        {
+            if (surface != null)
+            {
+                surface.relativeTo = RelativeTo;
+            }
+            _previousSurface = surface;
         }
 
         public HandPose InvertedPose()
         {
-            if (snapSurface != null)
+            if (surface != null)
             {
-                return snapSurface.InvertedPose(relativeTo, pose);
+                return surface.InvertedPose(pose);
             }
             else
             {
@@ -92,19 +128,19 @@ namespace PoseAuthoring.PoseRecording
             }
         }
 
-        public Vector3 NearestInVolume(Vector3 worldPoint)
+        public Vector3 NearestInSurface(Vector3 worldPoint)
         {
-            if (snapSurface != null)
+            if (surface != null)
             {
-                return snapSurface.NearestPointInSurface(worldPoint);
+                return surface.NearestPointInSurface(worldPoint);
             }
             else
             {
-                return this.transform.position; //TODO: is it the grip point?
+                return GripPoint.position;
             }
         }
 
-        public ScoredHandPose CalculateBestPlace(HandPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any)
+        public ScoredHandPose CalculateBestPose(HandPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any)
         {
             if (pose.handeness != userPose.handeness)
             {
@@ -119,15 +155,15 @@ namespace PoseAuthoring.PoseRecording
             if (direction == SnapDirection.Any
                 || direction == SnapDirection.Forward)
             {
-                bestForwardPose = ComparePoses(userPose, pose, scoreWeight.Value, SnapDirection.Forward);
+                bestForwardPose = CompareNearPoses(userPose, pose, scoreWeight.Value, SnapDirection.Forward);
             }
 
-            if (handCanInvert
+            if (canInvert
                 && (direction == SnapDirection.Any
                 || direction == SnapDirection.Backward))
             {
                 HandPose invertedPose = InvertedPose();
-                bestBackwardPose = ComparePoses(userPose, invertedPose, scoreWeight.Value, SnapDirection.Backward);
+                bestBackwardPose = CompareNearPoses(userPose, invertedPose, scoreWeight.Value, SnapDirection.Backward);
 
                 if (!bestForwardPose.HasValue
                     || bestBackwardPose.Value.Score > bestForwardPose.Value.Score)
@@ -138,21 +174,21 @@ namespace PoseAuthoring.PoseRecording
             return bestForwardPose ?? bestBackwardPose.Value;
         }
 
-        private ScoredHandPose ComparePoses(HandPose userPose, HandPose snapPose, float scoreWeight, SnapDirection direction)
+        private ScoredHandPose CompareNearPoses(HandPose userPose, HandPose snapPose, float scoreWeight, SnapDirection direction)
         {
             Pose desired = userPose.ToPose(relativeTo);
             Pose snap = snapPose.ToPose(relativeTo);
-            Pose similarPlace = snapSurface ? snapSurface.SimilarPlaceAtVolume(desired, snap, relativeTo) : snap;
-            Pose nearestPlace = snapSurface ? snapSurface.NearestPlaceAtVolume(desired, snap, relativeTo) : snap;
+            Pose similarPlace = surface ? surface.SimilarPlaceAtVolume(desired, snap) : snap;
+            Pose nearestPlace = surface ? surface.NearestPlaceAtVolume(desired, snap) : snap;
             Pose bestForwardPlace = SelectBestPose(similarPlace, nearestPlace, desired, scoreWeight, out float bestScore);
             HandPose adjustedPose = snapPose.AdjustPose(bestForwardPlace, relativeTo);
             return new ScoredHandPose(adjustedPose, bestScore, direction);
         }
 
-        private Pose SelectBestPose(Pose a, Pose b, Pose comparer, float normalisedWeight, out float bestScore)
+        private Pose SelectBestPose(Pose a, Pose b, Pose reference, float normalisedWeight, out float bestScore)
         {
-            float aScore = Score(comparer, a);
-            float bScore = Score(comparer, b);
+            float aScore = Similitude(reference, a, maxDistance);
+            float bScore = Similitude(reference, b, maxDistance);
             if (aScore * normalisedWeight >= bScore * (1f - normalisedWeight))
             {
                 bestScore = aScore;
@@ -162,7 +198,7 @@ namespace PoseAuthoring.PoseRecording
             return b;
         }
 
-        private float Score(Pose from, Pose to)
+        private float Similitude(Pose from, Pose to, float maxDistance)
         {
             float forwardDifference = Vector3.Dot(from.rotation * Vector3.forward, to.rotation * Vector3.forward) * 0.5f + 0.5f;
             float upDifference = Vector3.Dot(from.rotation * Vector3.up, to.rotation * Vector3.up) * 0.5f + 0.5f;

@@ -1,15 +1,15 @@
 ﻿namespace PoseAuthoring
 {
+    public enum SnapDirection
+    {
+        Any,
+        Forward,
+        Backward,
+        None
+    }; 
+
     public struct ScoredHandPose
     {
-        public enum SnapDirection
-        {
-            Any,
-            Forward,
-            Backward,
-            None
-        }
-
         public HandPose Pose { get; private set; }
 
         public SnapDirection Direction { get; private set; }
