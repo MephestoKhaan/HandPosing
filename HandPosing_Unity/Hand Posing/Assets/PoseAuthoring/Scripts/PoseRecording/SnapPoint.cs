@@ -97,16 +97,15 @@ namespace PoseAuthoring.PoseRecording
             this.positionRotationWeight = data.positionRotationWeight;
             this.snapsBack = data.snapsBack;
             this.slideThresold = data.slideThresold;
-            //this.surface.Data = data.surfaceData;
+            LoadSurface(data.surfaceData);
         }
 
         public void SetPose(HandPose snapPose, Transform relativeTo)
         {
             pose = snapPose;
             this.relativeTo = relativeTo;
-
-            //this.transform.localPosition = snapPose.relativeGrip.position;
-            //this.transform.localRotation = snapPose.relativeGrip.rotation;
+            this.transform.localPosition = snapPose.relativeGrip.position;
+            this.transform.localRotation = snapPose.relativeGrip.rotation;
         }
 
         public void LoadGhost(HandGhostProvider ghostProvider)
@@ -125,6 +124,11 @@ namespace PoseAuthoring.PoseRecording
 
         private void LoadSurface(SnapSurfaceData surfaceData)
         {
+            if(surfaceData == null)
+            {
+                return;
+            }
+
             if (this.surface != null)
             {
                 Destroy(this.surface);
@@ -133,6 +137,7 @@ namespace PoseAuthoring.PoseRecording
 
             this.surface = this.gameObject.AddComponent(surfaceData.SurfaceType) as SnapSurface;
             this.surface.Data = surfaceData;
+            WireSurface();
         }
 
         private void WireGhost()
