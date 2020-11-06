@@ -24,7 +24,7 @@ namespace PoseAuthoring.PoseRecording
 
         [Space]
         [SerializeField]
-        private SnapSurface surface; //TODO how to save?
+        private SnapSurface surface;
         [SerializeField]
         private HandGhost ghost;
 
@@ -121,12 +121,6 @@ namespace PoseAuthoring.PoseRecording
             {
                 Debug.LogError("No HandGhostProvider", this);
             }
-        }
-
-        private void LoadDefaultSurface()
-        {
-            surface = this.gameObject.AddComponent<CylinderSurface>();
-            WireSurface();
         }
 
         private void WireGhost()

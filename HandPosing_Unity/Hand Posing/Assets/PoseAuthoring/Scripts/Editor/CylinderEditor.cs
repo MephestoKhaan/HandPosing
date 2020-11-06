@@ -35,14 +35,17 @@ namespace PoseAuthoring.PoseVolumes.Editor
         private void DrawEndsCaps(CylinderSurface cylinder)
         {
             EditorGUI.BeginChangeCheck();
-            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, cylinder.transform.rotation);
+
+            Quaternion handleRotation = (cylinder.relativeTo ?? cylinder.transform).rotation;
+
+            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, handleRotation);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(cylinder, "Change Start Cylinder Position");
                 cylinder.StartPoint = startPosition;
             }
             EditorGUI.BeginChangeCheck();
-            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, cylinder.transform.rotation);
+            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, handleRotation);
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(cylinder, "Change Start Cylinder Position");

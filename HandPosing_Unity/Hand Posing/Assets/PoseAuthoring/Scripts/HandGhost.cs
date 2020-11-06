@@ -11,14 +11,8 @@ namespace PoseAuthoring
         public System.Action OnDirtyBones;
         public System.Action OnDirtyGrip;
 
-
-        private HandPose _lockPose;
-        private Transform _lockRelativeTo;
-
         public void SetPose(HandPose userPose, Transform relativeTo)
         {
-            _lockPose = userPose;
-            _lockRelativeTo = relativeTo;
             puppet.LerpToPose(userPose, relativeTo);
         }
 
@@ -47,17 +41,6 @@ namespace PoseAuthoring
                 }
             }
             return hasChanged;
-        }
-
-        private void HoldInPlace()
-        {
-            if (_lockRelativeTo != null
-                && this.transform.hasChanged)
-            {
-                this.transform.hasChanged = false;
-                Debug.LogError("Do not move the ghost directly, but the snap point instead", this);
-                puppet.LerpToPose(_lockPose, _lockRelativeTo, 0f,1f);
-            }
         }
     }
 }

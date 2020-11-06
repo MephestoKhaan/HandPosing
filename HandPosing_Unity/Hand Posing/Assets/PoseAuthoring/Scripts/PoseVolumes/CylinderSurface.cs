@@ -7,6 +7,7 @@ namespace PoseAuthoring.PoseVolumes
     {
         public Vector3 startPoint;
         public Vector3 endPoint;
+        [Range(0f,360f)]
         public float angle;
     }
 
@@ -26,7 +27,7 @@ namespace PoseAuthoring.PoseVolumes
             {
                 if (value is CylinderSurfaceData)
                 {
-                    this._data = value as CylinderSurfaceData;
+                    this._data = value as CylinderSurfaceData; //TODO: reconsider, reflection?
                 }
                 else
                 {
