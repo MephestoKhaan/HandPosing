@@ -82,7 +82,6 @@ namespace PoseAuthoring
                 if(!_offsetInitialised)
                 {
                     CacheGripOffsets();
-                    _offsetInitialised = true;
                 }
                 Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
                 return this.handAnchor.GlobalPose(offset);
@@ -136,6 +135,7 @@ namespace PoseAuthoring
             _originalGripOffset = GripOffset;
             _pupettedGripOffset = OffsetedGripPose(trackedHandOffset.positionOffset,
                 trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f));
+            _offsetInitialised = true;
         }
 
         private Pose OffsetedGripPose(Vector3 posOffset, Quaternion rotOffset)
@@ -311,7 +311,6 @@ namespace PoseAuthoring
             HandPose pose = new HandPose();
             pose.relativeGrip.position = relativeTo.InverseTransformPoint(trackedGripPosition);
             pose.relativeGrip.rotation = Quaternion.Inverse(relativeTo.rotation) * trackedGripRotation;
-
             pose.handeness = this.handeness;
 
             if(includeBones)

@@ -9,7 +9,6 @@ namespace PoseAuthoring
         private HandPuppet puppet;
 
         public System.Action OnDirtyBones;
-        public System.Action OnDirtyGrip;
 
         public void SetPose(HandPose userPose, Transform relativeTo)
         {

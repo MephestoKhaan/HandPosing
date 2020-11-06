@@ -80,7 +80,7 @@ namespace PoseAuthoring.PoseRecording
             return new SnapPointData()
             {
                 pose = this.pose,
-                surfaceData = this.surface.Data,
+                surfaceData = this.surface?.Data,
                 canInvert = this.canInvert,
                 maxDistance = this.maxDistance,
                 positionRotationWeight = this.positionRotationWeight,
@@ -105,14 +105,14 @@ namespace PoseAuthoring.PoseRecording
             pose = snapPose;
             this.relativeTo = relativeTo;
 
-            this.transform.localPosition = pose.relativeGrip.position;
-            this.transform.localRotation = pose.relativeGrip.rotation;
+            //this.transform.localPosition = snapPose.relativeGrip.position;
+            //this.transform.localRotation = snapPose.relativeGrip.rotation;
         }
 
         public void LoadGhost(HandGhostProvider ghostProvider)
         {
             HandGhost ghostPrototype = ghostProvider?.GetHand(pose.handeness);
-            if(ghostPrototype != null)
+            if (ghostPrototype != null)
             {
                 ghost = Instantiate(ghostPrototype, this.transform);
                 WireGhost();
@@ -121,6 +121,18 @@ namespace PoseAuthoring.PoseRecording
             {
                 Debug.LogError("No HandGhostProvider", this);
             }
+        }
+
+        private void LoadSurface(SnapSurfaceData surfaceData)
+        {
+            if (this.surface != null)
+            {
+                Destroy(this.surface);
+                this.surface = null;
+            }
+
+            this.surface = this.gameObject.AddComponent(surfaceData.SurfaceType) as SnapSurface;
+            this.surface.Data = surfaceData;
         }
 
         private void WireGhost()

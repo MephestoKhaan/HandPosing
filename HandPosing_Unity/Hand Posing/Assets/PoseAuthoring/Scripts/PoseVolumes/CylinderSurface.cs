@@ -5,9 +5,12 @@ namespace PoseAuthoring.PoseVolumes
     [System.Serializable]
     public class CylinderSurfaceData : SnapSurfaceData
     {
+        public override System.Type SurfaceType => typeof(CylinderSurface);
+
         public Vector3 startPoint;
         public Vector3 endPoint;
-        [Range(0f,360f)]
+
+        [Range(0f, 360f)]
         public float angle;
     }
 
@@ -19,21 +22,8 @@ namespace PoseAuthoring.PoseVolumes
 
         public override SnapSurfaceData Data
         {
-            get
-            {
-                return _data;
-            }
-            set
-            {
-                if (value is CylinderSurfaceData)
-                {
-                    this._data = value as CylinderSurfaceData; //TODO: reconsider, reflection?
-                }
-                else
-                {
-                    Debug.LogError("Invalid Data", this);
-                }
-            }
+            get => _data;
+            set => _data = value as CylinderSurfaceData; 
         }
 
         public Vector3 StartAngleDir
