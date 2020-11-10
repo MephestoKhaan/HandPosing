@@ -206,12 +206,13 @@ namespace PoseAuthoring
             if (_grabSnap != null)
             {
                 this.puppet.LerpBones(_grabPose.Pose.Bones, _bonesOverrideFactor);
-                if (_grabSnap.SnapsBack)
-                {
-                    _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
-                }
+                
                 if (_isGrabbing)
                 {
+                    if (_grabSnap.SnapsBack)
+                    {
+                        _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
+                    }
                     this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
                     if (IsSliding)
                     {

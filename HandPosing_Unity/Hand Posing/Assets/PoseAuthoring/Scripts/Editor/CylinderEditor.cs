@@ -2,7 +2,7 @@
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace PoseAuthoring.PoseVolumes.Editor
+namespace PoseAuthoring.PoseSurfaces.Editor
 {
     [CustomEditor(typeof(CylinderSurface))]
     [CanEditMultipleObjects]
@@ -28,51 +28,51 @@ namespace PoseAuthoring.PoseVolumes.Editor
             DrawArcEditor(surface);
             if (Event.current.type == EventType.Repaint)
             {
-                DrawCylinderVolume(surface);
+                DrawSurfaceVolume(surface);
             }
         }
 
-        private void DrawEndsCaps(CylinderSurface cylinder)
+        private void DrawEndsCaps(CylinderSurface surface)
         {
             EditorGUI.BeginChangeCheck();
 
-            Quaternion handleRotation = (cylinder.relativeTo ?? cylinder.transform).rotation;
+            Quaternion handleRotation = (surface.relativeTo ?? surface.transform).rotation;
 
-            Vector3 startPosition = Handles.PositionHandle(cylinder.StartPoint, handleRotation);
+            Vector3 startPosition = Handles.PositionHandle(surface.StartPoint, handleRotation);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
-                cylinder.StartPoint = startPosition;
+                Undo.RecordObject(surface, "Change Start Cylinder Position");
+                surface.StartPoint = startPosition;
             }
             EditorGUI.BeginChangeCheck();
-            Vector3 endPosition = Handles.PositionHandle(cylinder.EndPoint, handleRotation);
+            Vector3 endPosition = Handles.PositionHandle(surface.EndPoint, handleRotation);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(cylinder, "Change Start Cylinder Position");
-                cylinder.EndPoint = endPosition;
+                Undo.RecordObject(surface, "Change Start Cylinder Position");
+                surface.EndPoint = endPosition;
             }
         }
 
-        private void DrawCylinderVolume(CylinderSurface cylinder)
+        private void DrawSurfaceVolume(CylinderSurface surface)
         {
-            Vector3 start = cylinder.StartPoint;
-            Vector3 end = cylinder.EndPoint;
-            float radious = cylinder.Radious;
+            Vector3 start = surface.StartPoint;
+            Vector3 end = surface.EndPoint;
+            float radious = surface.Radious;
 
             Handles.color = INTERACTABLE_COLOR;
             Handles.DrawWireArc(end,
-            cylinder.Direction,
-            cylinder.StartAngleDir,
-            cylinder.Angle,
+            surface.Direction,
+            surface.StartAngleDir,
+            surface.Angle,
             radious);
 
             Handles.DrawLine(start,end);
-            Handles.DrawLine(start, start + cylinder.StartAngleDir * radious);
-            Handles.DrawLine(start, start + cylinder.EndAngleDir * radious);
-            Handles.DrawLine(end,end + cylinder.StartAngleDir * radious);
-            Handles.DrawLine(end, end + cylinder.EndAngleDir * radious);
+            Handles.DrawLine(start, start + surface.StartAngleDir * radious);
+            Handles.DrawLine(start, start + surface.EndAngleDir * radious);
+            Handles.DrawLine(end,end + surface.StartAngleDir * radious);
+            Handles.DrawLine(end, end + surface.EndAngleDir * radious);
 
-            int edgePoints = Mathf.CeilToInt((2 * cylinder.Angle) / DRAWSURFACE_RESOLUTION) + 3;
+            int edgePoints = Mathf.CeilToInt((2 * surface.Angle) / DRAWSURFACE_RESOLUTION) + 3;
             if(surfaceEdges == null 
                 || surfaceEdges.Length != edgePoints)
             {
@@ -81,26 +81,26 @@ namespace PoseAuthoring.PoseVolumes.Editor
 
             Handles.color = NONINTERACTABLE_COLOR;
             int i = 0;
-            for(float angle = 0f; angle < cylinder.Angle; angle += DRAWSURFACE_RESOLUTION)
+            for(float angle = 0f; angle < surface.Angle; angle += DRAWSURFACE_RESOLUTION)
             {
-                Vector3 direction = Quaternion.AngleAxis(angle, cylinder.Direction) * cylinder.StartAngleDir;
+                Vector3 direction = Quaternion.AngleAxis(angle, surface.Direction) * surface.StartAngleDir;
                 surfaceEdges[i++] = start + direction * radious;
                 surfaceEdges[i++] = end + direction * radious;
             }
-            surfaceEdges[i++] = start + cylinder.EndAngleDir * radious;
-            surfaceEdges[i++] = end + cylinder.EndAngleDir * radious;
+            surfaceEdges[i++] = start + surface.EndAngleDir * radious;
+            surfaceEdges[i++] = end + surface.EndAngleDir * radious;
             Handles.DrawPolyLine(surfaceEdges);
 
         }
 
-        private void DrawArcEditor(CylinderSurface cylinder)
+        private void DrawArcEditor(CylinderSurface surface)
         {
-            float radious = cylinder.Radious;
-            topArc.angle = cylinder.Angle;
+            float radious = surface.Radious;
+            topArc.angle = surface.Angle;
             topArc.radius = radious;
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
-                cylinder.StartPoint,
-                Quaternion.LookRotation(cylinder.StartAngleDir, cylinder.Direction),
+                surface.StartPoint,
+                Quaternion.LookRotation(surface.StartAngleDir, surface.Direction),
                 Vector3.one
             );
             using (new Handles.DrawingScope(handleMatrix))
@@ -111,8 +111,8 @@ namespace PoseAuthoring.PoseVolumes.Editor
                 topArc.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {
-                    Undo.RecordObject(cylinder, "Change Cylinder Properties");
-                    cylinder.Angle = topArc.angle;
+                    Undo.RecordObject(surface, "Change Cylinder Properties");
+                    surface.Angle = topArc.angle;
                     radious = topArc.radius;
                 }
             }

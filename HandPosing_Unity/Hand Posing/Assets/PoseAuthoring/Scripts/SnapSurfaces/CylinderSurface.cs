@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PoseAuthoring.PoseVolumes
+namespace PoseAuthoring.PoseSurfaces
 {
     [System.Serializable]
     public class CylinderSurfaceData : SnapSurfaceData
@@ -124,14 +124,6 @@ namespace PoseAuthoring.PoseVolumes
             }
         }
 
-        public float Height
-        {
-            get
-            {
-                return (EndPoint - StartPoint).magnitude;
-            }
-        }
-
         public Vector3 Direction
         {
             get
@@ -145,7 +137,15 @@ namespace PoseAuthoring.PoseVolumes
             }
         }
 
-        public Quaternion Rotation
+        private float Height
+        {
+            get
+            {
+                return (EndPoint - StartPoint).magnitude;
+            }
+        }
+
+        private Quaternion Rotation
         {
             get
             {
@@ -168,7 +168,7 @@ namespace PoseAuthoring.PoseVolumes
             return invertedPose;
         }
 
-        public Vector3 PointAltitude(Vector3 point)
+        private Vector3 PointAltitude(Vector3 point)
         {
             Vector3 start = StartPoint;
             Vector3 projectedPoint = start + Vector3.Project(point - start, Direction);
@@ -205,35 +205,41 @@ namespace PoseAuthoring.PoseVolumes
                     targetDirection = EndAngleDir;
                 }
             }
-
             Vector3 surfacePoint = projectedPoint + targetDirection * Radious;
             return surfacePoint;
         }
 
-        public override Quaternion CalculateRotationOffset(Vector3 surfacePoint)
-        {
-            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.GripPoint.position - StartPoint, Direction);
-            Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
-
-            return Quaternion.FromToRotation(recordedDirection, desiredDirection);
-        }
-
-
-        public override Pose SimilarPlaceAtVolume(Pose userPose, Pose snapPose)
+        public override Pose MinimalRotationPoseAtSurface(Pose userPose, Pose snapPose)
         {
             Vector3 desiredPos = userPose.position;
             Quaternion desiredRot = userPose.rotation;
             Quaternion baseRot = snapPose.rotation;
-
             Quaternion rotDif = (desiredRot) * Quaternion.Inverse(baseRot);
             Vector3 desiredDirection = (rotDif * Rotation) * Vector3.forward;
             Vector3 projectedDirection = Vector3.ProjectOnPlane(desiredDirection, Direction).normalized;
-
             Vector3 altitudePoint = PointAltitude(desiredPos);
             Vector3 surfacePoint = NearestPointInSurface(altitudePoint + projectedDirection * Radious);
-            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint) * baseRot;
+            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint, desiredRot) * baseRot;
+            return new Pose(surfacePoint, surfaceRotation);
+        }
+
+        public override Pose MinimalTranslationPoseAtSurface(Pose userPose, Pose snapPose)
+        {
+            Vector3 desiredPos = userPose.position;
+            Quaternion baseRot = snapPose.rotation;
+
+            Vector3 surfacePoint = NearestPointInSurface(desiredPos);
+            Quaternion surfaceRotation = CalculateRotationOffset(surfacePoint, userPose.rotation) * baseRot;
 
             return new Pose(surfacePoint, surfaceRotation);
         }
+
+        protected Quaternion CalculateRotationOffset(Vector3 surfacePoint, Quaternion desiredRotation)
+        {
+            Vector3 recordedDirection = Vector3.ProjectOnPlane(this.GripPoint.position - StartPoint, Direction);
+            Vector3 desiredDirection = Vector3.ProjectOnPlane(surfacePoint - StartPoint, Direction);
+            return Quaternion.FromToRotation(recordedDirection, desiredDirection);
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using PoseAuthoring.PoseVolumes;
+﻿using PoseAuthoring.PoseSurfaces;
 using UnityEngine;
 
 namespace PoseAuthoring.PoseRecording
@@ -225,8 +225,8 @@ namespace PoseAuthoring.PoseRecording
         {
             Pose desired = userPose.ToPose(relativeTo);
             Pose snap = snapPose.ToPose(relativeTo);
-            Pose similarPlace = surface ? surface.SimilarPlaceAtVolume(desired, snap) : snap;
-            Pose nearestPlace = surface ? surface.NearestPlaceAtVolume(desired, snap) : snap;
+            Pose similarPlace = surface ? surface.MinimalRotationPoseAtSurface(desired, snap) : snap;
+            Pose nearestPlace = surface ? surface.MinimalTranslationPoseAtSurface(desired, snap) : snap;
             Pose bestForwardPlace = SelectBestPose(similarPlace, nearestPlace, desired, scoreWeight, out float bestScore);
             HandPose adjustedPose = snapPose.AdjustPose(bestForwardPlace, relativeTo);
             return new ScoredHandPose(adjustedPose, bestScore, direction);
