@@ -60,35 +60,35 @@ namespace PoseAuthoring.PoseSurfaces.Editor
             Vector3 gripDir = surface.Direction.normalized;
             Vector3 size = surface.Size;
             Vector3 centre = surface.Centre;
-
-            float Xdot = Vector3.Dot(rot * Vector3.right, gripDir);
-            float Ydot = Vector3.Dot(rot * Vector3.up, gripDir);
-            float Zdot = Vector3.Dot(rot * Vector3.forward, gripDir);
+            Vector3 right = rot * Vector3.right;
+            Vector3 up = rot * Vector3.up;
+            Vector3 forward = rot * Vector3.forward;
+            float Xdot = Vector3.Dot(right, gripDir);
+            float Ydot = Vector3.Dot(up, gripDir);
+            float Zdot = Vector3.Dot(forward, gripDir);
 
             Vector3 snapP = surface.transform.position;
-
-
 
             if (Mathf.Abs(Xdot) >= Mathf.Abs(Ydot)
                  && Mathf.Abs(Xdot) >= Mathf.Abs(Zdot))
             {
-                Vector3 planeN = rot * Vector3.right * Mathf.Sign(Xdot);
+                Vector3 planeN = right * Mathf.Sign(Xdot);
                 size.x = DistanceToSnap(centre, snapP, planeN) * 2f;
             }
             else if (Mathf.Abs(Ydot) >= Mathf.Abs(Xdot)
                  && Mathf.Abs(Ydot) >= Mathf.Abs(Zdot))
             {
-                Vector3 planeN = rot * Vector3.up * Mathf.Sign(Ydot);
+                Vector3 planeN = up * Mathf.Sign(Ydot);
                 size.y = DistanceToSnap(centre, snapP, planeN) * 2f;
             }
             else
             {
-                Vector3 planeN = rot * Vector3.forward * Mathf.Sign(Zdot);
+                Vector3 planeN = forward * Mathf.Sign(Zdot);
                 size.z = DistanceToSnap(centre, snapP, planeN) * 2f;
             }
 
             boxHandle.size = size;
-            boxHandle.center = centre;
+            boxHandle.center = Vector3.zero;
 
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
                 centre,
@@ -96,7 +96,7 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                 Vector3.one
             );
 
-            //using (new Handles.DrawingScope(handleMatrix))
+            using (new Handles.DrawingScope(handleMatrix))
             {
                 EditorGUI.BeginChangeCheck();
                 boxHandle.DrawHandle();
@@ -105,7 +105,7 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                     Undo.RecordObject(surface, "Change Box Properties");
 
                     surface.Size = boxHandle.size;
-                    surface.Centre = boxHandle.center;
+                    surface.Centre = centre + boxHandle.center;
                 }
             }
 
