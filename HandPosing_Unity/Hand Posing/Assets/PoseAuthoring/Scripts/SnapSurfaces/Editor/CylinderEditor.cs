@@ -12,12 +12,12 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private static readonly Color INTERACTABLE_COLOR = new Color(0f, 1f, 1f, 0.5f);
         private const float DRAWSURFACE_RESOLUTION = 5f;
 
-        private ArcHandle topArc = new ArcHandle();
+        private ArcHandle arcHandle = new ArcHandle();
         private Vector3[] surfaceEdges;
 
         private void OnEnable()
         {
-            topArc.SetColorWithRadiusHandle(INTERACTABLE_COLOR, 0f);
+            arcHandle.SetColorWithRadiusHandle(INTERACTABLE_COLOR, 0f);
         }
 
         public void OnSceneGUI()
@@ -96,8 +96,9 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private void DrawArcEditor(CylinderSurface surface)
         {
             float radious = surface.Radious;
-            topArc.angle = surface.Angle;
-            topArc.radius = radious;
+            arcHandle.angle = surface.Angle;
+            arcHandle.radius = radious;
+
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
                 surface.StartPoint,
                 Quaternion.LookRotation(surface.StartAngleDir, surface.Direction),
@@ -106,14 +107,12 @@ namespace PoseAuthoring.PoseSurfaces.Editor
             using (new Handles.DrawingScope(handleMatrix))
             {
                 EditorGUI.BeginChangeCheck();
-
-                Handles.color = Color.white;
-                topArc.DrawHandle();
+                arcHandle.DrawHandle();
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(surface, "Change Cylinder Properties");
-                    surface.Angle = topArc.angle;
-                    radious = topArc.radius;
+                    surface.Angle = arcHandle.angle;
+                    radious = arcHandle.radius;
                 }
             }
         }

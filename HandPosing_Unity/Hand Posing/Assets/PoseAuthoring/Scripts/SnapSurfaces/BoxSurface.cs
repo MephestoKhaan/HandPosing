@@ -3,22 +3,27 @@
 namespace PoseAuthoring.PoseSurfaces
 {
     [System.Serializable]
-    public class SphereSurfaceData : SnapSurfaceData
+    public class BoxSurfaceData : SnapSurfaceData
     {
-        public override System.Type SurfaceType => typeof(SphereSurface);
+        public override System.Type SurfaceType => typeof(BoxSurface);
+
         public Vector3 centre;
+        public Vector3 size;
+        public Vector3 eulerAngles;
+
+        //TODO select faces?
     }
 
     [System.Serializable]
-    public class SphereSurface : SnapSurface
+    public class BoxSurface : SnapSurface
     {
         [SerializeField]
-        private SphereSurfaceData _data = new SphereSurfaceData();
+        private BoxSurfaceData _data = new BoxSurfaceData();
 
         public override SnapSurfaceData Data
         {
             get => _data;
-            set => _data = value as SphereSurfaceData;
+            set => _data = value as BoxSurfaceData;
         }
 
         public Vector3 Centre
@@ -47,29 +52,16 @@ namespace PoseAuthoring.PoseSurfaces
             }
         }
 
-        public float Radious
+
+        public Vector3 Size
         {
             get
             {
-                if (this.GripPoint == null)
-                {
-                    return 0f;
-                }
-                return Vector3.Distance(Centre, this.GripPoint.position);
+                return _data.size;
             }
-        }
-
-
-        public override HandPose InvertedPose(HandPose pose)
-        {
-            return pose;
-        }
-
-        public Vector3 Direction
-        {
-            get
+            set
             {
-                return (this.GripPoint.position - Centre).normalized;
+                _data.size = value;
             }
         }
 
@@ -77,22 +69,39 @@ namespace PoseAuthoring.PoseSurfaces
         {
             get
             {
-                return Quaternion.LookRotation(Direction, this.GripPoint.forward);
+                return this.relativeTo.rotation * Quaternion.Euler(_data.eulerAngles);
             }
+            set
+            {
+                _data.eulerAngles = (Quaternion.Inverse(this.relativeTo.rotation) *  value).eulerAngles;
+            }
+        }
+
+        public Vector3 Direction
+        {
+            get
+            {
+                return (this.GripPoint.position - Centre);
+            }
+        }
+
+        public override HandPose InvertedPose(HandPose pose)
+        {
+            return pose;
         }
 
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
             Vector3 direction = (targetPosition - Centre).normalized;
-            return Centre + direction * Radious;
+            return Centre + direction;
         }
 
         public override Pose MinimalRotationPoseAtSurface(Pose userPose, Pose snapPose)
         {
             Quaternion rotCorrection = Quaternion.FromToRotation(snapPose.up, Direction);
             Vector3 correctedDir = (rotCorrection * userPose.up).normalized;
-            Vector3 surfacePoint = NearestPointInSurface(Centre + correctedDir * Radious);
+            Vector3 surfacePoint = NearestPointInSurface(Centre + correctedDir);
             Quaternion surfaceRotation = RotationAtPoint(surfacePoint, snapPose.rotation, userPose.rotation);
             return new Pose(surfacePoint, surfaceRotation);
         }

@@ -16,6 +16,7 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private void OnEnable()
         {
             sphereHandle.SetColor(INTERACTABLE_COLOR);
+            sphereHandle.midpointHandleDrawFunction = null;
         }
 
         public void OnSceneGUI()
@@ -23,7 +24,9 @@ namespace PoseAuthoring.PoseSurfaces.Editor
             SphereSurface surface = (target as SphereSurface);
 
             DrawCentre(surface);
-
+            Handles.color = Color.white;
+            DrawSphereEditor(surface);
+            
             if (Event.current.type == EventType.Repaint)
             {
                 DrawSurfaceVolume(surface);
@@ -47,8 +50,6 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private void DrawSurfaceVolume(SphereSurface surface)
         {
             Handles.color = INTERACTABLE_COLOR;
-            DrawSphereEditor(surface);
-
             Vector3 startLine = surface.Centre;
             Vector3 endLine = startLine + surface.Rotation * Vector3.forward * surface.Radious;
             Handles.DrawDottedLine(startLine, endLine, 5);
@@ -58,22 +59,10 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         {
             float radious = surface.Radious;
             sphereHandle.radius = radious;
-            Matrix4x4 handleMatrix = Matrix4x4.TRS(
-                surface.Centre,
-                surface.Rotation,
-                Vector3.one
-            );
-            using (new Handles.DrawingScope(handleMatrix))
-            {
-                EditorGUI.BeginChangeCheck();
-                Handles.color = Color.white;
-                sphereHandle.DrawHandle();
-                if (EditorGUI.EndChangeCheck())
-                {
-                    Undo.RecordObject(surface, "Change Sphere Properties");
-                    surface.Centre = sphereHandle.center;
-                }
-            }
+            sphereHandle.center = surface.Centre;
+
+            EditorGUI.BeginChangeCheck();
+            sphereHandle.DrawHandle();
         }
     }
 }
