@@ -60,32 +60,24 @@ namespace PoseAuthoring.PoseSurfaces.Editor
             Vector3 gripDir = surface.Direction.normalized;
             Vector3 size = surface.Size;
             Vector3 centre = surface.Centre;
+
             Vector3 right = rot * Vector3.right;
             Vector3 up = rot * Vector3.up;
             Vector3 forward = rot * Vector3.forward;
-            float Xdot = Vector3.Dot(right, gripDir);
-            float Ydot = Vector3.Dot(up, gripDir);
-            float Zdot = Vector3.Dot(forward, gripDir);
-
             Vector3 snapP = surface.transform.position;
 
-            if (Mathf.Abs(Xdot) >= Mathf.Abs(Ydot)
-                 && Mathf.Abs(Xdot) >= Mathf.Abs(Zdot))
-            {
-                Vector3 planeN = right * Mathf.Sign(Xdot);
-                size.x = DistanceToSnap(centre, snapP, planeN) * 2f;
-            }
-            else if (Mathf.Abs(Ydot) >= Mathf.Abs(Xdot)
-                 && Mathf.Abs(Ydot) >= Mathf.Abs(Zdot))
-            {
-                Vector3 planeN = up * Mathf.Sign(Ydot);
-                size.y = DistanceToSnap(centre, snapP, planeN) * 2f;
-            }
-            else
-            {
-                Vector3 planeN = forward * Mathf.Sign(Zdot);
-                size.z = DistanceToSnap(centre, snapP, planeN) * 2f;
-            }
+
+            float rightDistance = DistanceToPoint(centre, right * size.x * 0.5f, snapP);
+            centre.x += rightDistance * 0.5f;
+            size.x += Mathf.Abs(rightDistance);
+
+            float upDistance = DistanceToPoint(centre, up * size.y * 0.5f, snapP);
+            centre.y += upDistance * 0.5f;
+            size.y += Mathf.Abs(upDistance);
+
+            float forwardDistance = DistanceToPoint(centre, forward * size.z * 0.5f, snapP);
+            centre.z += forwardDistance * 0.5f;
+            size.z += Mathf.Abs(forwardDistance);
 
             boxHandle.size = size;
             boxHandle.center = Vector3.zero;
@@ -105,17 +97,26 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                     Undo.RecordObject(surface, "Change Box Properties");
 
                     surface.Size = boxHandle.size;
-                    surface.Centre = centre + boxHandle.center;
+                    surface.Centre = centre + boxHandle.center;//rotation?
                 }
             }
 
         }
 
-        private float DistanceToSnap(Vector3 centre, Vector3 snapP, Vector3 planeN)
+        private float DistanceToPoint(Vector3 centre, Vector3 dir, Vector3 point)
         {
-            Vector3 projectedSnap = snapP + Vector3.ProjectOnPlane(centre - snapP, planeN);
-            float distance = Vector3.Distance(centre, projectedSnap);
-            return distance;
+            Vector3 pointProj = centre + Vector3.Project(point - centre, dir.normalized);
+            Vector3 start = centre - dir;
+            Vector3 end = centre + dir;
+            if (Vector3.Dot(end - start, pointProj - start) < 0f)
+            {
+                return -Vector3.Distance(pointProj, start);
+            }
+            if (Vector3.Dot(start - end, pointProj - end) < 0f)
+            {
+                return Vector3.Distance(pointProj, end);
+            }
+            return 0f;
         }
     }
 }
