@@ -57,27 +57,14 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private void DrawBoxEditor(BoxSurface surface)
         {
             Quaternion rot = surface.Rotation;
-            Vector3 gripDir = surface.Direction.normalized;
             Vector3 size = surface.Size;
             Vector3 centre = surface.Centre;
 
-            Vector3 right = rot * Vector3.right;
-            Vector3 up = rot * Vector3.up;
-            Vector3 forward = rot * Vector3.forward;
             Vector3 snapP = surface.transform.position;
 
-
-            float rightDistance = DistanceToPoint(centre, right * size.x * 0.5f, snapP);
-            centre.x += rightDistance * 0.5f;
-            size.x += Mathf.Abs(rightDistance);
-
-            float upDistance = DistanceToPoint(centre, up * size.y * 0.5f, snapP);
-            centre.y += upDistance * 0.5f;
-            size.y += Mathf.Abs(upDistance);
-
-            float forwardDistance = DistanceToPoint(centre, forward * size.z * 0.5f, snapP);
-            centre.z += forwardDistance * 0.5f;
-            size.z += Mathf.Abs(forwardDistance);
+            EncapsulatePoint(rot, 0, snapP, ref centre, ref size);
+            EncapsulatePoint(rot, 1, snapP, ref centre, ref size);
+            EncapsulatePoint(rot, 2, snapP, ref centre, ref size);
 
             boxHandle.size = size;
             boxHandle.center = Vector3.zero;
@@ -97,10 +84,20 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                     Undo.RecordObject(surface, "Change Box Properties");
 
                     surface.Size = boxHandle.size;
-                    surface.Centre = centre + boxHandle.center;//rotation?
+                    surface.Centre = centre + rot *  boxHandle.center;
                 }
             }
 
+        }
+
+        private void EncapsulatePoint(Quaternion rotation, int axisIndex, Vector3 point, ref Vector3 centre, ref Vector3 size)
+        {
+            Vector3 axis = Vector3.zero;
+            axis[axisIndex] = 1f;
+            Vector3 dir = rotation * axis;
+            float distance = DistanceToPoint(centre, dir * size[axisIndex] * 0.5f, point);
+            centre += dir * distance * 0.5f;
+            size[axisIndex] += Mathf.Abs(distance);
         }
 
         private float DistanceToPoint(Vector3 centre, Vector3 dir, Vector3 point)
