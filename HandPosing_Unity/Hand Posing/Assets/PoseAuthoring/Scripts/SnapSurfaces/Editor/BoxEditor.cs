@@ -16,61 +16,41 @@ namespace PoseAuthoring.PoseSurfaces.Editor
         private void OnEnable()
         {
             boxHandle.SetColor(INTERACTABLE_COLOR);
-            //boxHandle.axes = PrimitiveBoundsHandle.Axes.X | PrimitiveBoundsHandle.Axes.Z;
+            boxHandle.axes = PrimitiveBoundsHandle.Axes.X | PrimitiveBoundsHandle.Axes.Z;
         }
 
         public void OnSceneGUI()
         {
             BoxSurface surface = (target as BoxSurface);
 
-            DrawCentre(surface);
+            DrawRotator(surface);
             DrawBoxEditor(surface);
-
-            if (Event.current.type == EventType.Repaint)
-            {
-                DrawSurfaceVolume(surface);
-            }
         }
 
-        private void DrawCentre(BoxSurface surface)
+        private void DrawRotator(BoxSurface surface)
         {
             EditorGUI.BeginChangeCheck();
-
-            Quaternion handleRotation = (surface.relativeTo ?? surface.transform).rotation;
-
-            Vector3 centrePosition = Handles.PositionHandle(surface.Centre, handleRotation);
+            Quaternion rotation = Handles.RotationHandle(surface.Rotation, surface.transform.position);
             if (EditorGUI.EndChangeCheck())
             {
-                Undo.RecordObject(surface, "Change Centre Box Position");
-                surface.Centre = centrePosition;
+                Undo.RecordObject(surface, "Change Rotation Box");
+                surface.Rotation = rotation;
             }
-        }
-
-        private void DrawSurfaceVolume(BoxSurface surface)
-        {
-            Handles.color = INTERACTABLE_COLOR;
-            Vector3 startLine = surface.Centre;
-            Vector3 endLine = surface.transform.position;
-            Handles.DrawDottedLine(startLine, endLine, 5);
         }
 
         private void DrawBoxEditor(BoxSurface surface)
         {
             Quaternion rot = surface.Rotation;
             Vector3 size = surface.Size;
-            Vector3 centre = surface.Centre;
 
             Vector3 snapP = surface.transform.position;
 
-            EncapsulatePoint(rot, 0, snapP, ref centre, ref size);
-            EncapsulatePoint(rot, 1, snapP, ref centre, ref size);
-            EncapsulatePoint(rot, 2, snapP, ref centre, ref size);
-
             boxHandle.size = size;
-            boxHandle.center = Vector3.zero;
+            float widthPos = Mathf.Lerp(-size.x * 0.5f, size.x * 0.5f, surface.WidthOffset);
+            boxHandle.center = new Vector3(widthPos, 0f, size.z * 0.5f);
 
             Matrix4x4 handleMatrix = Matrix4x4.TRS(
-                centre,
+                snapP,
                 rot,
                 Vector3.one
             );
@@ -84,10 +64,10 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                     Undo.RecordObject(surface, "Change Box Properties");
 
                     surface.Size = boxHandle.size;
-                    surface.Centre = centre + rot *  boxHandle.center;
+                    float width = boxHandle.size.x;
+                    surface.WidthOffset = width != 0f ? (boxHandle.center.x + width * 0.5f) / width : 0f;
                 }
             }
-
         }
 
         private void EncapsulatePoint(Quaternion rotation, int axisIndex, Vector3 point, ref Vector3 centre, ref Vector3 size)

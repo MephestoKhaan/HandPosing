@@ -7,7 +7,8 @@ namespace PoseAuthoring.PoseSurfaces
     {
         public override System.Type SurfaceType => typeof(BoxSurface);
 
-        public Vector3 centre;
+        [Range(0f,1f)]
+        public float widthOffset;
         public Vector3 size;
         public Vector3 eulerAngles;
 
@@ -26,29 +27,15 @@ namespace PoseAuthoring.PoseSurfaces
             set => _data = value as BoxSurfaceData;
         }
 
-        public Vector3 Centre
+        public float WidthOffset
         {
             get
             {
-                if (this.relativeTo != null)
-                {
-                    return this.relativeTo.TransformPoint(_data.centre);
-                }
-                else
-                {
-                    return _data.centre;
-                }
+                return _data.widthOffset;
             }
             set
             {
-                if (this.relativeTo != null)
-                {
-                    _data.centre = this.relativeTo.InverseTransformPoint(value);
-                }
-                else
-                {
-                    _data.centre = value;
-                }
+                _data.widthOffset = value;
             }
         }
 
@@ -64,6 +51,8 @@ namespace PoseAuthoring.PoseSurfaces
                 _data.size = value;
             }
         }
+
+        public Vector3 Offset => Vector3.zero;
 
         public Quaternion Rotation
         {
@@ -81,7 +70,7 @@ namespace PoseAuthoring.PoseSurfaces
         {
             get
             {
-                return (this.GripPoint.position - Centre);
+                return Rotation * Vector3.forward;
             }
         }
 
@@ -93,15 +82,15 @@ namespace PoseAuthoring.PoseSurfaces
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
-            Vector3 direction = (targetPosition - Centre).normalized;
-            return Centre + direction;
+            Vector3 direction = (targetPosition - Offset).normalized;
+            return Offset + direction;
         }
 
         public override Pose MinimalRotationPoseAtSurface(Pose userPose, Pose snapPose)
         {
             Quaternion rotCorrection = Quaternion.FromToRotation(snapPose.up, Direction);
             Vector3 correctedDir = (rotCorrection * userPose.up).normalized;
-            Vector3 surfacePoint = NearestPointInSurface(Centre + correctedDir);
+            Vector3 surfacePoint = NearestPointInSurface(Offset + correctedDir);
             Quaternion surfaceRotation = RotationAtPoint(surfacePoint, snapPose.rotation, userPose.rotation);
             return new Pose(surfacePoint, surfaceRotation);
         }
@@ -117,7 +106,7 @@ namespace PoseAuthoring.PoseSurfaces
 
         protected Quaternion RotationAtPoint(Vector3 surfacePoint, Quaternion baseRot, Quaternion desiredRotation)
         {
-            Vector3 desiredDirection = (surfacePoint - Centre).normalized;
+            Vector3 desiredDirection = (surfacePoint - Offset).normalized;
             Quaternion targetRotation = Quaternion.FromToRotation(Direction, desiredDirection) * baseRot;
             Vector3 targetProjected = Vector3.ProjectOnPlane(targetRotation * Vector3.forward, desiredDirection).normalized;
             Vector3 desiredProjected = Vector3.ProjectOnPlane(desiredRotation * Vector3.forward, desiredDirection).normalized;
