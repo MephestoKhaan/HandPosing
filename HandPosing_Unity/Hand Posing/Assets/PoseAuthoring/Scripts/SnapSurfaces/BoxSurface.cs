@@ -9,6 +9,7 @@ namespace PoseAuthoring.PoseSurfaces
 
         [Range(0f, 1f)]
         public float widthOffset;
+        public float snapOffset;
         public Vector3 size;
         public Vector3 eulerAngles;
     }
@@ -34,6 +35,17 @@ namespace PoseAuthoring.PoseSurfaces
             set
             {
                 _data.widthOffset = value;
+            }
+        }
+        public float SnapOffset
+        {
+            get
+            {
+                return _data.snapOffset;
+            }
+            set
+            {
+                _data.snapOffset = value;
             }
         }
 
@@ -112,13 +124,15 @@ namespace PoseAuthoring.PoseSurfaces
 
         private (Vector3, float) NearestPointAndAngleInSurface(Vector3 targetPosition)
         {
+            Vector3 rightOffset = Rotation * Vector3.right * SnapOffset;
+            Vector3 forwardOffset = Rotation * Vector3.forward * SnapOffset;
             Vector3 bottomLeft, bottomRight, topLeft, topRight;
             (bottomLeft, bottomRight, topLeft, topRight) = CalculateCorners();
 
-            Vector3 bottomP = ProjectOnSegment(targetPosition, (bottomLeft, bottomRight));
-            Vector3 topP = ProjectOnSegment(targetPosition, (topLeft, topRight));
-            Vector3 leftP = ProjectOnSegment(targetPosition, (bottomLeft, topLeft));
-            Vector3 rightP = ProjectOnSegment(targetPosition, (bottomRight, topRight));
+            Vector3 bottomP = ProjectOnSegment(targetPosition, (bottomLeft + rightOffset, bottomRight + rightOffset));
+            Vector3 topP = ProjectOnSegment(targetPosition, (topLeft - rightOffset, topRight - rightOffset));
+            Vector3 leftP = ProjectOnSegment(targetPosition, (bottomLeft - forwardOffset, topLeft - forwardOffset));
+            Vector3 rightP = ProjectOnSegment(targetPosition, (bottomRight + forwardOffset, topRight + forwardOffset));
 
             float bottomDistance = Vector3.Distance(bottomP, targetPosition);
             float topDistance = Vector3.Distance(topP, targetPosition);
@@ -158,26 +172,28 @@ namespace PoseAuthoring.PoseSurfaces
             float leftDot = PoseUtils.RotationDifference(leftRot, desiredRot);
             float rightDot = PoseUtils.RotationDifference(rightRot, desiredRot);
 
+            Vector3 rightOffset = Rotation * Vector3.right * SnapOffset;
+            Vector3 forwardOffset = Rotation * Vector3.forward * SnapOffset;
             Vector3 bottomLeft, bottomRight, topLeft, topRight;
             (bottomLeft, bottomRight, topLeft, topRight) = CalculateCorners();
 
             float maxDot = Mathf.Max(bottomDot, Mathf.Max(topDot, Mathf.Max(leftDot, rightDot)));
             if (bottomDot == maxDot)
             {
-                Vector3 projBottom = ProjectOnSegment(desiredPos, (bottomLeft, bottomRight));
+                Vector3 projBottom = ProjectOnSegment(desiredPos, (bottomLeft+ rightOffset, bottomRight+ rightOffset));
                 return new Pose(projBottom, bottomRot);
             }
             if (topDot == maxDot)
             {
-                Vector3 projTop = ProjectOnSegment(desiredPos, (topLeft, topRight));
+                Vector3 projTop = ProjectOnSegment(desiredPos, (topLeft- rightOffset, topRight- rightOffset));
                 return new Pose(projTop, topRot);
             }
             if (leftDot == maxDot)
             {
-                Vector3 projLeft = ProjectOnSegment(desiredPos, (bottomLeft, topLeft));
+                Vector3 projLeft = ProjectOnSegment(desiredPos, (bottomLeft- forwardOffset, topLeft- forwardOffset));
                 return new Pose(projLeft, leftRot);
             }
-            Vector3 projRight = ProjectOnSegment(desiredPos, (bottomRight, topRight));
+            Vector3 projRight = ProjectOnSegment(desiredPos, (bottomRight+ forwardOffset, topRight+ forwardOffset));
             return new Pose(projRight, rightRot);
         }
 

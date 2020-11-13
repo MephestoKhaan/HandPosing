@@ -2967,6 +2967,7 @@ MonoBehaviour:
   relativeTo: {fileID: 1867408691}
   _data:
     widthOffset: 0.6196983
+    snapOffset: 0.050263017
     size: {x: 0.18983677, y: 0, z: 0.1255715}
     eulerAngles: {x: -0, y: 90, z: 0}
 --- !u!1 &960455254
