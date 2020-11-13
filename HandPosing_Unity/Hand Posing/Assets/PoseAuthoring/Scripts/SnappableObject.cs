@@ -93,7 +93,10 @@ namespace PoseAuthoring
             {
                 foreach (var snapPoint in this.snapPoints)
                 {
-                    DestroyImmediate(snapPoint.gameObject);
+                    if(snapPoint != null)
+                    {
+                        DestroyImmediate(snapPoint.gameObject);
+                    }
                 }
                 this.snapPoints.Clear();
             }

@@ -59,5 +59,20 @@ namespace PoseAuthoring
                 reference.position + reference.rotation * offset.position,
                 reference.rotation * offset.rotation);
         }
+
+
+        public static float Similitude(Pose from, Pose to, float maxDistance)
+        {
+            float rotationDifference = RotationDifference(from.rotation, to.rotation);
+            float positionDifference = 1f - Mathf.Clamp01(Vector3.Distance(from.position, to.position) / maxDistance);
+            return rotationDifference  * positionDifference;
+        }
+
+        public static float RotationDifference(Quaternion from, Quaternion to)
+        {
+            float forwardDifference = Vector3.Dot(from * Vector3.forward, to * Vector3.forward) * 0.5f + 0.5f;
+            float upDifference = Vector3.Dot(from * Vector3.up, to * Vector3.up) * 0.5f + 0.5f;
+            return forwardDifference * upDifference;
+        }
     }
 }

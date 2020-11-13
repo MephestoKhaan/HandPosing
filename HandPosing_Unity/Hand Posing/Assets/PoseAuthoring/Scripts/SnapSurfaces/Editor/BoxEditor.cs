@@ -69,31 +69,5 @@ namespace PoseAuthoring.PoseSurfaces.Editor
                 }
             }
         }
-
-        private void EncapsulatePoint(Quaternion rotation, int axisIndex, Vector3 point, ref Vector3 centre, ref Vector3 size)
-        {
-            Vector3 axis = Vector3.zero;
-            axis[axisIndex] = 1f;
-            Vector3 dir = rotation * axis;
-            float distance = DistanceToPoint(centre, dir * size[axisIndex] * 0.5f, point);
-            centre += dir * distance * 0.5f;
-            size[axisIndex] += Mathf.Abs(distance);
-        }
-
-        private float DistanceToPoint(Vector3 centre, Vector3 dir, Vector3 point)
-        {
-            Vector3 pointProj = centre + Vector3.Project(point - centre, dir.normalized);
-            Vector3 start = centre - dir;
-            Vector3 end = centre + dir;
-            if (Vector3.Dot(end - start, pointProj - start) < 0f)
-            {
-                return -Vector3.Distance(pointProj, start);
-            }
-            if (Vector3.Dot(start - end, pointProj - end) < 0f)
-            {
-                return Vector3.Distance(pointProj, end);
-            }
-            return 0f;
-        }
     }
 }

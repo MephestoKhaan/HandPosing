@@ -7,12 +7,10 @@ namespace PoseAuthoring.PoseSurfaces
     {
         public override System.Type SurfaceType => typeof(BoxSurface);
 
-        [Range(0f,1f)]
+        [Range(0f, 1f)]
         public float widthOffset;
         public Vector3 size;
         public Vector3 eulerAngles;
-
-        //TODO select faces?
     }
 
     [System.Serializable]
@@ -52,8 +50,6 @@ namespace PoseAuthoring.PoseSurfaces
             }
         }
 
-        public Vector3 Offset => Vector3.zero;
-
         public Quaternion Rotation
         {
             get
@@ -62,7 +58,7 @@ namespace PoseAuthoring.PoseSurfaces
             }
             set
             {
-                _data.eulerAngles = (Quaternion.Inverse(this.relativeTo.rotation) *  value).eulerAngles;
+                _data.eulerAngles = (Quaternion.Inverse(this.relativeTo.rotation) * value).eulerAngles;
             }
         }
 
@@ -79,39 +75,127 @@ namespace PoseAuthoring.PoseSurfaces
             return pose;
         }
 
+        private (Vector3, Vector3, Vector3, Vector3) CalculateCorners()
+        {
+            Vector3 rightRot = Rotation * Vector3.right;
+            Vector3 bottomLeft = GripPoint.position - rightRot * _data.size.x * (1f - _data.widthOffset);
+            Vector3 bottomRight = GripPoint.position + rightRot * _data.size.x * ( _data.widthOffset);
+            Vector3 forwardOffset = Rotation * Vector3.forward * _data.size.z;
+            Vector3 topLeft = bottomLeft + forwardOffset;
+            Vector3 topRight = bottomRight + forwardOffset;
+            return (bottomLeft, bottomRight, topLeft, topRight);
+        }
+
+        private Vector3 ProjectOnSegment(Vector3 point, (Vector3, Vector3) segment)
+        {
+            Vector3 line = segment.Item2 - segment.Item1;
+            Vector3 projection = Vector3.Project(point - segment.Item1, line);
+            if (Vector3.Dot(projection, line) < 0f)
+            {
+                projection = segment.Item1;
+            }
+            else if (projection.magnitude > line.magnitude)
+            {
+                projection = segment.Item2;
+            }
+            else
+            {
+                projection += segment.Item1;
+            }
+            return projection;
+        }
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
-            Vector3 direction = (targetPosition - Offset).normalized;
-            return Offset + direction;
+            return NearestPointAndAngleInSurface(targetPosition).Item1;
+        }
+
+        private (Vector3, float) NearestPointAndAngleInSurface(Vector3 targetPosition)
+        {
+            Vector3 bottomLeft, bottomRight, topLeft, topRight;
+            (bottomLeft, bottomRight, topLeft, topRight) = CalculateCorners();
+
+            Vector3 bottomP = ProjectOnSegment(targetPosition, (bottomLeft, bottomRight));
+            Vector3 topP = ProjectOnSegment(targetPosition, (topLeft, topRight));
+            Vector3 leftP = ProjectOnSegment(targetPosition, (bottomLeft, topLeft));
+            Vector3 rightP = ProjectOnSegment(targetPosition, (bottomRight, topRight));
+
+            float bottomDistance = Vector3.Distance(bottomP, targetPosition);
+            float topDistance = Vector3.Distance(topP, targetPosition);
+            float leftDistance = Vector3.Distance(leftP, targetPosition);
+            float rightDistance = Vector3.Distance(rightP, targetPosition);
+
+            float minDistance = Mathf.Min(bottomDistance, Mathf.Min(topDistance, Mathf.Min(leftDistance, rightDistance)));
+            if (bottomDistance == minDistance)
+            {
+                return (bottomP, 0f);
+            }
+            if (topDistance == minDistance)
+            {
+                return (topP, 180f);
+            }
+            if (leftDistance == minDistance)
+            {
+                return (leftP, 90f);
+            }
+            return (rightP, -90f);
         }
 
         public override Pose MinimalRotationPoseAtSurface(Pose userPose, Pose snapPose)
         {
-            Quaternion rotCorrection = Quaternion.FromToRotation(snapPose.up, Direction);
-            Vector3 correctedDir = (rotCorrection * userPose.up).normalized;
-            Vector3 surfacePoint = NearestPointInSurface(Offset + correctedDir);
-            Quaternion surfaceRotation = RotationAtPoint(surfacePoint, snapPose.rotation, userPose.rotation);
-            return new Pose(surfacePoint, surfaceRotation);
+            Vector3 desiredPos = userPose.position;
+            Quaternion baseRot = snapPose.rotation;
+            Quaternion desiredRot = userPose.rotation;
+            Vector3 up = Rotation * Vector3.up;
+
+            Quaternion bottomRot = baseRot;
+            Quaternion topRot = Quaternion.AngleAxis(180f, up) * baseRot;
+            Quaternion leftRot = Quaternion.AngleAxis(90f, up) * baseRot;
+            Quaternion rightRot = Quaternion.AngleAxis(-90f, up) * baseRot;
+
+            float bottomDot = PoseUtils.RotationDifference(bottomRot, desiredRot);
+            float topDot = PoseUtils.RotationDifference(topRot, desiredRot);
+            float leftDot = PoseUtils.RotationDifference(leftRot, desiredRot);
+            float rightDot = PoseUtils.RotationDifference(rightRot, desiredRot);
+
+            Vector3 bottomLeft, bottomRight, topLeft, topRight;
+            (bottomLeft, bottomRight, topLeft, topRight) = CalculateCorners();
+
+            float maxDot = Mathf.Max(bottomDot, Mathf.Max(topDot, Mathf.Max(leftDot, rightDot)));
+            if (bottomDot == maxDot)
+            {
+                Vector3 projBottom = ProjectOnSegment(desiredPos, (bottomLeft, bottomRight));
+                return new Pose(projBottom, bottomRot);
+            }
+            if (topDot == maxDot)
+            {
+                Vector3 projTop = ProjectOnSegment(desiredPos, (topLeft, topRight));
+                return new Pose(projTop, topRot);
+            }
+            if (leftDot == maxDot)
+            {
+                Vector3 projLeft = ProjectOnSegment(desiredPos, (bottomLeft, topLeft));
+                return new Pose(projLeft, leftRot);
+            }
+            Vector3 projRight = ProjectOnSegment(desiredPos, (bottomRight, topRight));
+            return new Pose(projRight, rightRot);
         }
 
         public override Pose MinimalTranslationPoseAtSurface(Pose userPose, Pose snapPose)
         {
             Vector3 desiredPos = userPose.position;
             Quaternion baseRot = snapPose.rotation;
-            Vector3 surfacePoint = NearestPointInSurface(desiredPos);
-            Quaternion surfaceRotation = RotationAtPoint(surfacePoint, baseRot, userPose.rotation);
+            Vector3 surfacePoint;
+            float surfaceAngle;
+            (surfacePoint, surfaceAngle) = NearestPointAndAngleInSurface(desiredPos);
+            Quaternion surfaceRotation = RotateUp(baseRot, surfaceAngle);
             return new Pose(surfacePoint, surfaceRotation);
         }
 
-        protected Quaternion RotationAtPoint(Vector3 surfacePoint, Quaternion baseRot, Quaternion desiredRotation)
+        protected Quaternion RotateUp(Quaternion baseRot, float angle)
         {
-            Vector3 desiredDirection = (surfacePoint - Offset).normalized;
-            Quaternion targetRotation = Quaternion.FromToRotation(Direction, desiredDirection) * baseRot;
-            Vector3 targetProjected = Vector3.ProjectOnPlane(targetRotation * Vector3.forward, desiredDirection).normalized;
-            Vector3 desiredProjected = Vector3.ProjectOnPlane(desiredRotation * Vector3.forward, desiredDirection).normalized;
-            Quaternion rotCorrection = Quaternion.FromToRotation(targetProjected, desiredProjected);
-            return rotCorrection * targetRotation;
+            Quaternion offset = Quaternion.AngleAxis(angle, Rotation * Vector3.up);
+            return offset * baseRot;
         }
     }
 }

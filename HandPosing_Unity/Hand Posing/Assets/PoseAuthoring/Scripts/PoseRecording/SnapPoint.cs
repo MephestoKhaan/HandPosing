@@ -234,8 +234,8 @@ namespace PoseAuthoring.PoseRecording
 
         private Pose SelectBestPose(Pose a, Pose b, Pose reference, float normalisedWeight, out float bestScore)
         {
-            float aScore = Similitude(reference, a, maxDistance);
-            float bScore = Similitude(reference, b, maxDistance);
+            float aScore = PoseUtils.Similitude(reference, a, maxDistance);
+            float bScore = PoseUtils.Similitude(reference, b, maxDistance);
             if (aScore * normalisedWeight >= bScore * (1f - normalisedWeight))
             {
                 bestScore = aScore;
@@ -243,14 +243,6 @@ namespace PoseAuthoring.PoseRecording
             }
             bestScore = bScore;
             return b;
-        }
-
-        private float Similitude(Pose from, Pose to, float maxDistance)
-        {
-            float forwardDifference = Vector3.Dot(from.rotation * Vector3.forward, to.rotation * Vector3.forward) * 0.5f + 0.5f;
-            float upDifference = Vector3.Dot(from.rotation * Vector3.up, to.rotation * Vector3.up) * 0.5f + 0.5f;
-            float positionDifference = 1f - Mathf.Clamp01(Vector3.Distance(from.position, to.position) / maxDistance);
-            return forwardDifference * upDifference * positionDifference;
         }
     }
 }
