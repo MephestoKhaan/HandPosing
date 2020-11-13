@@ -47,31 +47,56 @@ namespace PoseAuthoring.PoseSurfaces.Editor
             Vector3 topLeft = bottomLeft + forwardOffset;
             Vector3 topRight = bottomRight + forwardOffset;
 
-            Handles.DrawLine(bottomLeft + rightRot * surface.SnapOffset, bottomRight + rightRot * surface.SnapOffset);
-            Handles.DrawLine(topLeft - rightRot * surface.SnapOffset, topRight - rightRot * surface.SnapOffset);
-            Handles.DrawLine(bottomLeft - forwardRot * surface.SnapOffset, topLeft - forwardRot * surface.SnapOffset);
-            Handles.DrawLine(bottomRight + forwardRot * surface.SnapOffset, topRight + forwardRot * surface.SnapOffset);
+            Handles.DrawLine(bottomLeft + rightRot * surface.SnapOffset.y, bottomRight + rightRot * surface.SnapOffset.x);
+            Handles.DrawLine(topLeft - rightRot * surface.SnapOffset.x, topRight - rightRot * surface.SnapOffset.y);
+            Handles.DrawLine(bottomLeft - forwardRot * surface.SnapOffset.z, topLeft - forwardRot * surface.SnapOffset.w);
+            Handles.DrawLine(bottomRight + forwardRot * surface.SnapOffset.w, topRight + forwardRot * surface.SnapOffset.z);
         }
 
         private void DrawSlider(BoxSurface surface)
         {
-            EditorGUI.BeginChangeCheck();
-            Vector3 rightRot = surface.Rotation * Vector3.right;
-            Vector3 bottomRight = surface.transform.position
-                + rightRot * surface.Size.x * (surface.WidthOffset);
+            Handles.color = INTERACTABLE_COLOR;
 
-            Vector3 offset = Handles.Slider(bottomRight + rightRot * surface.SnapOffset, rightRot);
+            EditorGUI.BeginChangeCheck();
+            Vector3 rightDir = surface.Rotation * Vector3.right;
+            Vector3 forwardDir = surface.Rotation * Vector3.forward;
+            Vector3 bottomRight = surface.transform.position
+                + rightDir * surface.Size.x * (surface.WidthOffset);
+            Vector3 bottomLeft = surface.transform.position
+                - rightDir * surface.Size.x * (1f - surface.WidthOffset);
+            Vector3 topRight = bottomRight + forwardDir * surface.Size.z;
+
+            Vector3 rightHandle = DrawOffsetHandle(bottomRight + rightDir * surface.SnapOffset.x, rightDir);
+            Vector3 leftHandle = DrawOffsetHandle(bottomLeft + rightDir * surface.SnapOffset.y, -rightDir);
+            Vector3 topHandle = DrawOffsetHandle(topRight + forwardDir * surface.SnapOffset.z, forwardDir);
+            Vector3 bottomHandle = DrawOffsetHandle(bottomRight + forwardDir * surface.SnapOffset.w, -forwardDir);
 
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(surface, "Change Offset Box");
-                float distance = Vector3.Distance(bottomRight, offset);
-                if (Vector3.Dot(offset - bottomRight, rightRot) < 0f)
-                {
-                    distance = -distance;
-                }
-                surface.SnapOffset = distance;
+                Vector4 offset = surface.SnapOffset;
+                offset.x = DistanceToHandle(bottomRight, rightHandle, rightDir);
+                offset.y = DistanceToHandle(bottomLeft, leftHandle, rightDir);
+                offset.z = DistanceToHandle(topRight, topHandle, forwardDir);
+                offset.w = DistanceToHandle(bottomRight, bottomHandle, forwardDir);
+                surface.SnapOffset = offset;
             }
+        }
+
+        private Vector3 DrawOffsetHandle(Vector3 point, Vector3 dir)
+        {
+            float size = HandleUtility.GetHandleSize(point) * 0.2f;
+            return Handles.Slider(point, dir, size, Handles.ConeHandleCap, 0f);
+        }
+
+        private float DistanceToHandle(Vector3 origin, Vector3 handlePoint, Vector3 dir)
+        {
+            float distance = Vector3.Distance(origin, handlePoint);
+            if (Vector3.Dot(handlePoint - origin, dir) < 0f)
+            {
+                distance = -distance;
+            }
+            return distance;
         }
 
         private void DrawRotator(BoxSurface surface)

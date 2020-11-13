@@ -2966,9 +2966,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1867408691}
   _data:
-    widthOffset: 0.6196983
-    snapOffset: 0.050263017
-    size: {x: 0.18983677, y: 0, z: 0.1255715}
+    widthOffset: 0.58970577
+    snapOffset: {x: 0.043027163, y: 0.07100767, z: 0.022460282, w: 0.03480184}
+    size: {x: 0.21798089, y: 0, z: 0.1255715}
     eulerAngles: {x: -0, y: 90, z: 0}
 --- !u!1 &960455254
 GameObject:
@@ -5124,6 +5124,7 @@ MonoBehaviour:
   LoadPoses: 
   snapPoints:
   - {fileID: 950555322}
+  - {fileID: 0}
   ClearSnapPoints: 
 --- !u!114 &1867408689
 MonoBehaviour:
@@ -5401,7 +5402,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904652121}
   m_LocalRotation: {x: -0.0000000037252903, y: -0, z: 0.0000000055879354, w: 1}
-  m_LocalPosition: {x: -0.03629981, y: -0.023700036, z: 0.0043998817}
+  m_LocalPosition: {x: -0.036299814, y: -0.023700025, z: 0.004399875}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 365640069}
@@ -6066,7 +6067,7 @@ MonoBehaviour:
   relativeTo: {fileID: 924816150}
   pose:
     relativeGrip:
-      position: {x: -0.0017578453, y: 0.00054883957, z: -0.0043469667}
+      position: {x: -0.0017578602, y: 0.00054883957, z: -0.0043469667}
       rotation: {x: 0.04444589, y: -0.33267295, z: -0.6977414, w: 0.6328586}
     handeness: 1
     _bones:
