@@ -1,6 +1,6 @@
 {
 	"name": "com.mefistofiles.handposing",
-	"version": "1.0",
+	"version": "1.0.1",
 	"displayName": "Hand Posing",
 	"description": "A tool for generating Hand-Poses using HandTracking",
 	"unity": "2019.4",
