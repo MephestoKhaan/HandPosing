@@ -1,0 +1,42 @@
+{
+	"name": "com.mefistofiles.handposing",
+	"version": "1.0",
+	"displayName": "Hand Posing",
+	"description": "A tool for generating Hand-Poses using HandTracking",
+	"unity": "2019.4",
+	"unityRelease": "12f1",
+	"keywords": [
+		"unity",
+		"posing",
+		"hand tracking"
+	],
+	"homepage": "https://github.com/MephestoKhaan/HandPosing",
+	"bugs": {
+		"url": "https://github.com/MephestoKhaan/HandPosing/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/MephestoKhaan/HandPosing.git"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "Luca Mefisto",
+		"email": "luca.m.conesa@gmail.com",
+		"url": "http://mefistofiles.com/"
+	},
+	"files": [
+		"*.md",
+		"*.meta",
+		"*.asmdef",
+		"Scripts",
+		"Prefabs",
+		"Samples~"
+	],
+	"samples": [
+		{
+			"displayName": "Poses Examples",
+			"description": "Sample covering all different types of poses and grabbers",
+			"path": "Samples~/PoseTest"
+		}
+	]
+}
