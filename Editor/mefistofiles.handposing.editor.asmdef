@@ -1,0 +1,17 @@
+{
+    "name": "mefistofiles.handposing.editor",
+    "references": [
+        "GUID:55826f0ca758ecd41ad616f11c6648ba"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
