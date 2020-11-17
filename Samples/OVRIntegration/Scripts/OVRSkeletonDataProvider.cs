@@ -2,17 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class OVRSkeletonDataProvider : MonoBehaviour
+namespace HandPosing.OVRIntegration
 {
-    // Start is called before the first frame update
-    void Start()
+    public class OVRSkeletonDataProvider : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

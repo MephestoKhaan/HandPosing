@@ -1,7 +1,6 @@
+using PoseAuthoring.Adapters;
 using System.Collections.Generic;
 using UnityEngine;
-using static OVRSkeleton;
-using static PoseAuthoring.HandPose;
 
 namespace PoseAuthoring
 {
@@ -10,6 +9,8 @@ namespace PoseAuthoring
     {
         [SerializeField]
         private OVRSkeleton trackedHand;
+        [SerializeField]
+        private AnchorsUpdateNotifier updateNotifier;
         [SerializeField]
         private Animator animator;
         [SerializeField]
@@ -89,17 +90,17 @@ namespace PoseAuthoring
         }
 
         private bool _trackingHands;
-        private bool _usingOVRUpdates;
 
         private void Awake()
         {
+
             if (trackedHand == null)
             {
                 this.enabled = false;
             }
             else
             {
-                InitializeOVRUpdates();
+                updateNotifier.OnAnchorsUpdated += UpdateHandPose;
             }
             CacheGripOffsets();
         }
@@ -113,20 +114,6 @@ namespace PoseAuthoring
                 bonesCollection.Add(id, boneMap);
             }
             return bonesCollection;
-        }
-
-        private void InitializeOVRUpdates()
-        {
-            OVRCameraRig rig = this.transform.GetComponentInParent<OVRCameraRig>();
-            if (rig != null)
-            {
-                rig.UpdatedAnchors += (r) => { UpdateHandPose(); };
-                _usingOVRUpdates = true;
-            }
-            else
-            {
-                _usingOVRUpdates = false;
-            }
         }
 
         private void CacheGripOffsets()
@@ -158,10 +145,6 @@ namespace PoseAuthoring
         private void Update()
         {
             OnPoseBeforeUpdate?.Invoke();
-            if (!_usingOVRUpdates)
-            {
-                UpdateHandPose();
-            }
         }
 
         private void UpdateHandPose()

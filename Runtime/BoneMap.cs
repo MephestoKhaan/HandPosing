@@ -6,7 +6,7 @@ namespace PoseAuthoring
     [System.Serializable]
     public class BoneMap
     {
-        public OVRSkeleton.BoneId id;
+        public BoneId id;
         public Transform transform;
         public Vector3 rotationOffset;
 
@@ -22,7 +22,7 @@ namespace PoseAuthoring
     [System.Serializable]
     public class HandMap
     {
-        public OVRSkeleton.BoneId id;
+        public BoneId id;
         public Transform transform;
         public Vector3 rotationOffset;
         public Vector3 positionOffset;
@@ -37,11 +37,11 @@ namespace PoseAuthoring
     }
 
     [System.Serializable]
-    public class BoneCollection : Dictionary<OVRSkeleton.BoneId, BoneMap>, ISerializationCallbackReceiver
+    public class BoneCollection : Dictionary<BoneId, BoneMap>, ISerializationCallbackReceiver
     {
         [SerializeField]
         [HideInInspector]
-        private List<OVRSkeleton.BoneId> serialisedKeys = new List<OVRSkeleton.BoneId>();
+        private List<BoneId> serialisedKeys = new List<BoneId>();
         [SerializeField]
         [HideInInspector]
         private List<BoneMap> serialisedValues = new List<BoneMap>();
