@@ -1,4 +1,6 @@
-﻿namespace PoseAuthoring
+﻿using UnityEngine;
+
+namespace PoseAuthoring
 {
 	public enum BoneId
 	{
@@ -25,7 +27,15 @@
 		Hand_Pinky3
 	}
 
-	public class HandBone 
+	public struct HandBone 
     {
-    }
+		public BoneId Id { get; private set; }
+		public Transform Transform { get; private set; }
+
+		public HandBone(BoneId id, Transform transform)
+        {
+			Id = id;
+			Transform = transform;
+        }
+	}
 }

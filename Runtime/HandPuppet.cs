@@ -8,7 +8,7 @@ namespace PoseAuthoring
     public class HandPuppet : MonoBehaviour
     {
         [SerializeField]
-        private OVRSkeleton trackedHand;
+        private SkeletonDataProvider skeleton;
         [SerializeField]
         private AnchorsUpdateNotifier updateNotifier;
         [SerializeField]
@@ -93,8 +93,7 @@ namespace PoseAuthoring
 
         private void Awake()
         {
-
-            if (trackedHand == null)
+            if (skeleton == null)
             {
                 this.enabled = false;
             }
@@ -149,9 +148,8 @@ namespace PoseAuthoring
 
         private void UpdateHandPose()
         {
-            if (trackedHand != null
-                && trackedHand.IsInitialized
-                && trackedHand.IsDataValid)
+            if (skeleton != null
+                && skeleton.IsTracking)
             {
                 EnableHandTracked();
             }
@@ -171,7 +169,7 @@ namespace PoseAuthoring
                 _trackingHands = true;
                 animator.enabled = false;
             }
-            SetLivePose(trackedHand);
+            SetLivePose(skeleton.Bones);
         }
 
         private void DisableHandTracked()
@@ -203,31 +201,25 @@ namespace PoseAuthoring
         }
         #endregion
 
-        private void SetLivePose(OVRSkeleton skeleton)
+        private void SetLivePose(List<HandBone> Bones)
         {
-            for (int i = 0; i < skeleton.Bones.Count; ++i)
+            for (int i = 0; i < Bones.Count; ++i)
             {
-                BoneId boneId = skeleton.Bones[i].Id;
+                BoneId boneId = Bones[i].Id;
                 if (BonesCache.ContainsKey(boneId))
                 {
                     Transform boneTransform = BonesCache[boneId].transform;
-                    boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
-                        BonesCache[boneId].RotationOffset);
+                    boneTransform.localRotation = BonesCache[boneId].RotationOffset
+                        * Bones[i].Transform.localRotation;
                 }
                 else if (trackedHandOffset.id == boneId) //TODO, do I REALLY want to move this?
                 {
                     Transform boneTransform = trackedHandOffset.transform;
-                    boneTransform.localRotation = UnmapRotation(skeleton.Bones[i],
-                     trackedHandOffset.RotationOffset);
-
+                    boneTransform.localRotation = trackedHandOffset.RotationOffset 
+                        * Bones[i].Transform.localRotation;
                     boneTransform.localPosition = trackedHandOffset.positionOffset
-                        + skeleton.Bones[i].Transform.localPosition;
+                        + Bones[i].Transform.localPosition;
                 }
-            }
-
-            Quaternion UnmapRotation(OVRBone trackedBone, Quaternion rotationOffset)
-            {
-                return rotationOffset * trackedBone.Transform.localRotation;
             }
         }
 

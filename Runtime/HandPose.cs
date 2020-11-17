@@ -11,14 +11,13 @@ namespace PoseAuthoring
     [System.Serializable]
     public struct BoneRotation
     {
-        public OVRSkeleton.BoneId boneID;
+        public BoneId boneID;
         public Quaternion rotation;
     }
 
     [System.Serializable]
     public struct HandPose
     {
-
         public Pose relativeGrip;
         public Handeness handeness;
 
