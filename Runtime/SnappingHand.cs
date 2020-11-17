@@ -1,9 +1,8 @@
 using UnityEngine;
 using System.Collections;
 
-using Grabber = Interaction.Grabber;
-using Grabbable = Interaction.Grabbable;
 using PoseAuthoring.PoseRecording;
+using PoseAuthoring.Adapters;
 
 namespace PoseAuthoring
 {
@@ -11,7 +10,7 @@ namespace PoseAuthoring
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
-        private Grabber grabber;
+        private GrabNotifier grabNotifier;
         [SerializeField]
         private HandPuppet puppet;
         [Space]
@@ -45,16 +44,16 @@ namespace PoseAuthoring
             get
             {
                 return IsSnapping
-                    &&  grabber.AccotedFlex() <= _grabSnap.SlideThresold;
+                    && grabNotifier.AccotedFlex() <= _grabSnap.SlideThresold;
             }
         }
 
 
         private void Start()
         {
-            grabber.OnGrabAttemp += GrabAttemp;
-            grabber.OnGrabStarted += GrabStarted;
-            grabber.OnGrabEnded += GrabEnded;
+            grabNotifier.OnGrabAttemp += GrabAttemp;
+            grabNotifier.OnGrabStarted += GrabStarted;
+            grabNotifier.OnGrabEnded += GrabEnded;
 
             puppet.OnPoseBeforeUpdate += BeforePuppetUpdate;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
@@ -67,9 +66,9 @@ namespace PoseAuthoring
 
         private void OnDestroy()
         {
-            grabber.OnGrabAttemp -= GrabAttemp;
-            grabber.OnGrabStarted -= GrabStarted;
-            grabber.OnGrabEnded -= GrabEnded;
+            grabNotifier.OnGrabAttemp -= GrabAttemp;
+            grabNotifier.OnGrabStarted -= GrabStarted;
+            grabNotifier.OnGrabEnded -= GrabEnded;
 
             puppet.OnPoseBeforeUpdate -= BeforePuppetUpdate;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;
@@ -93,7 +92,7 @@ namespace PoseAuthoring
 
         #region grabber callbacks
 
-        private void GrabStarted(Grabbable grabbable)
+        private void GrabStarted(GameObject grabbable)
         {
             var ghostPose = SnapForGrabbable(grabbable);
             if (ghostPose.HasValue)
@@ -109,13 +108,13 @@ namespace PoseAuthoring
             }
         }
 
-        private void GrabEnded(Grabbable grabbable)
+        private void GrabEnded(GameObject grabbable)
         {
             _isGrabbing = false;
             _grabSnap = null;
         }
 
-        private void GrabAttemp(Grabbable grabbable, float amount)
+        private void GrabAttemp(GameObject grabbable, float amount)
         {
             var ghostPose = SnapForGrabbable(grabbable);
             if (ghostPose.HasValue)
@@ -131,13 +130,13 @@ namespace PoseAuthoring
             }
         }
 
-        private (SnapPoint, ScoredHandPose)? SnapForGrabbable(Grabbable grabbable)
+        private (SnapPoint, ScoredHandPose)? SnapForGrabbable(GameObject grabbable)
         {
             if (grabbable == null)
             {
                 return null;
             }
-            SnappableObject snappable = grabbable.Snappable;
+            SnappableObject snappable = grabbable.GetComponent<SnappableObject>();
             if (snappable != null)
             {
                 HandPose userPose = this.puppet.TrackedPose(snappable.transform);
@@ -235,11 +234,11 @@ namespace PoseAuthoring
         private void AttachPhysics()
         {
             Vector3 grabPoint = _grabSnap.NearestInSurface(this.puppet.Grip.position);
-            Vector3 gripPos = this.grabber.transform.InverseTransformPoint(this.puppet.Grip.position);
+            Vector3 gripPos = this.transform.InverseTransformPoint(this.puppet.Grip.position);
             Joint[] joints = _grabSnap.RelativeTo.GetComponents<Joint>();
             foreach (var joint in joints)
             {
-                if (joint.connectedBody?.transform == this.grabber.transform)
+                if (joint.connectedBody?.transform == this.transform)
                 {
                     joint.connectedAnchor = gripPos;
                     joint.anchor = joint.transform.InverseTransformPoint(grabPoint);

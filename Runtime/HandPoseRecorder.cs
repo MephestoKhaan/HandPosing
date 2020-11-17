@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-
-using Grabber = Interaction.Grabber;
-using Grabbable = Interaction.Grabbable;
+using PoseAuthoring.Adapters;
 
 namespace PoseAuthoring
 {
@@ -10,13 +8,13 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppetHand;
         [SerializeField]
-        private Grabber grabber;
+        private GrabNotifier snapNotifier;
 
         [SerializeField]
         private KeyCode recordKey = KeyCode.Space;
         
         private void Update()
-        {   
+        {
             if(Input.GetKeyDown(recordKey))
             {
                 RecordPose();
@@ -25,8 +23,8 @@ namespace PoseAuthoring
 
         public void RecordPose()
         {
-            Grabbable grabbable = grabber.FindClosestGrabbable().Item1;
-            grabbable?.Snappable?.AddSnapPoint(puppetHand);
+            SnappableObject snappable = snapNotifier.FindClosestSnappable();
+            snappable?.AddSnapPoint(puppetHand);
         }
     }
 }
