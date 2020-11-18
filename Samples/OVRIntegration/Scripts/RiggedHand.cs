@@ -2,10 +2,11 @@
 using System.Linq;
 using UnityEngine;
 using OVRTouchSample;
+using PoseAuthoring.Interaction;
 
-namespace Interaction
+namespace PoseAuthoring.Adapters.OVRIntegration
 {
-    [RequireComponent(typeof(Grabber))]
+    [RequireComponent(typeof(BaseGrabber))]
     public class RiggedHand : MonoBehaviour
     {
         public const string ANIM_LAYER_NAME_POINT = "Point Layer";
@@ -28,11 +29,11 @@ namespace Interaction
         [SerializeField]
         private Animator m_animator = null;
         [SerializeField]
-        private HandPose m_defaultGrabPose = null;
+        private OVRTouchSample.HandPose m_defaultGrabPose = null;
 
         private Collider[] _colliders = null;
         private bool _collisionEnabled = true;
-        private Grabber _grabber;
+        private BaseGrabber _grabber;
 
         List<Renderer> _showAfterInputFocusAcquired;
 
@@ -50,7 +51,7 @@ namespace Interaction
 
         private void Awake()
         {
-            _grabber = GetComponent<Grabber>();
+            _grabber = GetComponent<BaseGrabber>();
         }
 
         private void Start()
@@ -154,10 +155,10 @@ namespace Interaction
         private void UpdateAnimStates()
         {
             bool grabbing = _grabber.GrabbedObject != null;
-            HandPose grabPose = m_defaultGrabPose;
+            OVRTouchSample.HandPose grabPose = m_defaultGrabPose;
             if (grabbing)
             {
-                HandPose customPose = _grabber.GrabbedObject.GetComponent<HandPose>();
+                OVRTouchSample.HandPose customPose = _grabber.GrabbedObject.GetComponent<OVRTouchSample.HandPose>();
                 if (customPose != null) grabPose = customPose;
             }
             // Pose

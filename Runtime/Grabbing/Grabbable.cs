@@ -1,10 +1,9 @@
-﻿using PoseAuthoring;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Interaction
+namespace PoseAuthoring.Interaction
 {
     public class Grabbable : MonoBehaviour
     {
@@ -15,9 +14,8 @@ namespace Interaction
         private Collider[] _grabPoints = null;
         private bool _isKinematic = false;
         private Collider _grabbedCollider = null;
-        private Grabber _grabbedBy = null;
+        private BaseGrabber _grabbedBy = null;
         protected Rigidbody _body;
-
 
         public bool IsGrabbed
         {
@@ -27,7 +25,7 @@ namespace Interaction
             }
         }
 
-        public Grabber GrabbedBy
+        public BaseGrabber GrabbedBy
         {
             get
             {
@@ -51,7 +49,7 @@ namespace Interaction
             }
         }
 
-        public virtual void GrabBegin(Grabber hand, Collider grabPoint)
+        public virtual void GrabBegin(BaseGrabber hand, Collider grabPoint)
         {
             _grabbedBy = hand;
             _grabbedCollider = grabPoint;
@@ -117,7 +115,7 @@ namespace Interaction
 
         public void UnsuscribeGrabber()
         {
-            Grabber.ClearAllGrabs(this);
+            BaseGrabber.ClearAllGrabs(this);
         }
     }
 }

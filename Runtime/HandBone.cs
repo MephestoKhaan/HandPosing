@@ -6,8 +6,6 @@ namespace PoseAuthoring
 	{
 		Invalid,
 		Hand_Start,
-		Hand_WristRoot,
-		Hand_ForearmStub,
 		Hand_Thumb0,
 		Hand_Thumb1,
 		Hand_Thumb2,

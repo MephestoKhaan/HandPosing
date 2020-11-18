@@ -4,11 +4,13 @@ namespace PoseAuthoring.Adapters
 {
     public class AnchorsUpdateNotifier : MonoBehaviour
     {
-        public System.Action OnAnchorsUpdated;
+        public System.Action OnAnchorsEveryUpdate;
+        public System.Action OnAnchorsFirstUpdate;
 
         protected virtual void Update()
         {
-            OnAnchorsUpdated?.Invoke();
+            OnAnchorsFirstUpdate?.Invoke();
+            OnAnchorsEveryUpdate?.Invoke();
         }
     }
 

@@ -3,7 +3,7 @@ using PoseAuthoring.Adapters;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace HandPosing.Adapters.OVRIntegration
+namespace PoseAuthoring.Adapters.OVRIntegration
 {
     [DefaultExecutionOrder(-70)]
     public class OVRSkeletonDataProvider : SkeletonDataProvider
@@ -17,8 +17,6 @@ namespace HandPosing.Adapters.OVRIntegration
             {
                 {OVRSkeleton.BoneId.Invalid , BoneId.Invalid},
                 {OVRSkeleton.BoneId.Hand_Start , BoneId.Hand_Start},
-                {OVRSkeleton.BoneId.Hand_WristRoot , BoneId.Hand_WristRoot},
-                {OVRSkeleton.BoneId.Hand_ForearmStub , BoneId.Hand_ForearmStub},
                 {OVRSkeleton.BoneId.Hand_Thumb0 , BoneId.Hand_Thumb0},
                 {OVRSkeleton.BoneId.Hand_Thumb1 , BoneId.Hand_Thumb1},
                 {OVRSkeleton.BoneId.Hand_Thumb2 , BoneId.Hand_Thumb2},
@@ -38,7 +36,15 @@ namespace HandPosing.Adapters.OVRIntegration
                 {OVRSkeleton.BoneId.Hand_Pinky3 , BoneId.Hand_Pinky3}
             };
 
+
         private List<HandBone> _bones;
+        public override List<HandBone> Bones
+        {
+            get
+            {
+                return _bones;
+            }
+        }
 
         public override bool IsTracking
         {
@@ -51,18 +57,19 @@ namespace HandPosing.Adapters.OVRIntegration
             }
         }
 
-        public override List<HandBone> Bones
+        private bool CanInitialise
+            => ovrSkeleton != null
+                  && ovrSkeleton.IsInitialized
+                  && _bones == null;
+
+        private void Reset()
         {
-            get
-            {
-                return _bones;
-            }
+            ovrSkeleton = this.GetComponent<OVRSkeleton>();
         }
 
         private void Start()
         {
-            if (ovrSkeleton != null
-                  && ovrSkeleton.IsInitialized)
+            if (CanInitialise)
             {
                 InitializeBones();
             }
@@ -77,15 +84,19 @@ namespace HandPosing.Adapters.OVRIntegration
             _bones = new List<HandBone>(ovrSkeleton.Bones.Count);
             foreach (var bone in ovrSkeleton.Bones)
             {
-                if(OVRToPosingIDs.TryGetValue(bone.Id, out BoneId id))
+                if (OVRToPosingIDs.TryGetValue(bone.Id, out BoneId id))
                 {
                     _bones.Add(new HandBone(id, bone.Transform));
                 }
-                else
-                {
-                    Debug.LogError($"Bone not found {bone.Id}", this);
-                }
+            }
+            this.enabled = false;
+        }
 
+        private void Update()
+        {
+            if(CanInitialise)
+            {
+                InitializeBones();
             }
         }
     }

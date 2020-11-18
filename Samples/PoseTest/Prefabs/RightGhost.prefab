@@ -375,13 +375,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3d49be93727e7645bc247336d9da650, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedHand: {fileID: 0}
+  skeleton: {fileID: 0}
+  updateNotifier: {fileID: 0}
   animator: {fileID: 0}
   handAnchor: {fileID: 7166070815929903276}
   gripPoint: {fileID: 6947336271118645116}
   handeness: 1
   trackedHandOffset:
-    id: 0
+    id: 1
     transform: {fileID: 7161748250141258252}
     rotationOffset: {x: 0, y: 0, z: 0}
     positionOffset: {x: 0, y: 0, z: 0}
@@ -431,54 +432,6 @@ MonoBehaviour:
   - id: 18
     transform: {fileID: 7165968319813253816}
     rotationOffset: {x: 0, y: 0, z: 0}
-  _bonesCache:
-    serialisedKeys: 020000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e000000100000001100000012000000
-    serialisedValues:
-    - id: 2
-      transform: {fileID: 7164180164629477100}
-      rotationOffset: {x: 240, y: 20, z: -180}
-    - id: 4
-      transform: {fileID: 7164296433768481468}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 5
-      transform: {fileID: 7164477314064904910}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 6
-      transform: {fileID: 7164498366076339162}
-      rotationOffset: {x: -90, y: 180, z: 0}
-    - id: 7
-      transform: {fileID: 7164119800825959154}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 8
-      transform: {fileID: 7164451739871274804}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 9
-      transform: {fileID: 7164108969234105498}
-      rotationOffset: {x: -90, y: 180, z: 0}
-    - id: 10
-      transform: {fileID: 7164406978306318838}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 11
-      transform: {fileID: 7164511554363597156}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 12
-      transform: {fileID: 7164389691833429856}
-      rotationOffset: {x: -90, y: 180, z: 0}
-    - id: 13
-      transform: {fileID: 7165902854948334230}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 14
-      transform: {fileID: 7164646113136286382}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 16
-      transform: {fileID: 7164335203531819350}
-      rotationOffset: {x: -180, y: 180, z: 0}
-    - id: 17
-      transform: {fileID: 7164628736816548236}
-      rotationOffset: {x: 0, y: 0, z: 0}
-    - id: 18
-      transform: {fileID: 7165968319813253816}
-      rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7362165940787128986
 MonoBehaviour:
   m_ObjectHideFlags: 0

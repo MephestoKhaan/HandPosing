@@ -1,8 +1,7 @@
 using UnityEngine;
 using System.Collections;
-
 using PoseAuthoring.PoseRecording;
-using PoseAuthoring.Adapters;
+using PoseAuthoring.Interaction;
 
 namespace PoseAuthoring
 {
@@ -10,13 +9,14 @@ namespace PoseAuthoring
     public class SnappingHand : MonoBehaviour
     {
         [SerializeField]
-        private GrabNotifier grabNotifier;
+        private Component grabber;
         [SerializeField]
         private HandPuppet puppet;
         [Space]
         [SerializeField]
         private float snapbackTime = 0.33f;
 
+        private IGrabNotifier _grabNotifier;
         private SnapPoint _grabSnap;
         private ScoredHandPose _grabPose;
 
@@ -43,17 +43,32 @@ namespace PoseAuthoring
         {
             get
             {
-                return IsSnapping
-                    && grabNotifier.AccotedFlex() <= _grabSnap.SlideThresold;
+                if(IsSnapping)
+                {
+                    float boundedFlex = _grabNotifier.GrabFlexThresold.x 
+                        + _grabNotifier.CurrentFlex() * (1f - _grabNotifier.GrabFlexThresold.x);
+                    return boundedFlex <= _grabSnap.SlideThresold; 
+                }
+                return false;   
             }
         }
 
+        private void Reset()
+        {
+            puppet = this.GetComponent<HandPuppet>();
+            grabber = this.GetComponent<IGrabNotifier>() as Component;
+        }
+
+        private void Awake()
+        {
+            _grabNotifier = grabber as IGrabNotifier;
+        }
 
         private void Start()
         {
-            grabNotifier.OnGrabAttemp += GrabAttemp;
-            grabNotifier.OnGrabStarted += GrabStarted;
-            grabNotifier.OnGrabEnded += GrabEnded;
+            _grabNotifier.OnGrabAttemp += GrabAttemp;
+            _grabNotifier.OnGrabStarted += GrabStarted;
+            _grabNotifier.OnGrabEnded += GrabEnded;
 
             puppet.OnPoseBeforeUpdate += BeforePuppetUpdate;
             puppet.OnPoseUpdated += AfterPuppetUpdate;
@@ -66,9 +81,9 @@ namespace PoseAuthoring
 
         private void OnDestroy()
         {
-            grabNotifier.OnGrabAttemp -= GrabAttemp;
-            grabNotifier.OnGrabStarted -= GrabStarted;
-            grabNotifier.OnGrabEnded -= GrabEnded;
+            _grabNotifier.OnGrabAttemp -= GrabAttemp;
+            _grabNotifier.OnGrabStarted -= GrabStarted;
+            _grabNotifier.OnGrabEnded -= GrabEnded;
 
             puppet.OnPoseBeforeUpdate -= BeforePuppetUpdate;
             puppet.OnPoseUpdated -= AfterPuppetUpdate;

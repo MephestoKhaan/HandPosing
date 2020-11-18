@@ -29,6 +29,22 @@ namespace PoseAuthoring
             }
         }
 
+        public static Pose Inverse(this Pose pose)
+        {
+            Pose invertedPose;
+            invertedPose.rotation = Quaternion.Inverse(pose.rotation);
+            invertedPose.position = pose.rotation * -pose.position;
+            return invertedPose;
+        }
+
+        public static Pose Multiply(Pose lhs, Pose rhs)
+        {
+            var product = new Pose();
+            product.position = lhs.position + lhs.rotation * rhs.position;
+            product.rotation = lhs.rotation * rhs.rotation;
+            return product;
+        }
+
         public static Pose RelativeOffset(this Transform to, Transform from)
         {
             return RelativeOffset(from.position, from.rotation, to.position, to.rotation);

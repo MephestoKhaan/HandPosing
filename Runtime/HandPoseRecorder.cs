@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using PoseAuthoring.Adapters;
+using PoseAuthoring.Interaction;
 
 namespace PoseAuthoring
 {
@@ -8,11 +8,16 @@ namespace PoseAuthoring
         [SerializeField]
         private HandPuppet puppetHand;
         [SerializeField]
-        private GrabNotifier snapNotifier;
+        private IGrabNotifier snapNotifier;
 
         [SerializeField]
         private KeyCode recordKey = KeyCode.Space;
-        
+
+        private void Reset()
+        {
+            puppetHand = this.GetComponent<HandPuppet>();
+        }
+
         private void Update()
         {
             if(Input.GetKeyDown(recordKey))

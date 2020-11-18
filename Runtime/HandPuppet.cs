@@ -75,6 +75,7 @@ namespace PoseAuthoring
         private Pose _originalGripOffset;
         private Pose _pupettedGripOffset;
         private bool _offsetInitialised = false;
+        private bool _usingUpdateNotifier;
 
         private Pose TrackedGripPose
         {
@@ -99,7 +100,15 @@ namespace PoseAuthoring
             }
             else
             {
-                updateNotifier.OnAnchorsUpdated += UpdateHandPose;
+                if (updateNotifier != null)
+                {
+                    updateNotifier.OnAnchorsEveryUpdate += UpdateHandPose;
+                    _usingUpdateNotifier = true;
+                }
+                else
+                {
+                    _usingUpdateNotifier = false;
+                }
             }
             CacheGripOffsets();
         }
@@ -140,10 +149,13 @@ namespace PoseAuthoring
             return pose;
         }
 
-
         private void Update()
         {
             OnPoseBeforeUpdate?.Invoke();
+            if(!_usingUpdateNotifier)
+            {
+                UpdateHandPose();
+            }
         }
 
         private void UpdateHandPose()

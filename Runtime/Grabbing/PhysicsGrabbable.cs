@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using UnityEngine;
 
-namespace Interaction.Grabbables
+namespace PoseAuthoring.Interaction
 {
     public class PhysicsGrabbable : Grabbable
     {
@@ -20,7 +20,7 @@ namespace Interaction.Grabbables
             }
         }
 
-        public override void GrabBegin(Grabber hand, Collider grabPoint)
+        public override void GrabBegin(BaseGrabber hand, Collider grabPoint)
         {
             base.GrabBegin(hand, grabPoint);
 
