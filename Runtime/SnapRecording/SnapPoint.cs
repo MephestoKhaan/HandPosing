@@ -118,7 +118,7 @@ namespace HandPosing.SnapRecording
             }
             else
             {
-                Debug.LogError("No HandGhostProvider", this);
+                Debug.LogWarning("No HandGhostProvider", this);
             }
         }
 
