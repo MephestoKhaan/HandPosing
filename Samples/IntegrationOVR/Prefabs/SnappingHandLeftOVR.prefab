@@ -839,7 +839,7 @@ MonoBehaviour:
     id: 1
     transform: {fileID: 351404503957238949}
     rotationOffset: {x: 175.9, y: 76.7, z: -11.6}
-    positionOffset: {x: 0.1, y: 0.055, z: -0.04}
+    positionOffset: {x: 0.1, y: 0.055, z: 0.04}
   boneMaps:
   - id: 2
     transform: {fileID: 356281409874025723}
@@ -927,6 +927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1387190361880471772}
+  grabber: {fileID: 4635681503502107842}
   recordKey: 32
 --- !u!114 &6419182328721095271
 MonoBehaviour:

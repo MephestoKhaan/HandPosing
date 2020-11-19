@@ -8,14 +8,22 @@ namespace HandPosing.SnapRecording
         [SerializeField]
         private HandPuppet puppetHand;
         [SerializeField]
-        private IGrabNotifier snapNotifier;
+        private Component grabber;
 
         [SerializeField]
         private KeyCode recordKey = KeyCode.Space;
 
+        private IGrabNotifier _grabNotifier;
+
         private void Reset()
         {
             puppetHand = this.GetComponent<HandPuppet>();
+            grabber = this.GetComponent<IGrabNotifier>() as Component;
+        }
+
+        private void Awake()
+        {
+            _grabNotifier = grabber as IGrabNotifier;
         }
 
         private void Update()
@@ -28,7 +36,7 @@ namespace HandPosing.SnapRecording
 
         public void RecordPose()
         {
-            Snappable snappable = snapNotifier.FindClosestSnappable();
+            Snappable snappable = _grabNotifier.FindClosestSnappable();
             snappable?.AddSnapPoint(puppetHand);
         }
     }

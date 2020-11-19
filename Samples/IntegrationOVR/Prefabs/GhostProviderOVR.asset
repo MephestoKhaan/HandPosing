@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93590be07c671404ba24d67c85f58fa1, type: 3}
-  m_Name: GhostHands
+  m_Script: {fileID: 11500000, guid: 8b0c1abeb4cdab745a87b33e13f24750, type: 3}
+  m_Name: GhostProviderOVR
   m_EditorClassIdentifier: 
-  leftHand: {fileID: 5793644766941875459, guid: 0631cafa306d2694986bf78e2b41e587,
+  leftHand: {fileID: 2620313736512842725, guid: 9c9caced691e39a4dac8e89ddac879ad,
     type: 3}
-  rightHand: {fileID: 7362165940787128986, guid: b4fc7edcec7832e4dbb22e9d5ddee148,
+  rightHand: {fileID: 3297801683976904522, guid: 279607e4686b2404fa13d68aa4f51637,
     type: 3}

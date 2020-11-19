@@ -1469,6 +1469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1442438993745604909}
+  grabber: {fileID: 7195348242957399794}
   recordKey: 32
 --- !u!114 &1442438993745604907
 MonoBehaviour:
