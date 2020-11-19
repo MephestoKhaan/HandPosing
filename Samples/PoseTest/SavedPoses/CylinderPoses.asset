@@ -16,7 +16,7 @@ MonoBehaviour:
   - pose:
       relativeGrip:
         position: {x: -0.021114198, y: 0.045536876, z: 0.018571928}
-        rotation: {x: 0.6247272, y: -0.73130304, z: -0.21028048, w: -0.17519829}
+        rotation: {x: 0.6247273, y: -0.7313029, z: -0.21028045, w: -0.17519823}
       handeness: 1
       _bones:
       - boneID: 2

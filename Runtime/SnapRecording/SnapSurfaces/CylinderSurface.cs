@@ -50,9 +50,9 @@ namespace HandPosing.SnapSurfaces
         {
             get
             {
-                if (this.GripPoint != null)
+                if (this.relativeTo != null)
                 {
-                    return this.GripPoint.TransformPoint(_data.startPoint);
+                    return this.relativeTo.TransformPoint(_data.startPoint);
                 }
                 else
                 {
@@ -61,9 +61,9 @@ namespace HandPosing.SnapSurfaces
             }
             set
             {
-                if (this.GripPoint != null)
+                if (this.relativeTo != null)
                 {
-                    _data.startPoint = this.GripPoint.InverseTransformPoint(value);
+                    _data.startPoint = this.relativeTo.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -76,9 +76,9 @@ namespace HandPosing.SnapSurfaces
         {
             get
             {
-                if (this.GripPoint != null)
+                if (this.relativeTo != null)
                 {
-                    return this.GripPoint.TransformPoint(_data.endPoint);
+                    return this.relativeTo.TransformPoint(_data.endPoint);
                 }
                 else
                 {
@@ -87,9 +87,9 @@ namespace HandPosing.SnapSurfaces
             }
             set
             {
-                if (this.GripPoint != null)
+                if (this.relativeTo != null)
                 {
-                    _data.endPoint = this.GripPoint.InverseTransformPoint(value);
+                    _data.endPoint = this.relativeTo.InverseTransformPoint(value);
                 }
                 else
                 {
@@ -131,7 +131,7 @@ namespace HandPosing.SnapSurfaces
                 Vector3 dir = (EndPoint - StartPoint);
                 if (dir.sqrMagnitude == 0f)
                 {
-                    return this.GripPoint ? this.GripPoint.up : Vector3.up;
+                    return this.relativeTo ? this.relativeTo.up : Vector3.up;
                 }
                 return dir.normalized;
             }

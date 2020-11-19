@@ -16,7 +16,7 @@ MonoBehaviour:
   - pose:
       relativeGrip:
         position: {x: 0.12662795, y: 0.05772257, z: -0.07280475}
-        rotation: {x: 0.16059399, y: -0.65764886, z: -0.045818042, w: 0.7345808}
+        rotation: {x: 0.16059396, y: -0.6576489, z: -0.045818053, w: 0.7345808}
       handeness: 1
       _bones:
       - boneID: 2
@@ -56,8 +56,8 @@ MonoBehaviour:
     slideThresold: 0
   - pose:
       relativeGrip:
-        position: {x: -0.032016896, y: -0.057722762, z: 0.14251365}
-        rotation: {x: -0.98149216, y: -0.13214685, z: 0.0937234, w: 0.10211211}
+        position: {x: -0.032016903, y: -0.057722814, z: 0.14251368}
+        rotation: {x: -0.9814923, y: -0.13214685, z: 0.093723394, w: 0.1021121}
       handeness: 1
       _bones:
       - boneID: 2

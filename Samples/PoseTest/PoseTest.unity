@@ -1015,9 +1015,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 89692215}
-  m_LocalRotation: {x: 0.000000029802319, y: 0.000000029802319, z: 0.00000004470348,
-    w: 1}
-  m_LocalPosition: {x: -0.036300026, y: -0.023699831, z: 0.004400119}
+  m_LocalRotation: {x: -0, y: 0.000000029802319, z: 0.0000000745058, w: 1}
+  m_LocalPosition: {x: -0.036300022, y: -0.023699744, z: 0.0044001974}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 913040660}
@@ -1447,8 +1446,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122149727}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.036299966, y: -0.023699997, z: 0.004399946}
+  m_LocalRotation: {x: -0, y: -0.000000029802319, z: -0, w: 1}
+  m_LocalPosition: {x: -0.03630002, y: -0.023699988, z: 0.004399987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1017324618}
@@ -2011,7 +2010,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.021114198, y: 0.045536876, z: 0.018571928}
-      rotation: {x: 0.62472725, y: -0.731303, z: -0.21028045, w: -0.17519826}
+      rotation: {x: 0.6247273, y: -0.7313029, z: -0.21028045, w: -0.17519823}
     handeness: 1
     _bones:
     - boneID: 2
@@ -2080,8 +2079,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 924816150}
   _data:
-    startPoint: {x: 0.004211529, y: -0.022169007, z: 0.01696209}
-    endPoint: {x: 0.08967688, y: -0.03549637, z: -0.03659927}
+    startPoint: {x: 0, y: 0.06258321, z: 0}
+    endPoint: {x: 0, y: 0.0014792681, z: 0}
     angle: 360
 --- !u!1 &153186705
 GameObject:
@@ -2117,7 +2116,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: 0.12662795, y: 0.05772257, z: -0.07280475}
-      rotation: {x: 0.16059399, y: -0.65764886, z: -0.045818042, w: 0.7345808}
+      rotation: {x: 0.16059396, y: -0.6576489, z: -0.045818053, w: 0.7345808}
     handeness: 1
     _bones:
     - boneID: 2
@@ -2186,8 +2185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
   _data:
-    startPoint: {x: 0.053168926, y: 0.038230732, z: 0.13057317}
-    endPoint: {x: 0.0511998, y: 0.044905547, z: 0.12933135}
+    startPoint: {x: -0.000000015832484, y: 0.05044813, z: 0.0000000018626451}
+    endPoint: {x: 0.000000017695129, y: 0.064113855, z: -0.000000022351742}
     angle: 225.03891
 --- !u!1 &153942857
 GameObject:
@@ -2251,8 +2250,8 @@ MonoBehaviour:
   relativeTo: {fileID: 1857934466}
   pose:
     relativeGrip:
-      position: {x: -0.0013423003, y: -0.0015108585, z: 0.008877069}
-      rotation: {x: -0.2808755, y: 0.5739516, z: 0.6613388, w: -0.3928349}
+      position: {x: -0.0013423078, y: -0.0015108585, z: 0.008877069}
+      rotation: {x: -0.2808755, y: 0.57395154, z: 0.66133887, w: -0.3928349}
     handeness: 1
     _bones:
     - boneID: 2
@@ -11017,9 +11016,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 859930262}
-  m_LocalRotation: {x: -0.0000000074505797, y: 0.000000014901159, z: -0.000000029802319,
+  m_LocalRotation: {x: -0.000000014901159, y: 0.000000059604638, z: -0.00000008940696,
     w: 1}
-  m_LocalPosition: {x: -0.036300004, y: -0.02370002, z: 0.0043999776}
+  m_LocalPosition: {x: -0.03629997, y: -0.023699995, z: 0.0044000223}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 742288597}
@@ -12518,7 +12517,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966175615}
-  m_LocalRotation: {x: -0, y: -0.000000014901161, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.000000044703484, z: 0.000000029802322, w: 1}
   m_LocalPosition: {x: -0.036300022, y: -0.023699988, z: 0.0043999627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12864,9 +12863,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 977791708}
-  m_LocalRotation: {x: -0.000000029802322, y: -0.000000029802322, z: 0.000000029802322,
-    w: 1}
-  m_LocalPosition: {x: -0.03629999, y: -0.02370002, z: 0.004399902}
+  m_LocalRotation: {x: -0.000000039115545, y: -0.000000066123896, z: -0, w: 1}
+  m_LocalPosition: {x: -0.036300134, y: -0.023700004, z: 0.004399851}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1938582701}
@@ -13466,8 +13464,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1012627860}
-  m_LocalRotation: {x: -0, y: -0, z: 0.000000059604645, w: 1}
-  m_LocalPosition: {x: -0.036300004, y: -0.023700014, z: 0.0043999134}
+  m_LocalRotation: {x: -0.000000029802322, y: -0.000000029802322, z: 0.000000029802322,
+    w: 1}
+  m_LocalPosition: {x: -0.03629999, y: -0.02370002, z: 0.004399902}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 953099802}
@@ -13845,8 +13844,8 @@ MonoBehaviour:
   relativeTo: {fileID: 2064346898}
   pose:
     relativeGrip:
-      position: {x: 0.01880752, y: 0.06371558, z: -0.11232394}
-      rotation: {x: 0.43709385, y: -0.05013647, z: 0.27437788, w: -0.85507447}
+      position: {x: 0.018807542, y: 0.06371558, z: -0.112323955}
+      rotation: {x: 0.4370939, y: -0.050136514, z: 0.2743779, w: -0.8550746}
     handeness: 1
     _bones:
     - boneID: 2
@@ -16115,8 +16114,8 @@ MonoBehaviour:
   relativeTo: {fileID: 1578624148}
   pose:
     relativeGrip:
-      position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
-      rotation: {x: -0.47071043, y: -0.7185894, z: -0.123081215, w: 0.4969031}
+      position: {x: 0.052703325, y: 0.007699728, z: 0.032011457}
+      rotation: {x: -0.4707104, y: -0.7185893, z: -0.12308125, w: 0.49690303}
     handeness: 1
     _bones:
     - boneID: 2
@@ -17379,7 +17378,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1403691870}
-  m_LocalRotation: {x: -0.00000004470348, y: -0.00000005681067, z: 0.000000029802319,
+  m_LocalRotation: {x: -0.000000059604638, y: -0.000000058673315, z: 0.000000029802319,
     w: 1}
   m_LocalPosition: {x: -0.036300134, y: -0.02369982, z: 0.004399906}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -18521,9 +18520,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1493014479}
-  m_LocalRotation: {x: 0.000000029802322, y: 0.000000011175871, z: 0.000000033527613,
-    w: 1}
-  m_LocalPosition: {x: -0.036300004, y: -0.023700025, z: 0.004400056}
+  m_LocalRotation: {x: -0, y: 0.0000000074505797, z: 0.000000024214383, w: 1}
+  m_LocalPosition: {x: -0.0363, y: -0.023700016, z: 0.004400054}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 996388391}
@@ -18858,8 +18856,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1513633463}
-  m_LocalRotation: {x: -0.000000067055225, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.036300004, y: -0.023699984, z: 0.0044000223}
+  m_LocalRotation: {x: -0.00000014901161, y: 0.000000014901161, z: -0.000000014901161,
+    w: 1}
+  m_LocalPosition: {x: -0.036300104, y: -0.023699988, z: 0.0044000857}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 681721990}
@@ -22915,8 +22914,8 @@ MonoBehaviour:
   relativeTo: {fileID: 1578624148}
   pose:
     relativeGrip:
-      position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
-      rotation: {x: -0.684206, y: -0.59515166, z: 0.42108694, w: 0.018522024}
+      position: {x: 0.052703388, y: 0.03201139, z: -0.0076997206}
+      rotation: {x: -0.684206, y: -0.59515166, z: 0.421087, w: 0.018521981}
     handeness: 1
     _bones:
     - boneID: 2
@@ -23706,8 +23705,8 @@ MonoBehaviour:
   relativeTo: {fileID: 1867408691}
   pose:
     relativeGrip:
-      position: {x: -0.07767299, y: 0.0020941496, z: 0.047859155}
-      rotation: {x: 0.20525673, y: -0.43015003, z: -0.5803209, w: -0.66035485}
+      position: {x: -0.077673025, y: 0.0020941496, z: 0.047859177}
+      rotation: {x: 0.20525675, y: -0.43015003, z: -0.58032095, w: -0.660355}
     handeness: 1
     _bones:
     - boneID: 2
@@ -26104,8 +26103,8 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: -0.032016896, y: -0.057722762, z: 0.14251365}
-      rotation: {x: -0.98149216, y: -0.13214685, z: 0.0937234, w: 0.10211211}
+      position: {x: -0.032016903, y: -0.057722814, z: 0.14251368}
+      rotation: {x: -0.9814923, y: -0.13214685, z: 0.093723394, w: 0.1021121}
     handeness: 1
     _bones:
     - boneID: 2
@@ -26174,8 +26173,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
   _data:
-    startPoint: {x: 0.053168926, y: 0.038230732, z: 0.13057317}
-    endPoint: {x: 0.0511998, y: 0.044905547, z: 0.12933135}
+    startPoint: {x: -0.0000000055879354, y: -0.053551715, z: 0.0000000041909516}
+    endPoint: {x: -0.000000030733645, y: -0.06302304, z: 0.00000001071021}
     angle: 225.03891
 --- !u!1 &2031153270
 GameObject:
@@ -27638,8 +27637,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 563200576}
   _data:
-    startPoint: {x: -0.026449896, y: -0.010093046, z: 0.029227767}
-    endPoint: {x: 0.03440435, y: -0.0021082237, z: -0.006976854}
+    startPoint: {x: 0.024583045, y: -0.000000059604645, z: 0.0000000037252903}
+    endPoint: {x: -0.05727402, y: -0.000000059604645, z: -0.000000007450581}
     angle: 360
 --- !u!114 &2121428161
 MonoBehaviour:
@@ -27657,7 +27656,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.005233764, y: -0.00903064, z: -0.00930685}
-      rotation: {x: 0.5694142, y: 0.24717638, z: -0.10912054, w: -0.77637905}
+      rotation: {x: 0.5694142, y: 0.24717638, z: -0.10912058, w: -0.77637905}
     handeness: 1
     _bones:
     - boneID: 2
