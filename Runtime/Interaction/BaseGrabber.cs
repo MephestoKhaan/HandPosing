@@ -310,18 +310,7 @@ namespace HandPosing.Interaction
 
             if (!_grabVolumeEnabled)
             {
-                if(GrabbedObject != null)
-                {
-                    if(_grabCandidates.TryGetValue(GrabbedObject, out int refCount))
-                    {
-                        _grabCandidates.Clear();
-                        _grabCandidates.Add(GrabbedObject, refCount);
-                    }
-                    else
-                    {
-                        _grabCandidates.Clear();
-                    }
-                }
+                _grabCandidates.Clear();
             }
         }
 
