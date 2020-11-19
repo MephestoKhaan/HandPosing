@@ -2,7 +2,7 @@
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 
-namespace PoseAuthoring.PoseSurfaces.Editor
+namespace HandPosing.SnapSurfaces.Editor
 {
     [CustomEditor(typeof(SphereSurface))]
     [CanEditMultipleObjects]

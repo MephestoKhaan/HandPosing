@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace PoseAuthoring
+namespace HandPosing
 {
     public static class PoseUtils
     {
