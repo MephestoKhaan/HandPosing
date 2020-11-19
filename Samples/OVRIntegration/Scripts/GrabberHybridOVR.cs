@@ -12,7 +12,7 @@ namespace HandPosing.OVRIntegration
         [SerializeField]
         private Vector2 grabThresoldController = new Vector2(0.35f, 0.85f);
         [SerializeField]
-        private Vector2 grabThresoldHand = new Vector2(0f, 1f);
+        private Vector2 grabThresoldHand = new Vector2(0f,0.95f);
 
         [SerializeField]
         private Handeness handeness;

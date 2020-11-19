@@ -3,12 +3,19 @@
 namespace HandPosing.SnapRecording
 {
     [ExecuteInEditMode]
+    [RequireComponent(typeof(HandPuppet))]
     public class HandGhost : MonoBehaviour
     {
         [SerializeField]
         private HandPuppet puppet;
 
         public System.Action OnDirtyBones;
+
+        private void Reset()
+        {
+            puppet = this.GetComponent<HandPuppet>();
+        }
+
 
         public void SetPose(HandPose userPose, Transform relativeTo)
         {

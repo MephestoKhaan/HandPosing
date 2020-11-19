@@ -616,7 +616,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9c806ca429e4c459827d78a59f945d, type: 3}
+  m_Script: {fileID: 11500000, guid: a938e6804a858c34d91a964d7b720752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &402033293
@@ -679,7 +679,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9c806ca429e4c459827d78a59f945d, type: 3}
+  m_Script: {fileID: 11500000, guid: a938e6804a858c34d91a964d7b720752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &498266807
@@ -1453,7 +1453,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 3
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -1067026263786837032, guid: 671c40d3df225e2449a65bf79c6e389c, type: 3}
@@ -1484,7 +1484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e933e81d3c20c74ea6fdc708a67e3a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  queueAhead: 1
   useRecommendedMSAALevel: 1
   _monoscopic: 0
   enableAdaptiveResolution: 0
@@ -1529,7 +1528,6 @@ MonoBehaviour:
   useIPDInPositionTracking: 1
   resetTrackerOnLoad: 0
   AllowRecenter: 1
-  _reorientHMDOnControllerRecenter: 1
   LateControllerUpdate: 0
 --- !u!81 &916718875
 AudioListener:
@@ -1804,6 +1802,7 @@ GameObject:
   - component: {fileID: 913469169}
   - component: {fileID: 913469179}
   - component: {fileID: 114473265340316095}
+  - component: {fileID: 920525600}
   m_Layer: 0
   m_Name: OVRCameraRig
   m_TagString: Untagged
@@ -1811,6 +1810,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &920525600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920525599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40cca75513021c84b8bbee4b82d0970d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ovrCameraRig: {fileID: 913469169}
 --- !u!1 &920527315
 GameObject:
   m_ObjectHideFlags: 0
@@ -4234,8 +4246,8 @@ GameObject:
   - component: {fileID: 4453511963432402}
   - component: {fileID: 114428880678883142}
   - component: {fileID: 114567485444191646}
-  - component: {fileID: 1870938087394517}
   - component: {fileID: 1870938087394518}
+  - component: {fileID: 1870938087394517}
   m_Layer: 11
   m_Name: OVRHandPrefab
   m_TagString: Untagged
@@ -4250,14 +4262,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1870938087394516}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d24fa2a57702c7648bbc44d402d50a4b, type: 3}
+  m_Script: {fileID: 11500000, guid: fef190d8d273c1f4fb95810e8f031f6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skeleton: {fileID: 114567485444191646}
-  axisPrototype: {fileID: 6532407849285881635, guid: e6a9e3c39b1d36543802876415b1b8ab,
-    type: 3}
+  ovrSkeleton: {fileID: 114567485444191646}
 --- !u!114 &1870938087394518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4763,6 +4773,11 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 1003884501}
+    - target: {fileID: 1387190361880471772, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
+        type: 3}
+      propertyPath: skeleton
+      value: 
+      objectReference: {fileID: 1870938087394517}
     - target: {fileID: 4382166926110245331, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
         type: 3}
       propertyPath: m_Enabled
@@ -4824,7 +4839,7 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
+  serializedVersion: 3
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: -1067026263786837032, guid: 671c40d3df225e2449a65bf79c6e389c, type: 3}

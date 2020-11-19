@@ -766,7 +766,7 @@ GameObject:
   - component: {fileID: 6419182328721095271}
   - component: {fileID: 4635681503502107842}
   m_Layer: 0
-  m_Name: CustomHandLeft
+  m_Name: SnappingHandLeftOVR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -812,7 +812,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 351404503956951377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d9c806ca429e4c459827d78a59f945d, type: 3}
+  m_Script: {fileID: 11500000, guid: a938e6804a858c34d91a964d7b720752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_controller: 1
@@ -827,18 +827,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 351404503956951377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3d49be93727e7645bc247336d9da650, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e5100f384afbab43873e0da9fce1f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedHand: {fileID: 0}
+  skeleton: {fileID: 0}
+  updateNotifier: {fileID: 0}
   handAnchor: {fileID: 0}
   gripPoint: {fileID: 351404503957172793}
   handeness: 0
   trackedHandOffset:
-    id: 0
+    id: 1
     transform: {fileID: 351404503957238949}
     rotationOffset: {x: 175.9, y: 76.7, z: -11.6}
-    positionOffset: {x: 0.1, y: 0.055, z: 0.04}
+    positionOffset: {x: 0.1, y: 0.055, z: -0.04}
   boneMaps:
   - id: 2
     transform: {fileID: 356281409874025723}
@@ -885,6 +886,34 @@ MonoBehaviour:
   - id: 18
     transform: {fileID: 356069724207430629}
     rotationOffset: {x: 0, y: 0, z: 0}
+  OnUsingHands:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 410362937497815097}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnUsingControllers:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 410362937497815097}
+        m_MethodName: set_enabled
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &7745922478154093841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,7 +927,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1387190361880471772}
-  grabber: {fileID: 4635681503502107842}
+  recordKey: 32
 --- !u!114 &6419182328721095271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -913,6 +942,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabber: {fileID: 4635681503502107842}
   puppet: {fileID: 1387190361880471772}
+  snapbackTime: 0.33
 --- !u!114 &4635681503502107842
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -922,17 +952,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 351404503956951377}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea32692d782ba44691f58983dfa68e7, type: 3}
+  m_Script: {fileID: 11500000, guid: 51eb3b5203579b848804c98dd1571c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabThresoldController: {x: 0.35, y: 0.55}
-  grabThresoldHand: {x: 0.35, y: 0.95}
-  trackedHand: {fileID: 0}
-  _gripTransform: {fileID: 351404503957172793}
-  _grabVolumes:
+  gripTransform: {fileID: 351404503957172793}
+  grabVolumes:
   - {fileID: 351404503943190831}
   - {fileID: 351404503943191197}
-  m_controller: 1
+  updateNotifier: {fileID: 0}
+  trackedHand: {fileID: 0}
+  grabThresoldController: {x: 0.1, y: 0.95}
+  grabThresoldHand: {x: 0, y: 0.95}
+  handeness: 0
 --- !u!1 &351404503956951833
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HandPosing
 {
@@ -11,8 +12,6 @@ namespace HandPosing
         [SerializeField]
         private AnchorsUpdateNotifier updateNotifier;
         [SerializeField]
-        private Animator animator;
-        [SerializeField]
         private Transform handAnchor;
         [SerializeField]
         private Transform gripPoint;
@@ -23,6 +22,11 @@ namespace HandPosing
         private HandMap trackedHandOffset;
         [SerializeField]
         private List<BoneMap> boneMaps;
+
+        [SerializeField]
+        private UnityEvent OnUsingHands;
+        [SerializeField]
+        private UnityEvent OnUsingControllers;
 
         public List<BoneMap> Bones
         {
@@ -178,7 +182,7 @@ namespace HandPosing
             if (!_trackingHands)
             {
                 _trackingHands = true;
-                animator.enabled = false;
+                OnUsingHands?.Invoke();
             }
             SetLivePose(skeleton.Bones);
         }
@@ -188,7 +192,7 @@ namespace HandPosing
             if (_trackingHands)
             {
                 _trackingHands = false;
-                animator.enabled = true;
+                OnUsingControllers?.Invoke();
                 RestoreHandOffset();
             }
         }
