@@ -25,10 +25,9 @@ jobs:
     name: create release
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: Release
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Release
       uses: cycjimmy/semantic-release-action@v2
       with:
         extra_plugins: |
@@ -36,4 +35,4 @@ jobs:
           @semantic-release/git
         branch: master
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
