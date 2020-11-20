@@ -8,9 +8,9 @@ namespace HandPosing.SnapSurfaces
         public override System.Type SurfaceType => typeof(BoxSurface);
 
         [Range(0f, 1f)]
-        public float widthOffset;
+        public float widthOffset = 0.5f;
         public Vector4 snapOffset;
-        public Vector3 size;
+        public Vector3 size = new Vector3(0.1f, 0f, 0.1f);
         public Vector3 eulerAngles;
     }
 

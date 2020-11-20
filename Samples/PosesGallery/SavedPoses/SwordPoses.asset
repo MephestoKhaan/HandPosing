@@ -15,8 +15,8 @@ MonoBehaviour:
   _snapPoints:
   - pose:
       relativeGrip:
-        position: {x: -0.0013423003, y: -0.0015108585, z: 0.008877069}
-        rotation: {x: -0.2808755, y: 0.5739516, z: 0.6613388, w: -0.3928349}
+        position: {x: -0.0013423227, y: -0.0015108585, z: 0.008877069}
+        rotation: {x: -0.28087553, y: 0.5739515, z: 0.661339, w: -0.39283502}
       handeness: 1
       _bones:
       - boneID: 2
@@ -49,6 +49,47 @@ MonoBehaviour:
         rotation: {x: -0.06780524, y: 0.025500031, z: -0.360716, w: 0.92985815}
       - boneID: 18
         rotation: {x: 0.0012061755, y: -0.048575155, z: -0.14080814, w: 0.98884386}
+    canInvert: 0
+    maxDistance: 0.1
+    positionRotationWeight: 0.5
+    snapsBack: 1
+    slideThresold: 0
+  - pose:
+      relativeGrip:
+        position: {x: 0.0050069652, y: 0.00417161, z: 0.0045609474}
+        rotation: {x: -0.22920454, y: -0.6452501, z: -0.65727836, w: -0.3148054}
+      handeness: 0
+      _bones:
+      - boneID: 2
+        rotation: {x: 0.21724729, y: 0.9479769, z: 0.08548829, w: 0.21641448}
+      - boneID: 4
+        rotation: {x: -0.085948855, y: 0.05010685, z: -0.22764868, w: 0.9686476}
+      - boneID: 5
+        rotation: {x: 0.06460756, y: 0.073415935, z: -0.2445185, w: 0.9647004}
+      - boneID: 6
+        rotation: {x: -0.018274175, y: 0.73119587, z: 0.6790326, w: 0.06271625}
+      - boneID: 7
+        rotation: {x: -0.025185315, y: -0.006268174, z: -0.48771992, w: 0.8726143}
+      - boneID: 8
+        rotation: {x: -0.017148906, y: 0.021260222, z: -0.2427038, w: 0.9697159}
+      - boneID: 9
+        rotation: {x: -0.31775025, y: 0.6276763, z: 0.6581524, w: 0.26812822}
+      - boneID: 10
+        rotation: {x: -0.0129218055, y: -0.0009608601, z: -0.4345059, w: 0.90057576}
+      - boneID: 11
+        rotation: {x: -0.07695941, y: -0.015758293, z: -0.37259048, w: 0.924665}
+      - boneID: 12
+        rotation: {x: -0.43703404, y: 0.51605785, z: 0.66504425, w: 0.3168624}
+      - boneID: 13
+        rotation: {x: -0.04061385, y: -0.01009395, z: -0.38333848, w: 0.92265934}
+      - boneID: 14
+        rotation: {x: -0.017164104, y: -0.029466702, z: -0.27039698, w: 0.9621448}
+      - boneID: 16
+        rotation: {x: -0.33514407, y: -0.053273797, z: 0.79652154, w: 0.5003936}
+      - boneID: 17
+        rotation: {x: -0.056659635, y: 0.0311877, z: -0.24380706, w: 0.9676648}
+      - boneID: 18
+        rotation: {x: 0.01982489, y: -0.044486295, z: -0.4972724, w: 0.8662264}
     canInvert: 0
     maxDistance: 0.1
     positionRotationWeight: 0.5

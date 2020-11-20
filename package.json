@@ -26,9 +26,14 @@
 	},
 	"samples": [
 		{
-			"displayName": "Poses Examples",
-			"description": "Sample covering all different types of poses and grabbers",
-			"path": "Samples~/PoseTest"
+			"displayName": "Integration Oculus (OVR)",
+			"description": "Scripts and prefabs for using with Oculus Quest.",
+			"path": "Samples~/IntegrationOVR"
+		},
+		{
+			"displayName": "Poses Gallery (Requires IntegrationOVR)",
+			"description": "Samples covering all current types of poses and grabbers.",
+			"path": "Samples~/PosesGallery"
 		}
 	]
 }

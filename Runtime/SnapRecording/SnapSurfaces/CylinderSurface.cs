@@ -7,11 +7,11 @@ namespace HandPosing.SnapSurfaces
     {
         public override System.Type SurfaceType => typeof(CylinderSurface);
 
-        public Vector3 startPoint;
-        public Vector3 endPoint;
+        public Vector3 startPoint = new Vector3(0f, 0.1f, 0f);
+        public Vector3 endPoint = new Vector3(0f, -0.1f, 0f);
 
         [Range(0f, 360f)]
-        public float angle;
+        public float angle = 120f;
     }
 
     [System.Serializable]
