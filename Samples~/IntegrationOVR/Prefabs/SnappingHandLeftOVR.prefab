@@ -817,7 +817,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_controller: 1
   m_animator: {fileID: 410362937497815097}
-  m_defaultGrabPose: {fileID: 11437176, guid: 35525acb4c3b75c4a8c4dc2c117427be, type: 3}
+  m_defaultGrabPose: {fileID: 11437176, guid: 7fab1a819803477439b71b9620160619, type: 3}
 --- !u!114 &1387190361880471772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -962,7 +962,7 @@ MonoBehaviour:
   - {fileID: 351404503943191197}
   updateNotifier: {fileID: 0}
   trackedHand: {fileID: 0}
-  grabThresoldController: {x: 0.1, y: 0.95}
+  grabThresoldController: {x: 0.35, y: 0.95}
   grabThresoldHand: {x: 0, y: 0.95}
   handeness: 0
 --- !u!1 &351404503956951833
