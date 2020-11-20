@@ -1,40 +1,34 @@
-name: CI
 on:
   push:
-    branches:
-    - master
+    # Sequence of patterns matched against refs/tags
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release
+
 jobs:
-  unity-integrity:
-    name: Reviews the Unity Package
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - name: rename samples
-      run: |
-        if [[ -d "Samples" ]]; then
-          git mv Samples Samples~
-          rm -f Samples.meta
-          git config --global user.name 'github-bot'
-          git config --global user.email 'github-bot@users.noreply.github.com'
-          git commit -am "fix: Samples => Samples~"
-        fi
-        git push -f -u origin master
-  release-github:
-    name: create release
+  build:
+    name: Create Release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
         with:
-            fetch-depth: 0
-      - name: release generation
-        uses: cycjimmy/semantic-release-action@v2
-        with:
-            extra_plugins: |
-                @semantic-release/changelog
-                @semantic-release/git
-            branch: master
+          fetch-depth: 0
+      - name: Changelog
+        uses: scottbrenner/generate-changelog-action@master
+        id: Changelog
         env:
-            GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
+          REPO: ${{ github.repository }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
