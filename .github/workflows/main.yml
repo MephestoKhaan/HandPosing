@@ -32,9 +32,9 @@ jobs:
       - name: release generation
         uses: cycjimmy/semantic-release-action@v2
         with:
-        extra_plugins: |
-            @semantic-release/changelog
-            @semantic-release/git
-        branch: master
+            extra_plugins: |
+                @semantic-release/changelog
+                @semantic-release/git
+            branch: master
         env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
