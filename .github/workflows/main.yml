@@ -27,12 +27,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Release
-      uses: cycjimmy/semantic-release-action@v2
-      with:
+        with:
+            fetch-depth: 0
+      - name: release generation
+        uses: cycjimmy/semantic-release-action@v2
+        with:
         extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
+            @semantic-release/changelog
+            @semantic-release/git
         branch: master
-      env:
+        env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} 
