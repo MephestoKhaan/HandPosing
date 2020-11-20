@@ -57,18 +57,3 @@ sysinfo.txt
 
 # Crashlytics generated file
 crashlytics-build.properties
-
-HandPosing_Unity/Hand Posing/Assets/Oculus/
-HandPosing_Unity/Hand Posing/Library/
-HandPosing_Unity/Hand Posing/Temp/
-HandPosing_Unity/Hand Posing/Logs/
-HandPosing_Unity/Hand Posing/Assets/Resources/OVRPlatformToolSettings.asset.meta
-HandPosing_Unity/Hand Posing/Assets/Resources/OVRPlatformToolSettings.asset
-HandPosing_Unity/Hand Posing/Assets/Resources/ONSPSettings.asset.meta
-HandPosing_Unity/Hand Posing/Assets/Resources/ONSPSettings.asset
-HandPosing_Unity/Hand Posing/obj/
-HandPosing_Unity/Hand Posing/deploy/
-Oculus/
-Oculus.meta
-Resources/OVRPlatformToolSettings.asset
-Resources/OVRPlatformToolSettings.asset.meta
