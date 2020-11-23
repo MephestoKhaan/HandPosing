@@ -15,6 +15,7 @@ namespace HandPosing.SnapRecording
         public float slideThresold;
     }
 
+    [ExecuteInEditMode]
     public class SnapPoint : MonoBehaviour
     {
         [SerializeField]
@@ -23,10 +24,8 @@ namespace HandPosing.SnapRecording
         private HandPose pose;
 
         [Space]
-        [SerializeField]
-        private SnapSurface surface;
-        [SerializeField]
-        private HandGhost ghost;
+        public SnapSurface surface;
+        public HandGhost ghost;
 
         [Space]
         [SerializeField]
@@ -70,6 +69,18 @@ namespace HandPosing.SnapRecording
             }
         }
 
+#if UNITY_EDITOR
+        private void Update()
+        {
+            if(this.transform.hasChanged)
+            {
+                this.transform.hasChanged = false;
+                this.pose.relativeGrip = this.transform.GetPose(Space.Self);
+                ghost?.SetPose(this.pose, this.relativeTo);
+            }
+        }
+#endif
+
         private void RefreshGhostPose()
         {
             this.pose = ghost.ReadPose(relativeTo);
@@ -104,8 +115,7 @@ namespace HandPosing.SnapRecording
         {
             pose = snapPose;
             this.relativeTo = relativeTo;
-            this.transform.localPosition = snapPose.relativeGrip.position;
-            this.transform.localRotation = snapPose.relativeGrip.rotation;
+            this.transform.SetPose(snapPose.relativeGrip, Space.Self);
         }
 
         public void LoadGhost(HandGhostProvider ghostProvider)
