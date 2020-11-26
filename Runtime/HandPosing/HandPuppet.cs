@@ -274,27 +274,6 @@ namespace HandPosing
 
             this.transform.SetPose(result);
         }
-
-
-        public void LerpGripOffset_OLD(Pose pose, float weight, Transform relativeTo = null)
-        {
-            relativeTo = relativeTo ?? this.handAnchor;
-
-            Pose worldGrip = TrackedGripPose;
-
-            Quaternion rotationDif = Quaternion.Inverse(transform.rotation) * this.gripPoint.rotation;
-            Quaternion desiredRotation = (relativeTo.rotation * pose.rotation) * rotationDif;
-            Quaternion trackedRot = rotationDif * worldGrip.rotation;
-            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, weight);
-            transform.rotation = finalRot;
-
-            Vector3 positionDif = transform.position - this.gripPoint.position;
-            Vector3 desiredPosition = relativeTo.TransformPoint(pose.position) + positionDif;
-            Vector3 trackedPosition = worldGrip.position + positionDif;
-            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, weight);
-            transform.position = finalPos;
-        }
-
         #endregion
 
         #region currentPoses
