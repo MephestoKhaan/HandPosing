@@ -33,7 +33,7 @@ namespace HandPosing
         {
             Pose invertedPose;
             invertedPose.rotation = Quaternion.Inverse(pose.rotation);
-            invertedPose.position = pose.rotation * -pose.position;
+            invertedPose.position = Quaternion.Inverse(pose.rotation) * -pose.position;
             return invertedPose;
         }
 
@@ -43,6 +43,14 @@ namespace HandPosing
             product.position = a.position + a.rotation * b.position;
             product.rotation = a.rotation * b.rotation;
             return product;
+        }
+
+        public static Pose Lerp(Pose a, Pose b, float t)
+        {
+            var result = new Pose();
+            result.position = Vector3.Lerp(a.position,b.position,t);
+            result.rotation = Quaternion.Lerp(a.rotation, b.rotation, t);
+            return result;
         }
 
         public static Pose RelativeOffset(this Transform to, Transform from)

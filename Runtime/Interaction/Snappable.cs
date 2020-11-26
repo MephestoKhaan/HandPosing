@@ -42,10 +42,11 @@ namespace HandPosing.Interaction
         public SnapPoint AddSnapPoint(HandPuppet puppet)
         {
             HandPose pose = puppet.TrackedPose(this.transform, true);
-            SnapPoint record = GenerateSnapPoint();
-            record.SetPose(pose, this.transform);
-            record.LoadGhost(ghostProvider);
-            return record;
+            SnapPoint snapPoint = GenerateSnapPoint();
+            snapPoint.SetPose(pose, this.transform);
+            snapPoint.LoadGhost(ghostProvider);
+            Debug.Break();
+            return snapPoint;
         }
 
         private SnapPoint LoadSnapPoint(SnapPointData data)
