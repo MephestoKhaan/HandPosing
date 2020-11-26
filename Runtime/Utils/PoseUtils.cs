@@ -37,11 +37,11 @@ namespace HandPosing
             return invertedPose;
         }
 
-        public static Pose Multiply(Pose lhs, Pose rhs)
+        public static Pose Multiply(Pose a, Pose b)
         {
             var product = new Pose();
-            product.position = lhs.position + lhs.rotation * rhs.position;
-            product.rotation = lhs.rotation * rhs.rotation;
+            product.position = a.position + a.rotation * b.position;
+            product.rotation = a.rotation * b.rotation;
             return product;
         }
 

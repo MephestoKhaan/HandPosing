@@ -130,6 +130,36 @@ PrefabInstance:
       propertyPath: handAnchor
       value: 
       objectReference: {fileID: 8788243299291242450}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[4].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[5].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[7].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[8].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[13].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[14].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 1537146065954877748, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: m_Enabled

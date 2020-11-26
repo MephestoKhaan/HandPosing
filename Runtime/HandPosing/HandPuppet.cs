@@ -36,6 +36,14 @@ namespace HandPosing
             }
         }
 
+        public HandMap HandOffset
+        {
+            get
+            {
+                return trackedHandOffset;
+            }
+        }
+
         public Transform Grip
         {
             get
@@ -50,6 +58,7 @@ namespace HandPosing
                 return _trackingHands;
             }
         }
+
         public Pose GripOffset
         {
             get
@@ -80,7 +89,9 @@ namespace HandPosing
         private bool _offsetInitialised = false;
         private bool _usingUpdateNotifier;
 
-        private Pose TrackedGripPose
+        public Transform gripTest;
+
+        public Pose TrackedGripPose
         {
             get
             {
@@ -127,29 +138,22 @@ namespace HandPosing
             return bonesCollection;
         }
 
+
         private void CacheGripOffsets()
         {
             _originalHandOffset = HandOffsetMapping();
             _originalGripOffset = GripOffset;
-            _pupettedGripOffset = OffsetedGripPose(trackedHandOffset.positionOffset,
-                trackedHandOffset.RotationOffset * Quaternion.Euler(0f, 180f, 0f));
+            _pupettedGripOffset = OffsetedGripPose();
             _offsetInitialised = true;
         }
 
-        private Pose OffsetedGripPose(Vector3 posOffset, Quaternion rotOffset)
+        private Pose OffsetedGripPose()
         {
-            Transform hand = trackedHandOffset.transform;
-            Vector3 originalPos = hand.localPosition;
-            Quaternion originalRot = hand.localRotation;
-            hand.localRotation = rotOffset;
-            hand.localPosition = hand.localPosition + posOffset;
-
-            Pose pose = GripOffset;
-
-            hand.localRotation = originalRot;
-            hand.localPosition = originalPos;
-
-            return pose;
+            Pose grip = trackedHandOffset.transform.RelativeOffset(this.gripPoint);
+            Pose trackingCoords = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+            Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingCoords);
+            Pose translateGrip = PoseUtils.Multiply(hand, grip);
+            return this.handAnchor.RelativeOffset(translateGrip);
         }
 
         private void Update()
@@ -159,6 +163,7 @@ namespace HandPosing
             {
                 UpdateHandPose();
             }
+            gripTest?.SetPose(TrackedGripPose);
         }
 
         private void UpdateHandPose()
@@ -193,7 +198,7 @@ namespace HandPosing
             {
                 _trackingHands = false;
                 OnUsingControllers?.Invoke();
-                RestoreHandOffset();
+                _originalHandOffset.Apply();
             }
         }
 
@@ -208,12 +213,6 @@ namespace HandPosing
                 rotationOffset = trackedHandOffset.transform.localRotation.eulerAngles
             };
         }
-
-        public void RestoreHandOffset()
-        {
-            _originalHandOffset.transform.localPosition = _originalHandOffset.positionOffset;
-            _originalHandOffset.transform.localRotation = _originalHandOffset.RotationOffset;
-        }
         #endregion
 
         private void SetLivePose(List<HandBone> Bones)
@@ -227,13 +226,13 @@ namespace HandPosing
                     boneTransform.localRotation = BonesCache[boneId].RotationOffset
                         * Bones[i].Transform.localRotation;
                 }
-                else if (trackedHandOffset.id == boneId) //TODO, do I REALLY want to move this?
+                else if (trackedHandOffset.id == boneId)
                 {
-                    Transform boneTransform = trackedHandOffset.transform;
-                    boneTransform.localRotation = trackedHandOffset.RotationOffset 
-                        * Bones[i].Transform.localRotation;
-                    boneTransform.localPosition = trackedHandOffset.positionOffset
-                        + Bones[i].Transform.localPosition;
+                   Transform handTransform = trackedHandOffset.transform;
+                    handTransform.localPosition =  trackedHandOffset.positionOffset
+                         + trackedHandOffset.RotationOffset * Bones[i].Transform.localPosition;
+                    handTransform.localRotation = trackedHandOffset.RotationOffset 
+                         * Bones[i].Transform.localRotation;
                 }
             }
         }

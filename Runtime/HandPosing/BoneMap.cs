@@ -34,6 +34,20 @@ namespace HandPosing
                 return Quaternion.Euler(rotationOffset);
             }
         }
+
+        public Pose Offset
+        {
+            get
+            {
+                return new Pose(positionOffset, RotationOffset);
+            }
+        }
+
+        public void Apply()
+        {
+            this.transform.localPosition = this.positionOffset;
+            this.transform.localRotation = RotationOffset;
+        }
     }
 
     [System.Serializable]
