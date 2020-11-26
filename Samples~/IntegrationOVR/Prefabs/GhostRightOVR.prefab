@@ -129,7 +129,7 @@ PrefabInstance:
         type: 3}
       propertyPath: handAnchor
       value: 
-      objectReference: {fileID: 8788243299291242450}
+      objectReference: {fileID: 8784068564325516658}
     - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: boneMaps.Array.data[4].rotationOffset.x
@@ -160,6 +160,71 @@ PrefabInstance:
       propertyPath: boneMaps.Array.data[14].rotationOffset.x
       value: -0
       objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[0].rotationOffset.x
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[0].rotationOffset.y
+      value: 199.99998
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[0].rotationOffset.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[1].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[2].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[3].rotationOffset.x
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[6].rotationOffset.x
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[9].rotationOffset.x
+      value: 270
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[10].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[11].rotationOffset.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[12].rotationOffset.x
+      value: 349.99997
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[12].rotationOffset.y
+      value: 0.000006362672
+      objectReference: {fileID: 0}
+    - target: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
+        type: 3}
+      propertyPath: boneMaps.Array.data[12].rotationOffset.z
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 1537146065954877748, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: m_Enabled
@@ -182,6 +247,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 7918407103359256906}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &8784068564325516658 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1442438993032825912, guid: 23b1fe0762145904ba4ff0b82e7de514,
+    type: 3}
+  m_PrefabInstance: {fileID: 7918407103359256906}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8784068564652423271 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1442438993745604909, guid: 23b1fe0762145904ba4ff0b82e7de514,
@@ -194,9 +265,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e5100f384afbab43873e0da9fce1f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &8788243299291242450 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1447284928220665496, guid: 23b1fe0762145904ba4ff0b82e7de514,
-    type: 3}
-  m_PrefabInstance: {fileID: 7918407103359256906}
-  m_PrefabAsset: {fileID: 0}

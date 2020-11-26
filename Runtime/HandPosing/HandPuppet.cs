@@ -98,7 +98,7 @@ namespace HandPosing
                     CacheGripOffsets();
                 }
                 Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
-                return this.transform.GlobalPose(offset);
+                return this.handAnchor.GlobalPose(offset);
             }
         }
 
@@ -140,20 +140,18 @@ namespace HandPosing
         private void CacheGripOffsets()
         {
             _originalHandOffset = HandOffsetMapping();
-            _originalGripOffset = this.transform.RelativeOffset(this.gripPoint);
-            _pupettedGripOffset = _originalGripOffset;// OffsetedGripPose();
+            _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
+            _pupettedGripOffset = OffsetedGripPose();
             _offsetInitialised = true;
         }
 
         private Pose OffsetedGripPose()
         {
-            //TODO, needed??
             Pose trackingCoords = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
             Pose grip = trackedHandOffset.transform.RelativeOffset(this.gripPoint);
             Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingCoords);
             Pose translateGrip = PoseUtils.Multiply(hand, grip);
-
-            return grip;
+            return this.handAnchor.RelativeOffset(translateGrip);
         }
 
         private void Update()
@@ -267,17 +265,34 @@ namespace HandPosing
 
         public void LerpGripOffset(Pose pose, float weight, Transform relativeTo = null)
         {
+            Pose gripOffset = this.gripPoint.RelativeOffset(this.transform);
+            Pose desiredGripWorld = (relativeTo ?? this.handAnchor).GlobalPose(pose);
+
+            Pose current = PoseUtils.Multiply(TrackedGripPose, gripOffset);
+            Pose target = PoseUtils.Multiply(desiredGripWorld, gripOffset);
+            Pose result = PoseUtils.Lerp(current, target, weight);
+
+            this.transform.SetPose(result);
+        }
+
+
+        public void LerpGripOffset_OLD(Pose pose, float weight, Transform relativeTo = null)
+        {
             relativeTo = relativeTo ?? this.handAnchor;
 
-            Pose gripOffset = this.transform.RelativeOffset(TrackedGripPose);
+            Pose worldGrip = TrackedGripPose;
 
-            Pose currentGrip = TrackedGripPose;
-            Pose desiredGrip = relativeTo.GlobalPose(pose);
+            Quaternion rotationDif = Quaternion.Inverse(transform.rotation) * this.gripPoint.rotation;
+            Quaternion desiredRotation = (relativeTo.rotation * pose.rotation) * rotationDif;
+            Quaternion trackedRot = rotationDif * worldGrip.rotation;
+            Quaternion finalRot = Quaternion.Lerp(trackedRot, desiredRotation, weight);
+            transform.rotation = finalRot;
 
-            Pose desiredPose = PoseUtils.Lerp(currentGrip, desiredGrip, weight);
-            Pose adjustedPose = PoseUtils.Multiply(desiredPose, gripOffset.Inverse());
-
-            transform.SetPose(adjustedPose);
+            Vector3 positionDif = transform.position - this.gripPoint.position;
+            Vector3 desiredPosition = relativeTo.TransformPoint(pose.position) + positionDif;
+            Vector3 trackedPosition = worldGrip.position + positionDif;
+            Vector3 finalPos = Vector3.Lerp(trackedPosition, desiredPosition, weight);
+            transform.position = finalPos;
         }
 
         #endregion

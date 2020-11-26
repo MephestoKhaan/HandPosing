@@ -45,7 +45,7 @@ namespace HandPosing.Interaction
             SnapPoint snapPoint = GenerateSnapPoint();
             snapPoint.SetPose(pose, this.transform);
             snapPoint.LoadGhost(ghostProvider);
-            Debug.Break();
+
             return snapPoint;
         }
 
