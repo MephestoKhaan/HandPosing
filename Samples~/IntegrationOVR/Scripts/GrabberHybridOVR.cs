@@ -67,10 +67,7 @@ namespace HandPosing.OVRIntegration
         {
             OVRInput.Controller controller = IsUsingHands ? hand : touch;
 
-            Pose localPose = new Pose(OVRInput.GetLocalControllerPosition(controller), OVRInput.GetLocalControllerRotation(controller));
-            localPose = PoseUtils.Multiply(localPose, offsetPose);
-
-            Pose trackingSpace = PoseUtils.Multiply(transform.GetPose(), localPose.Inverse());
+            Pose trackingSpace = Pose.identity;
             Vector3 linearVelocity = trackingSpace.rotation * OVRInput.GetLocalControllerVelocity(controller);
             Vector3 angularVelocity = trackingSpace.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
             return (linearVelocity, angularVelocity);

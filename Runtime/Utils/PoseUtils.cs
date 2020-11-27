@@ -33,7 +33,7 @@ namespace HandPosing
         {
             Pose invertedPose;
             invertedPose.rotation = Quaternion.Inverse(pose.rotation);
-            invertedPose.position = Quaternion.Inverse(pose.rotation) * -pose.position;
+            invertedPose.position = pose.rotation * -pose.position;
             return invertedPose;
         }
 
