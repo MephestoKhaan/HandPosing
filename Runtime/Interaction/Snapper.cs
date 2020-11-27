@@ -124,6 +124,7 @@ namespace HandPosing.Interaction
 
         private void GrabEnded(GameObject grabbable)
         {
+            this.puppet.LerpGripOffset(Pose.identity, 0f, null);
             _isGrabbing = false;
             _grabSnap = null;
         }
