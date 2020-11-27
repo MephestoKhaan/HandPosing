@@ -147,11 +147,11 @@ namespace HandPosing
 
         private Pose OffsetedGripPose()
         {
-            Pose trackingCoords = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            Pose grip = trackedHandOffset.transform.RelativeOffset(this.gripPoint);
-            Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingCoords);
-            Pose translateGrip = PoseUtils.Multiply(hand, grip);
-            return this.handAnchor.RelativeOffset(translateGrip);
+            Pose trackingOffset = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
+            Pose gripOffset = this.transform.RelativeOffset(this.gripPoint);
+            Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingOffset);
+            Pose translateGrip = PoseUtils.Multiply(hand, gripOffset);
+            return translateGrip;
         }
 
         private void Update()
@@ -174,8 +174,6 @@ namespace HandPosing
             {
                 DisableHandTracked();
             }
-
-
             OnPoseUpdated?.Invoke();
         }
 
@@ -266,12 +264,10 @@ namespace HandPosing
         public void LerpGripOffset(Pose pose, float weight, Transform relativeTo = null)
         {
             Pose gripOffset = this.gripPoint.RelativeOffset(this.transform);
-            Pose desiredGripWorld = (relativeTo ?? this.handAnchor).GlobalPose(pose);
-
-            Pose current = PoseUtils.Multiply(TrackedGripPose, gripOffset);
-            Pose target = PoseUtils.Multiply(desiredGripWorld, gripOffset);
-            Pose result = PoseUtils.Lerp(current, target, weight);
-
+            Pose basic = TrackedGripPose;
+            Pose target = (relativeTo ?? this.handAnchor).GlobalPose(pose);
+            Pose result = PoseUtils.Lerp(basic, target, weight);
+            result = PoseUtils.Multiply(result, gripOffset);
             this.transform.SetPose(result);
         }
         #endregion
