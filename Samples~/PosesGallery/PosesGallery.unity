@@ -353,7 +353,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &15798704
 Transform:
   m_ObjectHideFlags: 0
@@ -1790,36 +1789,6 @@ CapsuleCollider:
   m_Height: 0.035
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &110510777
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 110510778}
-  m_Layer: 0
-  m_Name: TEST
-  m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &110510778
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 110510777}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.060229033, y: 1.3408531, z: 0.3571114}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 26
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &114417404
 GameObject:
   m_ObjectHideFlags: 0
@@ -2047,7 +2016,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &122149730
 Transform:
   m_ObjectHideFlags: 0
@@ -2055,8 +2023,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122149727}
-  m_LocalRotation: {x: -0, y: -0, z: -0.000000014901159, w: 1}
-  m_LocalPosition: {x: -0.036299977, y: -0.023699986, z: 0.0043999553}
+  m_LocalRotation: {x: -0, y: 0.000000029802315, z: -0.000000029802315, w: 1}
+  m_LocalPosition: {x: -0.03629998, y: -0.023699969, z: 0.0043999515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1017324618}
@@ -3364,7 +3332,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.13547875, y: -0.04281612, z: -0.025796028}
+      position: {x: 0.13547872, y: -0.042816132, z: -0.02579605}
       rotation: {x: -0.88584775, y: -0.24405214, z: -0.39401704, w: -0.021522589}
     handeness: 1
     _bones:
@@ -4654,7 +4622,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &266441720
 Transform:
   m_ObjectHideFlags: 0
@@ -8539,7 +8506,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &467355273
 Transform:
   m_ObjectHideFlags: 0
@@ -9551,7 +9517,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &498436032
 Transform:
   m_ObjectHideFlags: 0
@@ -9559,8 +9524,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498436029}
-  m_LocalRotation: {x: 0.00000004470347, y: -0.000000029802312, z: 0.000000022351735,
-    w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: 0.0000000074505797, w: 1}
   m_LocalPosition: {x: 0.036300007, y: -0.02369995, z: 0.0043999874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -16497,7 +16461,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &859930265
 Transform:
   m_ObjectHideFlags: 0
@@ -17112,7 +17075,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: 0.12999968, y: 0.0597899, z: -0.05229265}
-      rotation: {x: 0.14900877, y: -0.33968896, z: 0.1321454, w: 0.91920954}
+      rotation: {x: 0.1490087, y: -0.33968893, z: 0.13214533, w: 0.9192094}
     handeness: 0
     _bones:
     - boneID: 2
@@ -18613,7 +18576,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &951864260
 Transform:
   m_ObjectHideFlags: 0
@@ -18623,7 +18585,7 @@ Transform:
   m_GameObject: {fileID: 951864257}
   m_LocalRotation: {x: -0.000000005587934, y: 0.0000000032596283, z: 0.00000005960463,
     w: 1}
-  m_LocalPosition: {x: -0.036299985, y: -0.023700025, z: 0.004399944}
+  m_LocalPosition: {x: -0.036300004, y: -0.023700034, z: 0.0043999404}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1418900563}
@@ -19351,7 +19313,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &977791711
 Transform:
   m_ObjectHideFlags: 0
@@ -19361,7 +19322,7 @@ Transform:
   m_GameObject: {fileID: 977791708}
   m_LocalRotation: {x: 0.000000018626448, y: 0.000000046566118, z: -0.000000029802315,
     w: 1}
-  m_LocalPosition: {x: -0.036300037, y: -0.023700017, z: 0.004400026}
+  m_LocalPosition: {x: -0.03630004, y: -0.023699991, z: 0.0044000074}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1938582701}
@@ -20305,7 +20266,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &1012627863
 Transform:
   m_ObjectHideFlags: 0
@@ -20458,7 +20418,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020896300}
-  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0, w: 1}
+  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0.000000014901158,
+    w: 1}
   m_LocalPosition: {x: -0.0363, y: -0.023699969, z: 0.0044000726}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -20553,7 +20514,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!54 &1020896304
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -21190,7 +21150,7 @@ MonoBehaviour:
   relativeTo: {fileID: 2064346898}
   pose:
     relativeGrip:
-      position: {x: 0.018807532, y: 0.06371558, z: -0.11232395}
+      position: {x: 0.018807545, y: 0.06371558, z: -0.112323955}
       rotation: {x: 0.437094, y: -0.050136454, z: 0.274378, w: -0.85507464}
     handeness: 1
     _bones:
@@ -21654,7 +21614,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &1059242336
 Transform:
   m_ObjectHideFlags: 0
@@ -24994,7 +24953,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.14225627, y: 0.045501534, z: -0.02493769}
+      position: {x: 0.1422563, y: 0.045501545, z: -0.024937667}
       rotation: {x: -0.18448468, y: -0.9243081, z: -0.08014631, w: -0.32434022}
     handeness: 0
     _bones:
@@ -28915,7 +28874,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.005233675, y: -0.0090305805, z: -0.00930679}
-      rotation: {x: 0.5694144, y: 0.24717622, z: -0.10912067, w: -0.7763789}
+      rotation: {x: 0.5694144, y: 0.24717627, z: -0.10912067, w: -0.776379}
     handeness: 1
     _bones:
     - boneID: 2
@@ -30799,7 +30758,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &1493014482
 Transform:
   m_ObjectHideFlags: 0
@@ -30809,7 +30767,7 @@ Transform:
   m_GameObject: {fileID: 1493014479}
   m_LocalRotation: {x: 0.000000029802312, y: -0.00000003725289, z: -0.000000031664957,
     w: 1}
-  m_LocalPosition: {x: -0.0363, y: -0.023700016, z: 0.004400054}
+  m_LocalPosition: {x: -0.03629999, y: -0.023700004, z: 0.0044000535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 996388391}
@@ -33638,7 +33596,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.1266281, y: 0.057723038, z: -0.07280481}
+      position: {x: 0.12662812, y: 0.057723, z: -0.07280476}
       rotation: {x: 0.16059397, y: -0.65764904, z: -0.04581804, w: 0.7345807}
     handeness: 1
     _bones:
@@ -37171,7 +37129,7 @@ PrefabInstance:
         type: 3}
       propertyPath: test
       value: 
-      objectReference: {fileID: 110510778}
+      objectReference: {fileID: 0}
     - target: {fileID: 7195348242957399794, guid: 23b1fe0762145904ba4ff0b82e7de514,
         type: 3}
       propertyPath: trackedHand
@@ -37802,7 +37760,7 @@ MonoBehaviour:
   relativeTo: {fileID: 1578624148}
   pose:
     relativeGrip:
-      position: {x: 0.05270324, y: 0.03201139, z: -0.007699879}
+      position: {x: 0.0527033, y: 0.03201139, z: -0.007699879}
       rotation: {x: -0.684206, y: -0.59515166, z: 0.4210869, w: 0.018522108}
     handeness: 1
     _bones:
@@ -39361,7 +39319,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.07767305, y: 0.0020941496, z: 0.047859117}
-      rotation: {x: 0.20525676, y: -0.43015006, z: -0.58032095, w: -0.6603549}
+      rotation: {x: 0.20525678, y: -0.43015006, z: -0.5803209, w: -0.6603549}
     handeness: 1
     _bones:
     - boneID: 2
@@ -40549,7 +40507,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &1892982261
 Transform:
   m_ObjectHideFlags: 0
@@ -40558,7 +40515,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892982258}
   m_LocalRotation: {x: -0.0000000037252903, y: -0, z: -0.000000014901161, w: 1}
-  m_LocalPosition: {x: 0.036300037, y: -0.023699984, z: 0.0043999515}
+  m_LocalPosition: {x: 0.036300022, y: -0.023699962, z: 0.0043999404}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1784793595}
@@ -44491,7 +44448,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &2059344160
 Transform:
   m_ObjectHideFlags: 0
@@ -45884,7 +45840,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &2112928923
 Transform:
   m_ObjectHideFlags: 0
@@ -46375,7 +46330,6 @@ MonoBehaviour:
   OnUsingControllers:
     m_PersistentCalls:
       m_Calls: []
-  test: {fileID: 0}
 --- !u!4 &2133430481
 Transform:
   m_ObjectHideFlags: 0
@@ -46385,7 +46339,7 @@ Transform:
   m_GameObject: {fileID: 2133430478}
   m_LocalRotation: {x: 0.000000014901158, y: 0.000000029802315, z: 0.000000022351736,
     w: 1}
-  m_LocalPosition: {x: -0.036300026, y: -0.023700021, z: 0.00439997}
+  m_LocalPosition: {x: -0.036300037, y: -0.023699995, z: 0.0043999515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1515255140}
