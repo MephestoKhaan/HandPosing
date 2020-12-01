@@ -179,13 +179,10 @@ namespace HandPosing.SnapSurfaces
 
         public override Quaternion MirrorRelativeRotation(Quaternion rotation)
         {
-            Vector3 originalUp = rotation * Vector3.up;
-            Vector3 relativeNormal = Quaternion.Inverse(this.relativeTo.rotation) * StartAngleDir;
-            Vector3 relativeDir = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
-            Vector3 tangent = Vector3.Cross(relativeDir, relativeNormal).normalized;
-            Vector3 proyection = Vector3.Project(originalUp, tangent);
-            Vector3 mirroredUp = originalUp - 2 * proyection;
-            return Quaternion.FromToRotation(originalUp, mirroredUp) * rotation;// * Quaternion.Euler(0f, -105f, 0f); //TODO why 105? something hand specific?
+            Vector3 relativeUp = Quaternion.Inverse(this.relativeTo.rotation) * StartAngleDir;
+            Vector3 mirroredUp =  Quaternion.Euler(0f, 90f, 0f) * relativeUp;
+            Quaternion offset = Quaternion.FromToRotation(relativeUp, mirroredUp);
+            return offset * rotation;
 
         }
 
