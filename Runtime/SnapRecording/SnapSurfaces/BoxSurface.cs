@@ -7,6 +7,17 @@ namespace HandPosing.SnapSurfaces
     {
         public override System.Type SurfaceType => typeof(BoxSurface);
 
+        public override object Clone()
+        {
+            BoxSurfaceData clone = new BoxSurfaceData();
+            clone.widthOffset = this.widthOffset;
+            clone.snapOffset = this.snapOffset;
+            clone.size = this.size;
+            clone.eulerAngles = this.eulerAngles;
+            return clone;
+        }
+
+
         [Range(0f, 1f)]
         public float widthOffset = 0.5f;
         public Vector4 snapOffset;

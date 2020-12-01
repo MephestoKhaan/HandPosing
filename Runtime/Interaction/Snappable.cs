@@ -59,9 +59,7 @@ namespace HandPosing.Interaction
 
         private SnapPoint GenerateSnapPoint()
         {
-            GameObject go = new GameObject("Snap Point");
-            go.transform.SetParent(this.transform, false);
-            SnapPoint record = go.AddComponent<SnapPoint>();
+            SnapPoint record = SnapPoint.Create(this.transform);
             this.snapPoints.Add(record);
             return record;
         }

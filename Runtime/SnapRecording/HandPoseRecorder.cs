@@ -9,9 +9,11 @@ namespace HandPosing.SnapRecording
         private HandPuppet puppetHand;
         [SerializeField]
         private Component grabber;
-
         [SerializeField]
         private KeyCode recordKey = KeyCode.Space;
+        [InspectorButton("RecordPose")]
+        public string Record;
+
 
         private IGrabNotifier _grabNotifier;
 

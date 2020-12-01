@@ -3,9 +3,10 @@
 namespace HandPosing.SnapSurfaces
 {
     [System.Serializable]
-    public abstract class SnapSurfaceData
+    public abstract class SnapSurfaceData : System.ICloneable
     {
         public abstract System.Type SurfaceType { get; }
+        public abstract object Clone();
     }
 
     [System.Serializable]
@@ -23,6 +24,10 @@ namespace HandPosing.SnapSurfaces
 
         public Transform relativeTo;
 
+        public virtual Quaternion MirrorRelativeRotation(Quaternion rotation)
+        {
+            return rotation;
+        }
 
         public abstract HandPose InvertedPose(HandPose pose);
         public abstract Vector3 NearestPointInSurface(Vector3 targetPosition);

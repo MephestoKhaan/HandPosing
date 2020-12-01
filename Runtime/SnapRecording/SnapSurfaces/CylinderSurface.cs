@@ -7,6 +7,15 @@ namespace HandPosing.SnapSurfaces
     {
         public override System.Type SurfaceType => typeof(CylinderSurface);
 
+        public override object Clone()
+        {
+            CylinderSurfaceData clone = new CylinderSurfaceData();
+            clone.startPoint = this.startPoint;
+            clone.endPoint = this.endPoint;
+            clone.angle = this.angle;
+            return clone;
+        }
+
         public Vector3 startPoint = new Vector3(0f, 0.1f, 0f);
         public Vector3 endPoint = new Vector3(0f, -0.1f, 0f);
 
@@ -166,6 +175,18 @@ namespace HandPosing.SnapSurfaces
             invertedPose.relativeGrip.rotation = Quaternion.Inverse(relativeTo.rotation) * invertedRot;
 
             return invertedPose;
+        }
+
+        public override Quaternion MirrorRelativeRotation(Quaternion rotation)
+        {
+            Vector3 originalUp = rotation * Vector3.up;
+            Vector3 relativeNormal = Quaternion.Inverse(this.relativeTo.rotation) * StartAngleDir;
+            Vector3 relativeDir = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+            Vector3 tangent = Vector3.Cross(relativeDir, relativeNormal).normalized;
+            Vector3 proyection = Vector3.Project(originalUp, tangent);
+            Vector3 mirroredUp = originalUp - 2 * proyection;
+            return Quaternion.FromToRotation(originalUp, mirroredUp) * rotation;// * Quaternion.Euler(0f, -105f, 0f); //TODO why 105? something hand specific?
+
         }
 
         private Vector3 PointAltitude(Vector3 point)

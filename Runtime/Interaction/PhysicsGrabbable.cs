@@ -74,7 +74,7 @@ namespace HandPosing.Interaction
             return savedJointHolder.GetComponent<Joint>();
         }
 
-        public static Component CloneJoint(Joint joint, GameObject destination)
+        private static Component CloneJoint(Joint joint, GameObject destination)
         {
             System.Type jointType = typeof(Joint);
             Component clone = destination.gameObject.AddComponent(joint.GetType());

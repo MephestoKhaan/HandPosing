@@ -26,6 +26,10 @@ namespace HandPosing.SnapRecording
         [Space]
         public SnapSurface surface;
         public HandGhost ghost;
+        [Space]
+
+        [InspectorButton("Mirror")]
+        public string CreateMirror;
 
         [Space]
         [SerializeField]
@@ -68,6 +72,37 @@ namespace HandPosing.SnapRecording
                 _previousRelativeTo = relativeTo;
             }
         }
+
+        #region generation
+
+        public static SnapPoint Create(Transform parent)
+        {
+            GameObject go = new GameObject("Snap Point");
+            go.transform.SetParent(parent, false);
+            SnapPoint record = go.AddComponent<SnapPoint>();
+            return record;
+        }
+
+        public SnapPoint Mirror()
+        {
+            SnapPoint record = Create(this.transform.parent);
+            record.gameObject.name = $"{this.gameObject.name}_Mirror";
+            SnapPointData mirrorData = this.SaveData();
+            mirrorData.surfaceData = mirrorData.surfaceData.Clone() as SnapSurfaceData;
+            mirrorData.pose.handeness = this.pose.handeness == Handeness.Left ? Handeness.Right : Handeness.Left;
+
+            if(this.surface != null)
+            {
+                mirrorData.pose.relativeGrip.rotation = this.surface.MirrorRelativeRotation(mirrorData.pose.relativeGrip.rotation);
+            }
+            record.LoadData(mirrorData, this.RelativeTo);
+
+
+            return record;
+        }
+
+
+        #endregion
 
 #if UNITY_EDITOR
         private void Update()

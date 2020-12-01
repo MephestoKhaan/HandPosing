@@ -6,6 +6,14 @@ namespace HandPosing.SnapSurfaces
     public class SphereSurfaceData : SnapSurfaceData
     {
         public override System.Type SurfaceType => typeof(SphereSurface);
+
+        public override object Clone()
+        {
+            SphereSurfaceData clone = new SphereSurfaceData();
+            clone.centre = this.centre;
+            return clone;
+        }
+
         public Vector3 centre;
     }
 
@@ -59,12 +67,6 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
-
-        public override HandPose InvertedPose(HandPose pose)
-        {
-            return pose;
-        }
-
         public Vector3 Direction
         {
             get
@@ -81,6 +83,19 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        public override HandPose InvertedPose(HandPose pose)
+        {
+            return pose;
+        }
+
+
+        public override Quaternion MirrorRelativeRotation(Quaternion rotation)
+        {
+            Vector3 relativeDir = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+            Vector3 originalUp = rotation * Vector3.up;
+            Vector3 mirroredUp = Vector3.Reflect(rotation * Vector3.down, relativeDir);
+            return Quaternion.FromToRotation(originalUp, mirroredUp) * rotation;
+        }
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)
         {
