@@ -14,5 +14,20 @@ namespace HandPosing.SnapRecording
         {
             return handeness == Handeness.Right ? rightHand : leftHand;
         }
+
+        public Quaternion MirrorRotationOffset(Handeness mirrorHand)
+        {
+            Transform rightGrip = rightHand.GetComponent<HandPuppet>().Grip;
+            Transform leftGrip = leftHand.GetComponent<HandPuppet>().Grip;
+
+            if(mirrorHand == Handeness.Left)
+            {
+                return (leftGrip.rotation) * Quaternion.Inverse(rightGrip.rotation);
+            }
+            else
+            {
+                return (rightGrip.rotation) * Quaternion.Inverse(leftGrip.rotation);
+            }
+        }
     }
 }

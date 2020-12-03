@@ -878,6 +878,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -2023,8 +2024,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 122149727}
-  m_LocalRotation: {x: -0, y: 0.000000029802315, z: -0.000000029802315, w: 1}
-  m_LocalPosition: {x: -0.03629998, y: -0.023699969, z: 0.0043999515}
+  m_LocalRotation: {x: -0, y: -0, z: -0.000000014901159, w: 1}
+  m_LocalPosition: {x: -0.036299977, y: -0.023699986, z: 0.0043999553}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1017324618}
@@ -2266,14 +2267,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 126286814}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.85, z: 0}
+  m_LocalRotation: {x: -0, y: 0.29473454, z: -0, w: 0.9555792}
+  m_LocalPosition: {x: 0.911, y: 2.042, z: -0.675}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1579379273}
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 34.283, z: 0}
 --- !u!1 &137400704
 GameObject:
   m_ObjectHideFlags: 0
@@ -2606,6 +2607,7 @@ MonoBehaviour:
       rotation: {x: 0.0011641858, y: -0.04866794, z: -0.12827423, w: 0.9905432}
   surface: {fileID: 151766558}
   ghost: {fileID: 859930263}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -2864,6 +2866,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 175526500}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -3141,6 +3144,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -3332,7 +3336,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.13547872, y: -0.042816132, z: -0.02579605}
+      position: {x: 0.13547866, y: -0.042816073, z: -0.025795953}
       rotation: {x: -0.88584775, y: -0.24405214, z: -0.39401704, w: -0.021522589}
     handeness: 1
     _bones:
@@ -3368,6 +3372,7 @@ MonoBehaviour:
       rotation: {x: 0.0019138568, y: -0.04565085, z: -0.35787174, w: 0.93265224}
   surface: {fileID: 195985254}
   ghost: {fileID: 951864258}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -4099,6 +4104,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -4435,6 +4441,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -9524,7 +9531,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498436029}
-  m_LocalRotation: {x: -0, y: -0, z: 0.0000000074505797, w: 1}
+  m_LocalRotation: {x: 0.00000004470347, y: -0.000000029802312, z: 0.000000022351735,
+    w: 1}
   m_LocalPosition: {x: 0.036300007, y: -0.02369995, z: 0.0043999874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12650,6 +12658,7 @@ MonoBehaviour:
       rotation: {x: 0.0013817177, y: -0.04809645, z: -0.193596, w: 0.9799007}
   surface: {fileID: 673497873}
   ghost: {fileID: 15798702}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -13252,6 +13261,7 @@ MonoBehaviour:
       rotation: {x: 0.01982489, y: -0.044486295, z: -0.4972724, w: 0.8662264}
   surface: {fileID: 0}
   ghost: {fileID: 1059242334}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -13371,6 +13381,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -15302,6 +15313,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -16787,6 +16799,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 870878356}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -17075,7 +17088,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: 0.12999968, y: 0.0597899, z: -0.05229265}
-      rotation: {x: 0.1490087, y: -0.33968893, z: 0.13214533, w: 0.9192094}
+      rotation: {x: 0.14900877, y: -0.33968896, z: 0.1321454, w: 0.91920954}
     handeness: 0
     _bones:
     - boneID: 2
@@ -17110,6 +17123,7 @@ MonoBehaviour:
       rotation: {x: 0.0016072199, y: -0.047254, z: -0.26238117, w: 0.9638053}
   surface: {fileID: 881643616}
   ghost: {fileID: 498436030}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -18585,7 +18599,7 @@ Transform:
   m_GameObject: {fileID: 951864257}
   m_LocalRotation: {x: -0.000000005587934, y: 0.0000000032596283, z: 0.00000005960463,
     w: 1}
-  m_LocalPosition: {x: -0.036300004, y: -0.023700034, z: 0.0043999404}
+  m_LocalPosition: {x: -0.036299985, y: -0.023700025, z: 0.004399944}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1418900563}
@@ -19322,7 +19336,7 @@ Transform:
   m_GameObject: {fileID: 977791708}
   m_LocalRotation: {x: 0.000000018626448, y: 0.000000046566118, z: -0.000000029802315,
     w: 1}
-  m_LocalPosition: {x: -0.03630004, y: -0.023699991, z: 0.0044000074}
+  m_LocalPosition: {x: -0.036300037, y: -0.023700017, z: 0.004400026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1938582701}
@@ -20418,8 +20432,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020896300}
-  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0.000000014901158,
-    w: 1}
+  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0, w: 1}
   m_LocalPosition: {x: -0.0363, y: -0.023699969, z: 0.0044000726}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -20976,6 +20989,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -21186,6 +21200,7 @@ MonoBehaviour:
       rotation: {x: 0.0011203261, y: -0.048756167, z: -0.11521946, w: 0.9921422}
   surface: {fileID: 1045191398}
   ghost: {fileID: 1493014480}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 0
   maxDistance: 0.1
@@ -21488,6 +21503,7 @@ MonoBehaviour:
       rotation: {x: 0.0012061755, y: -0.048575155, z: -0.14080814, w: 0.98884386}
   surface: {fileID: 0}
   ghost: {fileID: 266441718}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -22334,6 +22350,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -22849,6 +22866,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -24953,7 +24971,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.1422563, y: 0.045501545, z: -0.024937667}
+      position: {x: 0.14225627, y: 0.045501534, z: -0.02493769}
       rotation: {x: -0.18448468, y: -0.9243081, z: -0.08014631, w: -0.32434022}
     handeness: 0
     _bones:
@@ -24989,6 +25007,7 @@ MonoBehaviour:
       rotation: {x: 0.0016119706, y: -0.04723334, z: -0.2638423, w: 0.96340734}
   surface: {fileID: 1240866558}
   ghost: {fileID: 1892982259}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -26490,6 +26509,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 1307938126}
   ghost: {fileID: 1012627861}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -28662,6 +28682,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -28874,7 +28895,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.005233675, y: -0.0090305805, z: -0.00930679}
-      rotation: {x: 0.5694144, y: 0.24717627, z: -0.10912067, w: -0.776379}
+      rotation: {x: 0.5694144, y: 0.24717622, z: -0.10912067, w: -0.7763789}
     handeness: 1
     _bones:
     - boneID: 2
@@ -28909,6 +28930,7 @@ MonoBehaviour:
       rotation: {x: 0.0017109021, y: -0.04677431, z: -0.29440203, w: 0.9545348}
   surface: {fileID: 1422035962}
   ghost: {fileID: 1020896302}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 0
   maxDistance: 0.1
@@ -29121,6 +29143,7 @@ MonoBehaviour:
       rotation: {x: 0.0017955826, y: -0.046336304, z: -0.32075274, w: 0.9460272}
   surface: {fileID: 1430346627}
   ghost: {fileID: 2059344158}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -33596,7 +33619,7 @@ MonoBehaviour:
   relativeTo: {fileID: 341260608}
   pose:
     relativeGrip:
-      position: {x: 0.12662812, y: 0.057723, z: -0.07280476}
+      position: {x: 0.1266281, y: 0.05772301, z: -0.07280479}
       rotation: {x: 0.16059397, y: -0.65764904, z: -0.04581804, w: 0.7345807}
     handeness: 1
     _bones:
@@ -33632,6 +33655,7 @@ MonoBehaviour:
       rotation: {x: 0.0017955826, y: -0.046336304, z: -0.32075274, w: 0.9460272}
   surface: {fileID: 1626098981}
   ghost: {fileID: 2133430479}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -37760,7 +37784,7 @@ MonoBehaviour:
   relativeTo: {fileID: 1578624148}
   pose:
     relativeGrip:
-      position: {x: 0.0527033, y: 0.03201139, z: -0.007699879}
+      position: {x: 0.05270324, y: 0.03201139, z: -0.007699879}
       rotation: {x: -0.684206, y: -0.59515166, z: 0.4210869, w: 0.018522108}
     handeness: 1
     _bones:
@@ -37796,6 +37820,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 1813749603}
   ghost: {fileID: 977791709}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -38580,6 +38605,7 @@ MonoBehaviour:
       rotation: {x: 0.0019138568, y: -0.04565085, z: -0.35787174, w: 0.93265224}
   surface: {fileID: 1845065606}
   ghost: {fileID: 467355271}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -39131,6 +39157,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -39319,7 +39346,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.07767305, y: 0.0020941496, z: 0.047859117}
-      rotation: {x: 0.20525678, y: -0.43015006, z: -0.5803209, w: -0.6603549}
+      rotation: {x: 0.20525676, y: -0.43015006, z: -0.58032095, w: -0.6603549}
     handeness: 1
     _bones:
     - boneID: 2
@@ -39354,6 +39381,7 @@ MonoBehaviour:
       rotation: {x: 0.000734736, y: -0.049165823, z: -0.0020138212, w: 0.99878836}
   surface: {fileID: 1864347872}
   ghost: {fileID: 122149728}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 0
   maxDistance: 0.1
@@ -39788,6 +39816,7 @@ MonoBehaviour:
       rotation: {x: 0.00064526265, y: -0.049170732, z: 0.023869034, w: 0.99850494}
   surface: {fileID: 0}
   ghost: {fileID: 0}
+  CreateMirror: 
   canInvert: 1
   snapsBack: 1
   maxDistance: 0.1
@@ -40515,7 +40544,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892982258}
   m_LocalRotation: {x: -0.0000000037252903, y: -0, z: -0.000000014901161, w: 1}
-  m_LocalPosition: {x: 0.036300022, y: -0.023699962, z: 0.0043999404}
+  m_LocalPosition: {x: 0.036300037, y: -0.023699984, z: 0.0043999515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1784793595}
@@ -43027,6 +43056,7 @@ MonoBehaviour:
       rotation: {x: 0.0016119706, y: -0.04723334, z: -0.2638423, w: 0.96340734}
   surface: {fileID: 1998808627}
   ghost: {fileID: 2112928921}
+  CreateMirror: 
   canInvert: 0
   snapsBack: 1
   maxDistance: 0.1
@@ -46339,7 +46369,7 @@ Transform:
   m_GameObject: {fileID: 2133430478}
   m_LocalRotation: {x: 0.000000014901158, y: 0.000000029802315, z: 0.000000022351736,
     w: 1}
-  m_LocalPosition: {x: -0.036300037, y: -0.023699995, z: 0.0043999515}
+  m_LocalPosition: {x: -0.03630005, y: -0.023700003, z: 0.0043999627}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1515255140}

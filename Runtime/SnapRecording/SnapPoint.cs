@@ -83,20 +83,23 @@ namespace HandPosing.SnapRecording
             return record;
         }
 
+        public HandGhostProvider ghostProvider;
+
         public SnapPoint Mirror()
         {
             SnapPoint record = Create(this.transform.parent);
             record.gameObject.name = $"{this.gameObject.name}_Mirror";
             SnapPointData mirrorData = this.SaveData();
-            mirrorData.surfaceData = mirrorData.surfaceData.Clone() as SnapSurfaceData;
+            mirrorData.surfaceData = mirrorData.surfaceData?.Clone() as SnapSurfaceData;
             mirrorData.pose.handeness = this.pose.handeness == Handeness.Left ? Handeness.Right : Handeness.Left;
 
             if(this.surface != null)
             {
-                mirrorData.pose.relativeGrip.rotation = this.surface.MirrorRelativeRotation(mirrorData.pose.relativeGrip.rotation);
+                mirrorData.pose.relativeGrip = this.surface.MirrorPose(mirrorData.pose.relativeGrip);
             }
+            mirrorData.pose.relativeGrip.rotation = ghostProvider.MirrorRotationOffset(mirrorData.pose.handeness) * mirrorData.pose.relativeGrip.rotation;
             record.LoadData(mirrorData, this.RelativeTo);
-
+            record.LoadGhost(ghostProvider);
 
             return record;
         }

@@ -1321,14 +1321,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442438993032528950}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1447284928220665496}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1442438993029418596
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1385,49 +1385,49 @@ MonoBehaviour:
   boneMaps:
   - id: 2
     transform: {fileID: 1444372827363248344}
-    rotationOffset: {x: 240, y: 20, z: -180}
+    rotationOffset: {x: 300, y: 200, z: -0.000006830191}
   - id: 4
     transform: {fileID: 1444396745358015624}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 5
     transform: {fileID: 1444072877610224890}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 6
     transform: {fileID: 1444071942826884590}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 7
     transform: {fileID: 1444291577433812166}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 8
     transform: {fileID: 1443975907334281472}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 9
     transform: {fileID: 1444302734985968302}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 10
     transform: {fileID: 1444002612718477250}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 11
     transform: {fileID: 1444041145030221648}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 12
     transform: {fileID: 1444020501220856148}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 13
     transform: {fileID: 1447150987959735458}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 14
     transform: {fileID: 1444205396268557466}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 16
     transform: {fileID: 1444497012342011746}
-    rotationOffset: {x: -170, y: 180, z: 0}
+    rotationOffset: {x: 349.99997, y: 0.0000061782453, z: 180}
   - id: 17
     transform: {fileID: 1444223270861977528}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 18
     transform: {fileID: 1447226346013901964}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   OnUsingHands:
     m_PersistentCalls:
       m_Calls:
@@ -1471,6 +1471,7 @@ MonoBehaviour:
   puppetHand: {fileID: 1442438993745604909}
   grabber: {fileID: 7195348242957399794}
   recordKey: 32
+  Record: 
 --- !u!114 &1442438993745604907
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2256,7 +2257,7 @@ GameObject:
   m_Layer: 0
   m_Name: gripTrans
   m_TagString: Untagged
-  m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -2267,13 +2268,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442438993032731902}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.12940949, y: 0.12940949, z: -0.017037077, w: 0.98296297}
   m_LocalPosition: {x: 0.036299992, y: 0.023699997, z: 0.0254}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1447284928220665496}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: 15, z: 0}
 --- !u!1 &1442438993032732256
 GameObject:
   m_ObjectHideFlags: 0

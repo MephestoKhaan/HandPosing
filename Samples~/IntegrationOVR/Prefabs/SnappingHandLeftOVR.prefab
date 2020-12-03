@@ -552,7 +552,7 @@ GameObject:
   m_Layer: 0
   m_Name: gripTrans
   m_TagString: Untagged
-  m_Icon: {fileID: 7148428337604731935, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -563,13 +563,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351404503956941277}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.12940949, y: -0.12940958, z: 0.017037088, w: 0.98296297}
   m_LocalPosition: {x: -0.036299992, y: 0.023699997, z: 0.0254}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 355762419389467091}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15, y: -15, z: 0}
 --- !u!1 &351404503956941817
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,14 +779,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351404503956951377}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 355762419389467091}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &351404503951667381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -843,49 +843,49 @@ MonoBehaviour:
   boneMaps:
   - id: 2
     transform: {fileID: 356281409874025723}
-    rotationOffset: {x: 240, y: 20, z: -180}
+    rotationOffset: {x: 300, y: 200, z: -0.000005122643}
   - id: 4
     transform: {fileID: 355498295236230121}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 5
     transform: {fileID: 355577000633570517}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 6
     transform: {fileID: 355639364182880963}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 7
     transform: {fileID: 355800231500694773}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 8
     transform: {fileID: 355619328990516337}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 9
     transform: {fileID: 355247461470528137}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 10
     transform: {fileID: 355447575431380121}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 11
     transform: {fileID: 356013368944839259}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 12
     transform: {fileID: 355773397757282603}
-    rotationOffset: {x: -90, y: 180, z: 0}
+    rotationOffset: {x: 270, y: 180, z: 0}
   - id: 13
     transform: {fileID: 355977159343713759}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 14
     transform: {fileID: 356296121210698217}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 16
     transform: {fileID: 355245483486865761}
-    rotationOffset: {x: -170, y: 180, z: 0}
+    rotationOffset: {x: 349.99997, y: 0.000007542295, z: 180}
   - id: 17
     transform: {fileID: 355919974576972147}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   - id: 18
     transform: {fileID: 356069724207430629}
-    rotationOffset: {x: 0, y: 0, z: 0}
+    rotationOffset: {x: -0, y: 0, z: 0}
   OnUsingHands:
     m_PersistentCalls:
       m_Calls:
@@ -929,6 +929,7 @@ MonoBehaviour:
   puppetHand: {fileID: 1387190361880471772}
   grabber: {fileID: 4635681503502107842}
   recordKey: 32
+  Record: 
 --- !u!114 &6419182328721095271
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -24,9 +24,9 @@ namespace HandPosing.SnapSurfaces
 
         public Transform relativeTo;
 
-        public virtual Quaternion MirrorRelativeRotation(Quaternion rotation)
+        public virtual Pose MirrorPose(Pose pose)
         {
-            return rotation;
+            return pose;
         }
 
         public abstract HandPose InvertedPose(HandPose pose);

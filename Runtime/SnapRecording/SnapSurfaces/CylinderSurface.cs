@@ -177,15 +177,6 @@ namespace HandPosing.SnapSurfaces
             return invertedPose;
         }
 
-        public override Quaternion MirrorRelativeRotation(Quaternion rotation)
-        {
-            Vector3 relativeUp = Quaternion.Inverse(this.relativeTo.rotation) * StartAngleDir;
-            Vector3 mirroredUp =  Quaternion.Euler(0f, 90f, 0f) * relativeUp;
-            Quaternion offset = Quaternion.FromToRotation(relativeUp, mirroredUp);
-            return offset * rotation;
-
-        }
-
         private Vector3 PointAltitude(Vector3 point)
         {
             Vector3 start = StartPoint;
