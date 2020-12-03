@@ -90,10 +90,9 @@ namespace HandPosing.SnapSurfaces
 
         public override Pose MirrorPose(Pose pose)
         {
-            Pose mirrorPose = pose;
-            Vector3 dir = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
-            mirrorPose.rotation = Quaternion.AngleAxis(180f, dir) * mirrorPose.rotation;
-            return mirrorPose;
+            Vector3 normal = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+            Vector3 tangent = Vector3.Cross(normal,Vector3.up);
+            return pose.MirrorPose(normal, tangent);
         }
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)

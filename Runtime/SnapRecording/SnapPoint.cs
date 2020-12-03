@@ -97,8 +97,12 @@ namespace HandPosing.SnapRecording
             {
                 mirrorData.pose.relativeGrip = this.surface.MirrorPose(mirrorData.pose.relativeGrip);
             }
-            //mirrorData.pose.relativeGrip.rotation =  mirrorData.pose.relativeGrip.rotation * Quaternion.Euler(0f, 0f, 30f);
-            //mirrorData.pose.relativeGrip.rotation = mirrorData.pose.relativeGrip.rotation * ghostProvider.MirrorRotationOffset(mirrorData.pose.handeness);
+            else
+            {
+                Vector3 tangent = Vector3.up;
+                Vector3 normal = Vector3.ProjectOnPlane(tangent, mirrorData.pose.relativeGrip.position).normalized;
+                mirrorData.pose.relativeGrip = mirrorData.pose.relativeGrip.MirrorPose(normal, tangent);
+            }
 
             record.LoadData(mirrorData, this.RelativeTo);
 

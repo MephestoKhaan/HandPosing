@@ -98,6 +98,15 @@ namespace HandPosing.SnapSurfaces
             return pose;
         }
 
+
+        public override Pose MirrorPose(Pose pose)
+        {
+            Vector3 normal = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+            Vector3 tangent = Quaternion.Inverse(this.relativeTo.rotation) * (Rotation * Vector3.up);
+            return pose.MirrorPose(normal, tangent);
+        }
+
+
         private (Vector3, Vector3, Vector3, Vector3) CalculateCorners()
         {
             Vector3 rightRot = Rotation * Vector3.right;
