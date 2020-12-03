@@ -93,13 +93,19 @@ namespace HandPosing.SnapRecording
             mirrorData.surfaceData = mirrorData.surfaceData?.Clone() as SnapSurfaceData;
             mirrorData.pose.handeness = this.pose.handeness == Handeness.Left ? Handeness.Right : Handeness.Left;
 
-            if(this.surface != null)
+            if (this.surface != null)
             {
                 mirrorData.pose.relativeGrip = this.surface.MirrorPose(mirrorData.pose.relativeGrip);
             }
-            mirrorData.pose.relativeGrip.rotation = ghostProvider.MirrorRotationOffset(mirrorData.pose.handeness) * mirrorData.pose.relativeGrip.rotation;
+            //mirrorData.pose.relativeGrip.rotation =  mirrorData.pose.relativeGrip.rotation * Quaternion.Euler(0f, 0f, 30f);
+            //mirrorData.pose.relativeGrip.rotation = mirrorData.pose.relativeGrip.rotation * ghostProvider.MirrorRotationOffset(mirrorData.pose.handeness);
+
             record.LoadData(mirrorData, this.RelativeTo);
-            record.LoadGhost(ghostProvider);
+
+            if(this.ghostProvider != null)
+            {
+                record.LoadGhost(ghostProvider);
+            }
 
             return record;
         }
@@ -110,7 +116,7 @@ namespace HandPosing.SnapRecording
 #if UNITY_EDITOR
         private void Update()
         {
-            if(this.transform.hasChanged)
+            if (this.transform.hasChanged)
             {
                 this.transform.hasChanged = false;
                 this.pose.relativeGrip = this.transform.GetPose(Space.Self);
@@ -172,7 +178,7 @@ namespace HandPosing.SnapRecording
 
         private void LoadSurface(SnapSurfaceData surfaceData)
         {
-            if(surfaceData == null)
+            if (surfaceData == null)
             {
                 return;
             }

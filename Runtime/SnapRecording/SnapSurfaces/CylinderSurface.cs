@@ -177,6 +177,14 @@ namespace HandPosing.SnapSurfaces
             return invertedPose;
         }
 
+        public override Pose MirrorPose(Pose pose)
+        {
+            Vector3 dir = Quaternion.Inverse(this.relativeTo.rotation) * StartAngleDir;
+            Vector3 tan = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+
+            return pose.MirrorPose(dir, tan);
+        }
+
         private Vector3 PointAltitude(Vector3 point)
         {
             Vector3 start = StartPoint;

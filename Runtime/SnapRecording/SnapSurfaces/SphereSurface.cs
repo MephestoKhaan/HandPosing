@@ -90,26 +90,10 @@ namespace HandPosing.SnapSurfaces
 
         public override Pose MirrorPose(Pose pose)
         {
-            Pose mirrorPose = this.relativeTo.GlobalPose(pose);
-
-
-            Vector3 normal = Direction;
-            Vector3 tangent = Vector3.Cross(Vector3.forward, normal).normalized;
-
-            Vector3 forward = pose.rotation * Vector3.forward;
-            Vector3 projectedForward = Vector3.ProjectOnPlane(forward, normal);
-            float angleForward = Vector3.SignedAngle(projectedForward, tangent, normal);
-            Vector3 mirroredForward = Quaternion.AngleAxis(2*angleForward, normal) * forward;
-
-            Vector3 up = pose.rotation * Vector3.forward;
-            Vector3 projectedUp = Vector3.ProjectOnPlane(up, normal);
-            float angleUp = Vector3.SignedAngle(projectedUp, tangent, normal);
-            Vector3 mirroredUp = Quaternion.AngleAxis(2 * angleUp, normal) * up;
-
-            mirrorPose.rotation = Quaternion.LookRotation(mirroredForward, mirroredUp);
-
-            return this.relativeTo.RelativeOffset(mirrorPose);
-
+            Pose mirrorPose = pose;
+            Vector3 dir = Quaternion.Inverse(this.relativeTo.rotation) * Direction;
+            mirrorPose.rotation = Quaternion.AngleAxis(180f, dir) * mirrorPose.rotation;
+            return mirrorPose;
         }
 
         public override Vector3 NearestPointInSurface(Vector3 targetPosition)

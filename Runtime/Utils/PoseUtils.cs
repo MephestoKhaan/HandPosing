@@ -98,5 +98,22 @@ namespace HandPosing
             float upDifference = Vector3.Dot(from * Vector3.up, to * Vector3.up) * 0.5f + 0.5f;
             return forwardDifference * upDifference;
         }
+
+        public static Pose MirrorPose(this Pose pose, Vector3 dir, Vector3 tan)
+        {
+            Pose mirrorPose = pose;
+            Vector3 forward = pose.rotation * Vector3.forward;
+            Vector3 proyectedForward = Vector3.ProjectOnPlane(forward, dir);
+            float angleForward = Vector3.SignedAngle(proyectedForward, tan, dir);
+            Vector3 mirrorForward = Quaternion.AngleAxis(2 * angleForward, dir) * forward;
+
+            Vector3 up = pose.rotation * Vector3.up;
+            Vector3 proyectedUp = Vector3.ProjectOnPlane(up, dir);
+            float angleUp = Vector3.SignedAngle(proyectedUp, tan, dir);
+            Vector3 mirrorUp = Quaternion.AngleAxis(2 * angleUp, dir) * up;
+
+            mirrorPose.rotation = Quaternion.LookRotation(mirrorForward, mirrorUp);
+            return mirrorPose;
+        }
     }
 }

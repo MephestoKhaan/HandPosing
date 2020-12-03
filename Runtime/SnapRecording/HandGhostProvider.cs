@@ -22,11 +22,11 @@ namespace HandPosing.SnapRecording
 
             if(mirrorHand == Handeness.Left)
             {
-                return (leftGrip.rotation) * Quaternion.Inverse(rightGrip.rotation);
+                return Quaternion.Inverse(rightGrip.rotation) * (leftGrip.rotation);
             }
             else
             {
-                return (rightGrip.rotation) * Quaternion.Inverse(leftGrip.rotation);
+                return Quaternion.Inverse(leftGrip.rotation) * (rightGrip.rotation);
             }
         }
     }
