@@ -7,6 +7,7 @@ namespace HandPosing.SnapSurfaces
     {
         public abstract System.Type SurfaceType { get; }
         public abstract object Clone();
+        public abstract SnapSurfaceData Mirror();
     }
 
     [System.Serializable]

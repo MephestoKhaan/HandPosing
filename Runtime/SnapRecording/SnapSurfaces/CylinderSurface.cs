@@ -16,6 +16,12 @@ namespace HandPosing.SnapSurfaces
             return clone;
         }
 
+        public override SnapSurfaceData Mirror()
+        {
+            CylinderSurfaceData mirror = Clone() as CylinderSurfaceData;
+            return mirror;
+        }
+
         public Vector3 startPoint = new Vector3(0f, 0.1f, 0f);
         public Vector3 endPoint = new Vector3(0f, -0.1f, 0f);
 

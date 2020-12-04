@@ -14,6 +14,12 @@ namespace HandPosing.SnapSurfaces
             return clone;
         }
 
+        public override SnapSurfaceData Mirror()
+        {
+            SphereSurfaceData mirror = Clone() as SphereSurfaceData;
+            return mirror;
+        }
+
         public Vector3 centre;
     }
 

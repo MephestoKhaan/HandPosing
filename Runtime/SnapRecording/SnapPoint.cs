@@ -90,7 +90,7 @@ namespace HandPosing.SnapRecording
             SnapPoint record = Create(this.transform.parent);
             record.gameObject.name = $"{this.gameObject.name}_Mirror";
             SnapPointData mirrorData = this.SaveData();
-            mirrorData.surfaceData = mirrorData.surfaceData?.Clone() as SnapSurfaceData;
+            mirrorData.surfaceData = mirrorData.surfaceData?.Mirror();
             mirrorData.pose.handeness = this.pose.handeness == Handeness.Left ? Handeness.Right : Handeness.Left;
 
             if (this.surface != null)
@@ -99,9 +99,9 @@ namespace HandPosing.SnapRecording
             }
             else
             {
-                Vector3 tangent = Vector3.up;
-                Vector3 normal = Vector3.ProjectOnPlane(tangent, mirrorData.pose.relativeGrip.position).normalized;
-                mirrorData.pose.relativeGrip = mirrorData.pose.relativeGrip.MirrorPose(normal, tangent);
+                mirrorData.pose.relativeGrip = mirrorData.pose.relativeGrip.MirrorPose(Vector3.forward, Vector3.up);
+                Vector3 translation = Vector3.Project(mirrorData.pose.relativeGrip.position, Vector3.right);
+                mirrorData.pose.relativeGrip.position = mirrorData.pose.relativeGrip.position - 2f * translation;
             }
 
             record.LoadData(mirrorData, this.RelativeTo);

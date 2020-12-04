@@ -18,6 +18,18 @@ namespace HandPosing.SnapSurfaces
         }
 
 
+        public override SnapSurfaceData Mirror()
+        {
+            BoxSurfaceData mirror = Clone() as BoxSurfaceData;
+
+            mirror.snapOffset = new Vector4(
+                -mirror.snapOffset.y, -mirror.snapOffset.x,
+                -mirror.snapOffset.w, -mirror.snapOffset.z);
+
+            return mirror;
+        }
+
+
         [Range(0f, 1f)]
         public float widthOffset = 0.5f;
         public Vector4 snapOffset;
