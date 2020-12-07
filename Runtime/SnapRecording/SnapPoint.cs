@@ -3,6 +3,18 @@ using UnityEngine;
 
 namespace HandPosing.SnapRecording
 {
+    [System.Serializable]
+    public struct SnapPointData
+    {
+        public HandPose pose;
+        public SnapSurfaceData surfaceData;
+        public float maxDistance;
+        public bool snapsBack;
+        public float slideThresold;
+        public float positionRotationWeight;
+        public float scale;
+    }
+
     [ExecuteInEditMode]
     public class SnapPoint : BaseSnapPoint
     {
@@ -120,7 +132,8 @@ namespace HandPosing.SnapRecording
                 maxDistance = this.maxDistance,
                 positionRotationWeight = this.positionRotationWeight,
                 snapsBack = this.snapsBack,
-                slideThresold = this.slideThresold
+                slideThresold = this.slideThresold,
+                scale = this.transform.localScale.x
             };
         }
 
@@ -131,6 +144,7 @@ namespace HandPosing.SnapRecording
             this.positionRotationWeight = data.positionRotationWeight;
             this.snapsBack = data.snapsBack;
             this.slideThresold = data.slideThresold;
+            this.transform.localScale = Vector3.one * data.scale;
             LoadSurface(data.surfaceData);
         }
 

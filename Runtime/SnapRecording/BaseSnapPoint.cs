@@ -4,17 +4,6 @@ using UnityEngine;
 namespace HandPosing.SnapRecording
 {
     [System.Serializable]
-    public struct SnapPointData
-    {
-        public HandPose pose;
-        public SnapSurfaceData surfaceData;
-        public float maxDistance;
-        public bool snapsBack;
-        public float slideThresold;
-        public float positionRotationWeight;
-    }
-
-    [System.Serializable]
     public abstract class BaseSnapPoint : MonoBehaviour
     {
         [SerializeField]
