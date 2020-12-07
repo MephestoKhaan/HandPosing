@@ -8,5 +8,7 @@ namespace HandPosing
         public abstract bool IsTracking { get; }
 
         public abstract List<HandBone> Bones { get; }
+
+        public virtual float? HandScale { get => 1f; }
     }
 }

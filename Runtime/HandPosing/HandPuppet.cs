@@ -98,6 +98,7 @@ namespace HandPosing
                     CacheGripOffsets();
                 }
                 Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
+                offset.position = Vector3.Scale(offset.position, this.handAnchor.localScale);
                 return this.handAnchor.GlobalPose(offset);
             }
         }
@@ -154,12 +155,19 @@ namespace HandPosing
             return translateGrip;
         }
 
+        public Transform test;
+
         private void Update()
         {
             OnPoseBeforeUpdate?.Invoke();
             if (!_usingUpdateNotifier)
             {
                 UpdateHandPose();
+            }
+
+            if(test != null)
+            {
+                test.position = TrackedGripPose.position;
             }
         }
 
@@ -182,6 +190,7 @@ namespace HandPosing
             if (!_trackingHands)
             {
                 _trackingHands = true;
+                this.handAnchor.localScale = Vector3.one * (skeleton.HandScale ?? 1f);
                 OnUsingHands?.Invoke();
             }
             SetLivePose(skeleton.Bones);

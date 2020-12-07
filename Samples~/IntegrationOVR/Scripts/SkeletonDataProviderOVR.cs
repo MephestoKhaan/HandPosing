@@ -55,6 +55,29 @@ namespace HandPosing.OVRIntegration
             }
         }
 
+
+        public override float? HandScale
+        {
+            get
+            {
+                return RetrieveHandScale();
+            }
+        }
+
+        private float? RetrieveHandScale()
+        {
+            if (IsTracking)
+            {
+                OVRPlugin.Hand handeness = ovrSkeleton.GetSkeletonType() == OVRSkeleton.SkeletonType.HandLeft ? OVRPlugin.Hand.HandLeft : OVRPlugin.Hand.HandRight;
+                OVRPlugin.HandState handState = new OVRPlugin.HandState();
+                if (OVRPlugin.GetHandState(OVRPlugin.Step.Render, handeness, ref handState))
+                {
+                    return handState.HandScale;
+                }
+            }
+            return null;
+        }
+
         private bool CanInitialise
             => ovrSkeleton != null
                   && ovrSkeleton.IsInitialized
