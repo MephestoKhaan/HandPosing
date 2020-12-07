@@ -44,6 +44,18 @@ namespace HandPosing
             }
         }
 
+        public float Scale
+        {
+            get
+            {
+                return this.handAnchor.localScale.x;
+            }
+            private set
+            {
+                this.handAnchor.localScale = Vector3.one * value;
+            }
+        }
+
         public Transform Grip
         {
             get
@@ -98,7 +110,7 @@ namespace HandPosing
                     CacheGripOffsets();
                 }
                 Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
-                offset.position = Vector3.Scale(offset.position, this.handAnchor.localScale);
+                offset.position = offset.position * Scale;
                 return this.handAnchor.GlobalPose(offset);
             }
         }
@@ -190,7 +202,7 @@ namespace HandPosing
             if (!_trackingHands)
             {
                 _trackingHands = true;
-                this.handAnchor.localScale = Vector3.one * (skeleton.HandScale ?? 1f);
+                Scale = skeleton.HandScale ?? 1f;
                 OnUsingHands?.Invoke();
             }
             SetLivePose(skeleton.Bones);
@@ -201,6 +213,7 @@ namespace HandPosing
             if (_trackingHands)
             {
                 _trackingHands = false;
+                Scale = 1f;
                 OnUsingControllers?.Invoke();
                 _originalHandOffset.Apply();
             }

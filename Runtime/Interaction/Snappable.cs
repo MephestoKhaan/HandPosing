@@ -19,13 +19,13 @@ namespace HandPosing.Interaction
 
         [Space]
         [SerializeField]
-        private List<SnapPoint> snapPoints = new List<SnapPoint>();
+        private List<BaseSnapPoint> snapPoints = new List<BaseSnapPoint>();
         [InspectorButton("RemoveSnaps")]
         public string ClearSnapPoints;
 
-        public SnapPoint FindBestSnapPose(HandPose userPose, out ScoredHandPose bestHandPose)
+        public BaseSnapPoint FindBestSnapPose(HandPose userPose, out ScoredHandPose bestHandPose)
         {
-            SnapPoint bestSnap = null;
+            BaseSnapPoint bestSnap = null;
             bestHandPose = ScoredHandPose.Null();
             foreach (var snapPose in this.snapPoints)
             {
@@ -94,7 +94,7 @@ namespace HandPosing.Interaction
                 {
                     if(snapPoint != null)
                     {
-                        DestroyImmediate(snapPoint.gameObject);
+                        snapPoint.DestroyImmediate();
                     }
                 }
                 this.snapPoints.Clear();

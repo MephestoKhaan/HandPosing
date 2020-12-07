@@ -16,7 +16,7 @@ namespace HandPosing.Interaction
         private float snapbackTime = 0.33f;
 
         private IGrabNotifier _grabNotifier;
-        private SnapPoint _grabSnap;
+        private BaseSnapPoint _grabSnap;
         private ScoredHandPose _grabPose;
 
         private float _bonesOverrideFactor;
@@ -145,7 +145,7 @@ namespace HandPosing.Interaction
             }
         }
 
-        private (SnapPoint, ScoredHandPose)? SnapForGrabbable(GameObject grabbable)
+        private (BaseSnapPoint, ScoredHandPose)? SnapForGrabbable(GameObject grabbable)
         {
             if (grabbable == null)
             {
@@ -155,7 +155,7 @@ namespace HandPosing.Interaction
             if (snappable != null)
             {
                 HandPose userPose = this.puppet.TrackedPose(snappable.transform);
-                SnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
+                BaseSnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
                 if (snapPose != null)
                 {
                     return (snapPose, bestPose);

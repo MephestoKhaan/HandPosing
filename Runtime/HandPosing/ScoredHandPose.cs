@@ -31,6 +31,24 @@
         {
             return pose.Score == -1f;
         }
+
+        public static ScoredHandPose? Lerp(ScoredHandPose from, ScoredHandPose to, float t)
+        {
+            if(from.Direction != to.Direction)
+            {
+                UnityEngine.Debug.LogError("ScoredHandPose must have same direction for interpolation");
+                return null;
+            }
+
+            float score = UnityEngine.Mathf.Lerp(from.Score, to.Score, t);
+            HandPose? pose = HandPose.Lerp(from.Pose, to.Pose, t);
+            if (!pose.HasValue)
+            {
+                UnityEngine.Debug.LogError("ScoredHandPose interpolation error");
+                return null;
+            }
+            return new ScoredHandPose(pose.Value, score, from.Direction);
+        }
     }
 }
 

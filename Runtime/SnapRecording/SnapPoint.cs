@@ -3,29 +3,17 @@ using UnityEngine;
 
 namespace HandPosing.SnapRecording
 {
-    [System.Serializable]
-    public struct SnapPointData
-    {
-        public HandPose pose;
-        public SnapSurfaceData surfaceData;
-        public bool canInvert;
-        public float maxDistance;
-        public float positionRotationWeight;
-        public bool snapsBack;
-        public float slideThresold;
-    }
-
     [ExecuteInEditMode]
-    public class SnapPoint : MonoBehaviour
+    public class SnapPoint : BaseSnapPoint
     {
-        [SerializeField]
-        private Transform relativeTo;
         [SerializeField]
         private HandPose pose;
 
         [Space]
-        public SnapSurface surface;
-        public HandGhost ghost;
+        [SerializeField]
+        private SnapSurface surface;
+        [SerializeField]
+        private HandGhost ghost;
         [Space]
 
         [InspectorButton("Mirror")]
@@ -33,27 +21,24 @@ namespace HandPosing.SnapRecording
 
         [Space]
         [SerializeField]
-        private bool canInvert = false;
-        [SerializeField]
-        private bool snapsBack = false;
-        [SerializeField]
         private float maxDistance = 0.1f;
         [SerializeField]
         [Range(0f, 1f)]
         private float positionRotationWeight = 0.5f;
-        [SerializeField]
-        [Range(0f, 1f)]
-        private float slideThresold = 0f;
-
-        public Transform RelativeTo { get => relativeTo; }
-        public bool SnapsBack { get => snapsBack; }
-        public float SlideThresold { get => slideThresold; }
 
         private HandGhost _previousGhost;
         private SnapSurface _previousSurface;
         private Transform _previousRelativeTo;
 
         private Transform GripPoint { get => this.transform; }
+
+        public float Scale
+        {
+            get
+            {
+                return this.transform.localScale.x;
+            }
+        }
 
         private void OnValidate()
         {
@@ -83,8 +68,6 @@ namespace HandPosing.SnapRecording
             return record;
         }
 
-        public HandGhostProvider ghostProvider;
-
         public SnapPoint Mirror()
         {
             SnapPoint record = Create(this.transform.parent);
@@ -105,12 +88,6 @@ namespace HandPosing.SnapRecording
             }
 
             record.LoadData(mirrorData, this.RelativeTo);
-
-            if(this.ghostProvider != null)
-            {
-                record.LoadGhost(ghostProvider);
-            }
-
             return record;
         }
 
@@ -140,7 +117,6 @@ namespace HandPosing.SnapRecording
             {
                 pose = this.pose,
                 surfaceData = this.surface?.Data,
-                canInvert = this.canInvert,
                 maxDistance = this.maxDistance,
                 positionRotationWeight = this.positionRotationWeight,
                 snapsBack = this.snapsBack,
@@ -151,7 +127,6 @@ namespace HandPosing.SnapRecording
         public void LoadData(SnapPointData data, Transform relativeTo)
         {
             SetPose(data.pose, relativeTo);
-            this.canInvert = data.canInvert;
             this.maxDistance = data.maxDistance;
             this.positionRotationWeight = data.positionRotationWeight;
             this.snapsBack = data.snapsBack;
@@ -221,19 +196,7 @@ namespace HandPosing.SnapRecording
             _previousSurface = surface;
         }
 
-        public HandPose InvertedPose()
-        {
-            if (surface != null)
-            {
-                return surface.InvertedPose(pose);
-            }
-            else
-            {
-                return pose;
-            }
-        }
-
-        public Vector3 NearestInSurface(Vector3 worldPoint)
+        public override Vector3 NearestInSurface(Vector3 worldPoint, float scale = 1f)
         {
             if (surface != null)
             {
@@ -245,7 +208,7 @@ namespace HandPosing.SnapRecording
             }
         }
 
-        public ScoredHandPose CalculateBestPose(HandPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any)
+        public override ScoredHandPose CalculateBestPose(HandPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any , float scale = 1f)
         {
             if (pose.handeness != userPose.handeness)
             {
@@ -261,20 +224,6 @@ namespace HandPosing.SnapRecording
                 || direction == SnapDirection.Forward)
             {
                 bestForwardPose = CompareNearPoses(userPose, pose, scoreWeight.Value, SnapDirection.Forward);
-            }
-
-            if (canInvert
-                && (direction == SnapDirection.Any
-                || direction == SnapDirection.Backward))
-            {
-                HandPose invertedPose = InvertedPose();
-                bestBackwardPose = CompareNearPoses(userPose, invertedPose, scoreWeight.Value, SnapDirection.Backward);
-
-                if (!bestForwardPose.HasValue
-                    || bestBackwardPose.Value.Score > bestForwardPose.Value.Score)
-                {
-                    return bestBackwardPose.Value;
-                }
             }
             return bestForwardPose ?? bestBackwardPose.Value;
         }
@@ -301,6 +250,11 @@ namespace HandPosing.SnapRecording
             }
             bestScore = bScore;
             return b;
+        }
+
+        public override void DestroyImmediate()
+        {
+            DestroyImmediate(this.gameObject);
         }
     }
 }
