@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace HandPosing.Interaction
@@ -100,9 +101,15 @@ namespace HandPosing.Interaction
             System.Type jointType = typeof(Joint);
             Component clone = destination.gameObject.AddComponent(joint.GetType());
 
-            foreach (var foundProperty in joint.GetType().GetProperties())
+            PropertyInfo[] properties = joint.GetType().GetProperties(
+                BindingFlags.FlattenHierarchy
+                | BindingFlags.Public
+                | BindingFlags.Instance);
+
+            foreach (var foundProperty in properties)
             {
-                if (foundProperty.DeclaringType.IsSubclassOf(jointType)
+                if ((foundProperty.DeclaringType.IsSubclassOf(jointType)
+                    || foundProperty.DeclaringType == jointType)
                     && foundProperty.CanWrite)
                 {
                     foundProperty.SetValue(clone, foundProperty.GetValue(joint, null), null);
