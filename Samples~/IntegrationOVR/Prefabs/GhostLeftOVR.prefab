@@ -89,7 +89,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 944feb076639a4d39b750e3cb5d7dfab, type: 2}
+      objectReference: {fileID: 2100000, guid: 3b284a5e175186f479db1d1cd81a41df, type: 2}
     - target: {fileID: 1387190361880471772, guid: 886cb81ddb5a38541bfc87cbb5fabfd5,
         type: 3}
       propertyPath: OnUsingHands.m_PersistentCalls.m_Calls.Array.size

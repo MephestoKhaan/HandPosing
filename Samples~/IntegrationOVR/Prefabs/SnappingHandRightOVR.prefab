@@ -257,17 +257,17 @@ SkinnedMeshRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1441316691142280916}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_MotionVectors: 1
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3637b758ff163493f8bb8b6d7e96d7ae, type: 2}
+  - {fileID: 2100000, guid: ef05a92427437d940922dfb387f41d29, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1377,6 +1377,7 @@ MonoBehaviour:
   handAnchor: {fileID: 0}
   gripPoint: {fileID: 1442438993032791978}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1442438993032825912}
@@ -1385,7 +1386,7 @@ MonoBehaviour:
   boneMaps:
   - id: 2
     transform: {fileID: 1444372827363248344}
-    rotationOffset: {x: 300, y: 200, z: -0.000006830191}
+    rotationOffset: {x: 300, y: 199.99997, z: 0.0000017075478}
   - id: 4
     transform: {fileID: 1444396745358015624}
     rotationOffset: {x: -0, y: 0, z: 0}
@@ -1421,7 +1422,7 @@ MonoBehaviour:
     rotationOffset: {x: -0, y: 0, z: 0}
   - id: 16
     transform: {fileID: 1444497012342011746}
-    rotationOffset: {x: 349.99997, y: 0.0000061782453, z: 180}
+    rotationOffset: {x: 349.99997, y: 0.000006362672, z: 180}
   - id: 17
     transform: {fileID: 1444223270861977528}
     rotationOffset: {x: -0, y: 0, z: 0}
@@ -1506,7 +1507,7 @@ MonoBehaviour:
   updateNotifier: {fileID: 0}
   trackedHand: {fileID: 0}
   grabThresoldController: {x: 0.35, y: 0.95}
-  grabThresoldHand: {x: 0, y: 0.95}
+  grabThresoldHand: {x: 0, y: 0.9}
   handeness: 1
 --- !u!1 &1442438993032529408
 GameObject:
