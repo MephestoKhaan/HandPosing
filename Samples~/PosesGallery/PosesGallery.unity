@@ -248,10 +248,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1867408691}
+  snapsBack: 0
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: -0.077673145, y: 0.0020941496, z: 0.047859035}
-      rotation: {x: 0.20525678, y: -0.43015, z: -0.58032113, w: -0.6603549}
+      position: {x: -0.07767306, y: 0.0020941496, z: 0.047859125}
+      rotation: {x: 0.20525683, y: -0.43015003, z: -0.5803211, w: -0.660355}
     handeness: 1
     _bones:
     - boneID: 2
@@ -287,12 +289,8 @@ MonoBehaviour:
   surface: {fileID: 11251408}
   ghost: {fileID: 29242769}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 0
   maxDistance: 0.1
   positionRotationWeight: 0.8
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &11251407
 Transform:
   m_ObjectHideFlags: 0
@@ -375,6 +373,7 @@ MonoBehaviour:
   handAnchor: {fileID: 379151023}
   gripPoint: {fileID: 587533754}
   handeness: 0
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 15798704}
@@ -696,6 +695,7 @@ MonoBehaviour:
   handAnchor: {fileID: 29242771}
   gripPoint: {fileID: 887699836}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 29242771}
@@ -760,8 +760,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29242768}
-  m_LocalRotation: {x: -0.12940954, y: -0.12940955, z: 0.017037146, w: 0.98296297}
-  m_LocalPosition: {x: -0.036201883, y: -0.024224035, z: 0.0011641793}
+  m_LocalRotation: {x: -0.12940958, y: -0.12940952, z: 0.017037127, w: 0.9829629}
+  m_LocalPosition: {x: -0.036201924, y: -0.024224065, z: 0.0011642165}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 676672937}
@@ -1056,6 +1056,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1932868561}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -1095,12 +1097,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &44374758
 Transform:
   m_ObjectHideFlags: 0
@@ -3291,6 +3289,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1248587805}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -3330,12 +3330,8 @@ MonoBehaviour:
   surface: {fileID: 175526500}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!114 &175526500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3518,6 +3514,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1987249417}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -3557,12 +3555,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &186064062
 Transform:
   m_ObjectHideFlags: 0
@@ -3777,9 +3771,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.13547875, y: -0.04281612, z: -0.025796028}
+      position: {x: 0.13547872, y: -0.042816132, z: -0.02579605}
       rotation: {x: -0.88584775, y: -0.24405214, z: -0.39401704, w: -0.021522589}
     handeness: 1
     _bones:
@@ -3816,12 +3812,8 @@ MonoBehaviour:
   surface: {fileID: 195985254}
   ghost: {fileID: 951864258}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &195985253
 Transform:
   m_ObjectHideFlags: 0
@@ -4492,6 +4484,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1562091171}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -4531,12 +4525,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &234878812
 Transform:
   m_ObjectHideFlags: 0
@@ -4600,6 +4590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &241413834
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4798,6 +4789,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1027729074}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -4837,12 +4830,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &256153770
 Transform:
   m_ObjectHideFlags: 0
@@ -4968,6 +4957,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1628213210}
   gripPoint: {fileID: 1311070240}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 266441720}
@@ -6589,6 +6579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &341260607
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -8791,6 +8782,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1077657192}
   gripPoint: {fileID: 2108096558}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 467355273}
@@ -9847,6 +9839,7 @@ MonoBehaviour:
   handAnchor: {fileID: 540958600}
   gripPoint: {fileID: 146576211}
   handeness: 0
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 498436032}
@@ -9911,7 +9904,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 498436029}
-  m_LocalRotation: {x: -0, y: -0, z: 0.0000000074505797, w: 1}
+  m_LocalRotation: {x: 0.00000004470347, y: -0.000000029802312, z: 0.000000022351735,
+    w: 1}
   m_LocalPosition: {x: 0.036300007, y: -0.02369995, z: 0.0043999874}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -10962,6 +10956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!114 &554327960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11205,6 +11200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2fa2bd22c944846b34678beaf51089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
   customJoint: {fileID: 563200581}
 --- !u!153 &563200579
 ConfigurableJoint:
@@ -13111,6 +13107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.051166512, y: -0.044845305, z: 0.12858745}
@@ -13150,12 +13148,8 @@ MonoBehaviour:
   surface: {fileID: 673497873}
   ghost: {fileID: 15798702}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &673497872
 Transform:
   m_ObjectHideFlags: 0
@@ -13735,6 +13729,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1857934466}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.005006969, y: 0.00417161, z: 0.0045609474}
@@ -13774,12 +13770,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 1059242334}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &711652949
 Transform:
   m_ObjectHideFlags: 0
@@ -13870,6 +13862,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 554327962}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -13909,12 +13903,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &714594841
 Transform:
   m_ObjectHideFlags: 0
@@ -15632,6 +15622,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1027729074}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -15671,12 +15663,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &805258716
 Transform:
   m_ObjectHideFlags: 0
@@ -16619,6 +16607,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1248587805}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -16658,12 +16648,8 @@ MonoBehaviour:
   surface: {fileID: 870878356}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!114 &870878356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16944,10 +16930,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.12999968, y: 0.0597899, z: -0.05229265}
-      rotation: {x: 0.1490087, y: -0.33968893, z: 0.13214533, w: 0.9192094}
+      rotation: {x: 0.14900877, y: -0.33968896, z: 0.1321454, w: 0.91920954}
     handeness: 0
     _bones:
     - boneID: 2
@@ -16983,12 +16971,8 @@ MonoBehaviour:
   surface: {fileID: 881643616}
   ghost: {fileID: 498436030}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &881643615
 Transform:
   m_ObjectHideFlags: 0
@@ -17796,7 +17780,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &915692329
 Transform:
   m_ObjectHideFlags: 0
@@ -18017,6 +18001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &924816149
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -18425,6 +18410,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1418900563}
   gripPoint: {fileID: 1257011124}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 951864260}
@@ -18491,7 +18477,7 @@ Transform:
   m_GameObject: {fileID: 951864257}
   m_LocalRotation: {x: -0.000000005587934, y: 0.0000000032596283, z: 0.00000005960463,
     w: 1}
-  m_LocalPosition: {x: -0.036299985, y: -0.023700025, z: 0.004399944}
+  m_LocalPosition: {x: -0.036300004, y: -0.023700034, z: 0.0043999404}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1418900563}
@@ -19042,6 +19028,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1938582701}
   gripPoint: {fileID: 1784742595}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 977791711}
@@ -19108,7 +19095,7 @@ Transform:
   m_GameObject: {fileID: 977791708}
   m_LocalRotation: {x: 0.000000018626448, y: 0.000000046566118, z: -0.000000029802315,
     w: 1}
-  m_LocalPosition: {x: -0.03630004, y: -0.023699991, z: 0.0044000074}
+  m_LocalPosition: {x: -0.036300037, y: -0.023700017, z: 0.004400026}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1938582701}
@@ -20136,6 +20123,7 @@ MonoBehaviour:
   handAnchor: {fileID: 953099802}
   gripPoint: {fileID: 593007207}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1012627863}
@@ -20312,8 +20300,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1020896300}
-  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0.000000014901158,
-    w: 1}
+  m_LocalRotation: {x: 0.000000029802315, y: 0.000000014901158, z: -0, w: 1}
   m_LocalPosition: {x: -0.0363, y: -0.023699969, z: 0.0044000726}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -20351,6 +20338,7 @@ MonoBehaviour:
   handAnchor: {fileID: 276022416}
   gripPoint: {fileID: 1148094515}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1020896301}
@@ -20640,6 +20628,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!114 &1027729072
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20832,6 +20821,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1987249417}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -20871,12 +20862,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1037856083
 Transform:
   m_ObjectHideFlags: 0
@@ -21075,9 +21062,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 2064346898}
+  snapsBack: 0
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.018807545, y: 0.06371558, z: -0.112323955}
+      position: {x: 0.018807532, y: 0.06371558, z: -0.11232395}
       rotation: {x: 0.437094, y: -0.050136454, z: 0.274378, w: -0.85507464}
     handeness: 1
     _bones:
@@ -21114,12 +21103,8 @@ MonoBehaviour:
   surface: {fileID: 1045191398}
   ghost: {fileID: 1493014480}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 0
   maxDistance: 0.1
   positionRotationWeight: 0
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1045191397
 Transform:
   m_ObjectHideFlags: 0
@@ -21424,6 +21409,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1857934466}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.0013423078, y: -0.0015108585, z: 0.008877069}
@@ -21463,12 +21450,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 266441718}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1057986140
 Transform:
   m_ObjectHideFlags: 0
@@ -21533,6 +21516,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1719669972}
   gripPoint: {fileID: 527979173}
   handeness: 0
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1059242336}
@@ -22179,6 +22163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1276842645}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -22218,12 +22204,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1097662565
 Transform:
   m_ObjectHideFlags: 0
@@ -22641,6 +22623,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 554327962}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -22680,12 +22664,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1122678199
 Transform:
   m_ObjectHideFlags: 0
@@ -24920,9 +24900,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.1422563, y: 0.045501545, z: -0.024937667}
+      position: {x: 0.14225627, y: 0.045501534, z: -0.02493769}
       rotation: {x: -0.18448468, y: -0.9243081, z: -0.08014631, w: -0.32434022}
     handeness: 0
     _bones:
@@ -24959,12 +24941,8 @@ MonoBehaviour:
   surface: {fileID: 1240866558}
   ghost: {fileID: 1892982259}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1240866557
 Transform:
   m_ObjectHideFlags: 0
@@ -25196,6 +25174,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &1248587804
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -25837,6 +25816,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!114 &1276842643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26240,10 +26220,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 924816150}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.021114225, y: 0.045536876, z: 0.018571943}
-      rotation: {x: 0.62472755, y: -0.73130316, z: -0.21028057, w: -0.17519821}
+      rotation: {x: 0.6247275, y: -0.7313033, z: -0.21028054, w: -0.17519829}
     handeness: 1
     _bones:
     - boneID: 2
@@ -26279,12 +26261,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 1543274120}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1298493062
 Transform:
   m_ObjectHideFlags: 0
@@ -26622,6 +26600,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1578624148}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703265, y: 0.0076999664, z: 0.032011405}
@@ -26661,12 +26641,8 @@ MonoBehaviour:
   surface: {fileID: 1307938126}
   ghost: {fileID: 1012627861}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1307938125
 Transform:
   m_ObjectHideFlags: 0
@@ -28789,6 +28765,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1276842645}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -28828,12 +28806,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1411811283
 Transform:
   m_ObjectHideFlags: 0
@@ -29038,10 +29012,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 563200576}
+  snapsBack: 0
+  slideThresold: 1
   pose:
     relativeGrip:
       position: {x: -0.005233675, y: -0.0090305805, z: -0.00930679}
-      rotation: {x: 0.5694144, y: 0.24717627, z: -0.10912067, w: -0.776379}
+      rotation: {x: 0.5694144, y: 0.24717622, z: -0.10912067, w: -0.7763789}
     handeness: 1
     _bones:
     - boneID: 2
@@ -29077,12 +29053,8 @@ MonoBehaviour:
   surface: {fileID: 1422035962}
   ghost: {fileID: 1020896302}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 0
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 1
-  ghostProvider: {fileID: 0}
 --- !u!1 &1422139443
 GameObject:
   m_ObjectHideFlags: 0
@@ -29252,6 +29224,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.032017067, y: -0.05772346, z: 0.14251384}
@@ -29291,12 +29265,8 @@ MonoBehaviour:
   surface: {fileID: 1430346627}
   ghost: {fileID: 2059344158}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1430346626
 Transform:
   m_ObjectHideFlags: 0
@@ -30932,6 +30902,7 @@ MonoBehaviour:
   handAnchor: {fileID: 996388391}
   gripPoint: {fileID: 1414171358}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1493014482}
@@ -32325,6 +32296,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1543274122}
   gripPoint: {fileID: 1249315923}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1543274122}
@@ -32389,8 +32361,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1543274119}
-  m_LocalRotation: {x: -0.12940954, y: -0.12940949, z: 0.017037146, w: 0.98296297}
-  m_LocalPosition: {x: -0.036201876, y: -0.024224106, z: 0.0011642706}
+  m_LocalRotation: {x: -0.12940943, y: -0.12940949, z: 0.017037205, w: 0.98296297}
+  m_LocalPosition: {x: -0.03620188, y: -0.024224078, z: 0.0011642575}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 989126857}
@@ -32867,6 +32839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &1562091170
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -33127,6 +33100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &1578624147
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -33915,9 +33889,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.1266281, y: 0.057723038, z: -0.07280481}
+      position: {x: 0.12662812, y: 0.057723, z: -0.07280476}
       rotation: {x: 0.16059397, y: -0.65764904, z: -0.04581804, w: 0.7345807}
     handeness: 1
     _bones:
@@ -33954,12 +33930,8 @@ MonoBehaviour:
   surface: {fileID: 1626098981}
   ghost: {fileID: 2133430479}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1626098980
 Transform:
   m_ObjectHideFlags: 0
@@ -38027,9 +37999,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1578624148}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.0527033, y: 0.03201139, z: -0.007699879}
+      position: {x: 0.05270324, y: 0.03201139, z: -0.007699879}
       rotation: {x: -0.684206, y: -0.59515166, z: 0.4210869, w: 0.018522108}
     handeness: 1
     _bones:
@@ -38066,12 +38040,8 @@ MonoBehaviour:
   surface: {fileID: 1813749603}
   ghost: {fileID: 977791709}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1813749602
 Transform:
   m_ObjectHideFlags: 0
@@ -38762,6 +38732,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.02579606, y: 0.042816006, z: 0.1354788}
@@ -38801,12 +38773,8 @@ MonoBehaviour:
   surface: {fileID: 1845065606}
   ghost: {fileID: 467355271}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1845065605
 Transform:
   m_ObjectHideFlags: 0
@@ -39146,6 +39114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd2fa2bd22c944846b34678beaf51089, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
   customJoint: {fileID: 0}
 --- !u!54 &1857934469
 Rigidbody:
@@ -39315,6 +39284,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1562091171}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.052703295, y: 0.007699847, z: 0.032011446}
@@ -39354,12 +39325,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1861080668
 Transform:
   m_ObjectHideFlags: 0
@@ -39636,6 +39603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &1867408690
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -39822,6 +39790,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 1932868561}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: 0.05270336, y: 0.03201139, z: -0.007699702}
@@ -39861,12 +39831,8 @@ MonoBehaviour:
   surface: {fileID: 0}
   ghost: {fileID: 0}
   CreateMirror: 
-  canInvert: 1
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 1
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1871354106
 Transform:
   m_ObjectHideFlags: 0
@@ -40522,6 +40488,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1784793595}
   gripPoint: {fileID: 1548196106}
   handeness: 0
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 1892982261}
@@ -40587,7 +40554,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1892982258}
   m_LocalRotation: {x: -0.0000000037252903, y: -0, z: -0.000000014901161, w: 1}
-  m_LocalPosition: {x: 0.036300022, y: -0.023699962, z: 0.0043999404}
+  m_LocalPosition: {x: 0.036300037, y: -0.023699984, z: 0.0043999515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1784793595}
@@ -41531,6 +41498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!114 &1932868559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42661,6 +42629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!54 &1987249416
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -42988,6 +42957,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   relativeTo: {fileID: 341260608}
+  snapsBack: 1
+  slideThresold: 0
   pose:
     relativeGrip:
       position: {x: -0.024937926, y: -0.04550143, z: 0.14225626}
@@ -43027,12 +42998,8 @@ MonoBehaviour:
   surface: {fileID: 1998808627}
   ghost: {fileID: 2112928921}
   CreateMirror: 
-  canInvert: 0
-  snapsBack: 1
   maxDistance: 0.1
   positionRotationWeight: 0.5
-  slideThresold: 0
-  ghostProvider: {fileID: 0}
 --- !u!4 &1998808626
 Transform:
   m_ObjectHideFlags: 0
@@ -44526,6 +44493,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1168447769}
   gripPoint: {fileID: 471910349}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 2059344160}
@@ -44804,6 +44772,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0500daeaec005478651a4881d410fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canMove: 0
 --- !u!4 &2064346898
 Transform:
   m_ObjectHideFlags: 0
@@ -45796,6 +45765,7 @@ MonoBehaviour:
   handAnchor: {fileID: 695056934}
   gripPoint: {fileID: 1744988570}
   handeness: 0
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 2112928923}
@@ -46345,6 +46315,7 @@ MonoBehaviour:
   handAnchor: {fileID: 1515255140}
   gripPoint: {fileID: 1018138722}
   handeness: 1
+  autoAdjustScale: 0
   trackedHandOffset:
     id: 1
     transform: {fileID: 2133430481}
@@ -46411,7 +46382,7 @@ Transform:
   m_GameObject: {fileID: 2133430478}
   m_LocalRotation: {x: 0.000000014901158, y: 0.000000029802315, z: 0.000000022351736,
     w: 1}
-  m_LocalPosition: {x: -0.036300026, y: -0.023700021, z: 0.00439997}
+  m_LocalPosition: {x: -0.036300037, y: -0.023699995, z: 0.0043999515}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1515255140}

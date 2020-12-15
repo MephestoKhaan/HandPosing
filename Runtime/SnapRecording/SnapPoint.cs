@@ -113,7 +113,6 @@ namespace HandPosing.SnapRecording
             {
                 this.transform.hasChanged = false;
                 this.pose.relativeGrip = this.transform.GetPose(Space.Self);
-                ghost?.SetPose(this.pose, this.relativeTo);
             }
         }
 #endif
@@ -133,7 +132,7 @@ namespace HandPosing.SnapRecording
                 positionRotationWeight = this.positionRotationWeight,
                 snapsBack = this.snapsBack,
                 slideThresold = this.slideThresold,
-                scale = this.transform.localScale.x
+                scale = this.Scale
             };
         }
 

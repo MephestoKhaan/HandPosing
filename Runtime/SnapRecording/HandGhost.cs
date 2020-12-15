@@ -16,7 +16,6 @@ namespace HandPosing.SnapRecording
             puppet = this.GetComponent<HandPuppet>();
         }
 
-
         public void SetPose(HandPose userPose, Transform relativeTo)
         {
             puppet.LerpToPose(userPose, relativeTo);
