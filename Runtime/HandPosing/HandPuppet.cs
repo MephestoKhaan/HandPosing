@@ -17,6 +17,8 @@ namespace HandPosing
         private Transform gripPoint;
         [SerializeField]
         private Handeness handeness;
+        [SerializeField]
+        private bool autoAdjustScale;
 
         [SerializeField]
         private HandMap trackedHandOffset;
@@ -79,6 +81,20 @@ namespace HandPosing
             }
         }
 
+        public Pose TrackedGripPose
+        {
+            get
+            {
+                if (!_offsetInitialised)
+                {
+                    CacheGripOffsets();
+                }
+                Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
+                offset.position = offset.position * Scale;
+                return this.handAnchor.GlobalPose(offset);
+            }
+        }
+
         public System.Action OnPoseBeforeUpdate;
         public System.Action OnPoseUpdated;
 
@@ -100,22 +116,9 @@ namespace HandPosing
         private Pose _pupettedGripOffset;
         private bool _offsetInitialised = false;
         private bool _usingUpdateNotifier;
-
-        public Pose TrackedGripPose
-        {
-            get
-            {
-                if (!_offsetInitialised)
-                {
-                    CacheGripOffsets();
-                }
-                Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
-                offset.position = offset.position * Scale;
-                return this.handAnchor.GlobalPose(offset);
-            }
-        }
-
         private bool _trackingHands;
+
+
 
         private void Awake()
         {
@@ -167,19 +170,12 @@ namespace HandPosing
             return translateGrip;
         }
 
-        public Transform test;
-
         private void Update()
         {
             OnPoseBeforeUpdate?.Invoke();
             if (!_usingUpdateNotifier)
             {
                 UpdateHandPose();
-            }
-
-            if(test != null)
-            {
-                test.position = TrackedGripPose.position;
             }
         }
 
@@ -202,7 +198,7 @@ namespace HandPosing
             if (!_trackingHands)
             {
                 _trackingHands = true;
-                Scale = skeleton.HandScale ?? 1f;
+                Scale = autoAdjustScale? (skeleton.HandScale ?? 1f) : 1f;
                 OnUsingHands?.Invoke();
             }
             SetLivePose(skeleton.Bones);
