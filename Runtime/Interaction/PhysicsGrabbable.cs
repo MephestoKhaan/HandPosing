@@ -24,6 +24,11 @@ namespace HandPosing.Interaction
         {
             base.GrabBegin(hand, grabPoint);
 
+            if(!canMove)
+            {
+                return;
+            }
+
             if (_desiredJoint != null)
             {
                 _joint = CloneJoint(_desiredJoint, this.gameObject) as Joint;

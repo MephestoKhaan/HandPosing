@@ -9,6 +9,9 @@ namespace HandPosing.Interaction
     {
         public Snappable Snappable { get; private set; }
 
+        [SerializeField]
+        protected bool canMove;
+
         private HashSet<GameObject> _colliderObjects = null;
 
         private Collider[] _grabPoints = null;
@@ -68,8 +71,11 @@ namespace HandPosing.Interaction
 
         public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
         {
-            this.transform.position = desiredPos;
-            this.transform.rotation = desiredRot;
+            if(canMove)
+            {
+                this.transform.position = desiredPos;
+                this.transform.rotation = desiredRot;
+            }
         }
 
         protected virtual void Awake()
