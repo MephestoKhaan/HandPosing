@@ -67,9 +67,8 @@ namespace HandPosing.OVRIntegration
         {
             OVRInput.Controller controller = IsUsingHands ? hand : touch;
 
-            Pose trackingSpace = Pose.identity;
-            Vector3 linearVelocity = trackingSpace.rotation * OVRInput.GetLocalControllerVelocity(controller);
-            Vector3 angularVelocity = trackingSpace.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
+            Vector3 linearVelocity = this.transform.rotation * OVRInput.GetLocalControllerVelocity(controller);
+            Vector3 angularVelocity = this.transform.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
             return (linearVelocity, angularVelocity);
         }
     }
