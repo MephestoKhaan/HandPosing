@@ -190,11 +190,6 @@ namespace HandPosing.Interaction
 
         protected virtual void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
         {
-            if (closestGrabbable.IsGrabbed)
-            {
-                closestGrabbable.GrabbedBy.OffhandGrabbed(closestGrabbable);
-            }
-
             GrabbedObject = closestGrabbable;
             GrabbedObject.GrabBegin(this, closestGrabbableCollider);
 
@@ -230,12 +225,12 @@ namespace HandPosing.Interaction
 
         protected void ReleaseGrabbedObject(Vector3 linearVelocity, Vector3 angularVelocity)
         {
-            GrabbedObject.GrabEnd(linearVelocity, angularVelocity);
+            GrabbedObject.GrabEnd(this, linearVelocity, angularVelocity);
             OnGrabEnded?.Invoke(GrabbedObject?.gameObject);
             GrabbedObject = null;
         }
 
-        protected virtual void OffhandGrabbed(Grabbable grabbable)
+        public virtual void OffhandGrabbed(Grabbable grabbable)
         {
             if (GrabbedObject == grabbable)
             {

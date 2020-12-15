@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace HandPosing.Interaction
@@ -7,9 +7,13 @@ namespace HandPosing.Interaction
     {
         [SerializeField]
         private Joint customJoint;
+        [SerializeField]
+        private bool multiGrab;
 
         private Joint _desiredJoint;
-        private Joint _joint;
+        private Dictionary<BaseGrabber, Joint> _joints = new Dictionary<BaseGrabber, Joint>();
+
+        protected override bool MultiGrab => multiGrab;
 
         protected override void Awake()
         {
@@ -24,45 +28,57 @@ namespace HandPosing.Interaction
         {
             base.GrabBegin(hand, grabPoint);
 
-            if(!canMove)
+            if(immovable)
             {
                 return;
             }
 
+
+            Joint joint = null;
             if (_desiredJoint != null)
             {
-                _joint = CloneJoint(_desiredJoint, this.gameObject) as Joint;
+                joint = CloneJoint(_desiredJoint, this.gameObject) as Joint;
             }
             else
             {
-                _joint = CreateDefaultJoint();
+                joint = CreateDefaultJoint();
             }
 
-            _joint.connectedBody = hand.GetComponent<Rigidbody>();
-            _joint.autoConfigureConnectedAnchor = false;
-            _joint.anchor = _joint.transform.InverseTransformPoint(hand.transform.position);
-            _joint.connectedAnchor = Vector3.zero;
+            joint.connectedBody = hand.GetComponent<Rigidbody>();
+            joint.autoConfigureConnectedAnchor = false;
+            joint.anchor = joint.transform.InverseTransformPoint(hand.transform.position);
+            joint.connectedAnchor = Vector3.zero;
+
+            RemoveJoint(hand);
+            _joints.Add(hand, joint);
 
             _body.isKinematic = false;
         }
 
-        public override void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
+        public override void GrabEnd(BaseGrabber hand, Vector3 linearVelocity, Vector3 angularVelocity)
         {
-            if (_joint != null)
-            {
-                Destroy(_joint);
-                _joint = null;
-            }
+            RemoveJoint(hand);
 
-            base.GrabEnd(linearVelocity, angularVelocity);
+            base.GrabEnd(hand, linearVelocity, angularVelocity);
         }
 
+
         public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot) { }
+
+        private void RemoveJoint(BaseGrabber hand)
+        {
+            if (_joints.TryGetValue(hand, out Joint joint))
+            {
+                _joints.Remove(hand);
+                Destroy(joint);
+            }
+        }
 
         private Joint CreateDefaultJoint()
         {
             Joint joint = this.gameObject.AddComponent<FixedJoint>();
             joint.breakForce = Mathf.Infinity;
+            joint.enablePreprocessing = false;
             return joint;
         }
 

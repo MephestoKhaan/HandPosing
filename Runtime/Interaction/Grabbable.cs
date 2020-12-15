@@ -10,14 +10,12 @@ namespace HandPosing.Interaction
         public Snappable Snappable { get; private set; }
 
         [SerializeField]
-        protected bool canMove;
+        protected bool immovable;
 
-        private HashSet<GameObject> _colliderObjects = null;
 
         private Collider[] _grabPoints = null;
         private bool _isKinematic = false;
-        private Collider _grabbedCollider = null;
-        private BaseGrabber _grabbedBy = null;
+        private HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
         protected Rigidbody _body;
 
         public bool IsGrabbed
@@ -25,22 +23,6 @@ namespace HandPosing.Interaction
             get
             {
                 return _grabbedBy != null;
-            }
-        }
-
-        public BaseGrabber GrabbedBy
-        {
-            get
-            {
-                return _grabbedBy;
-            }
-        }
-
-        public Rigidbody GrabbedBody
-        {
-            get
-            {
-                return _grabbedCollider.attachedRigidbody;
             }
         }
 
@@ -52,29 +34,11 @@ namespace HandPosing.Interaction
             }
         }
 
-        public virtual void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        protected virtual bool MultiGrab
         {
-            _grabbedBy = hand;
-            _grabbedCollider = grabPoint;
-            _body.isKinematic = true;
-        }
-
-        public virtual void GrabEnd(Vector3 linearVelocity, Vector3 angularVelocity)
-        {
-            _body.isKinematic = _isKinematic;
-            _body.velocity = linearVelocity;
-            _body.angularVelocity = angularVelocity;
-
-            _grabbedBy = null;
-            _grabbedCollider = null;
-        }
-
-        public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
-        {
-            if(canMove)
+            get
             {
-                this.transform.position = desiredPos;
-                this.transform.rotation = desiredRot;
+                return false;
             }
         }
 
@@ -85,28 +49,14 @@ namespace HandPosing.Interaction
 
             Snappable = this.GetComponent<Snappable>();
 
-            PopulateColliderObjects();
-
-            Collider collider = this.GetComponentInChildren<Collider>();
-            if (collider == null)
+            var colliders  = this.GetComponentsInChildren<Collider>().Where(c => !c.isTrigger);
+            if (colliders == null
+                || colliders.Count() == 0)
             {
                 throw new ArgumentException("Grabbables cannot have zero grab points and no collider -- please add a grab point or collider.");
             }
-            _grabPoints = new Collider[1] { collider };
+            _grabPoints = colliders.ToArray();
 
-        }
-
-        private void PopulateColliderObjects()
-        {
-            var colliders = this.GetComponentsInChildren<Collider>().Where(c => !c.isTrigger);
-            _colliderObjects = new HashSet<GameObject>();
-            foreach (var col in colliders)
-            {
-                if (!_colliderObjects.Contains(col.gameObject))
-                {
-                    _colliderObjects.Add(col.gameObject);
-                }
-            }
         }
 
         private void OnDisable()
@@ -118,6 +68,46 @@ namespace HandPosing.Interaction
         {
             UnsuscribeGrabber();
         }
+
+        public virtual void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        {
+            if(!MultiGrab)
+            {
+                foreach(var grabber in _grabbedBy.ToList())
+                {
+                    grabber.OffhandGrabbed(this);
+                }
+                _grabbedBy.Clear();
+            }
+
+            if(!_grabbedBy.Contains(hand))
+            {
+                _grabbedBy.Add(hand);
+            }
+            _body.isKinematic = true;
+        }
+
+        public virtual void GrabEnd(BaseGrabber hand, Vector3 linearVelocity, Vector3 angularVelocity)
+        {
+            _body.isKinematic = _isKinematic;
+            _body.velocity = linearVelocity;
+            _body.angularVelocity = angularVelocity;
+
+            if (_grabbedBy.Contains(hand))
+            {
+                _grabbedBy.Remove(hand);
+            }
+        }
+
+        public virtual void MoveTo(Vector3 desiredPos, Quaternion desiredRot)
+        {
+            if(!immovable)
+            {
+                this.transform.position = desiredPos;
+                this.transform.rotation = desiredRot;
+            }
+        }
+
 
         public void UnsuscribeGrabber()
         {
