@@ -10,6 +10,8 @@ namespace HandPosing.OVRIntegration
         [SerializeField]
         private OVRHand trackedHand;
         [SerializeField]
+        private Transform trackingSpace;
+        [SerializeField]
         private Vector2 grabThresoldController = new Vector2(0.35f, 0.85f);
         [SerializeField]
         private Vector2 grabThresoldHand = new Vector2(0f,0.95f);
@@ -67,8 +69,8 @@ namespace HandPosing.OVRIntegration
         {
             OVRInput.Controller controller = IsUsingHands ? hand : touch;
 
-            Vector3 linearVelocity = this.transform.rotation * OVRInput.GetLocalControllerVelocity(controller);
-            Vector3 angularVelocity = this.transform.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
+            Vector3 linearVelocity = this.trackingSpace.rotation * OVRInput.GetLocalControllerVelocity(controller);
+            Vector3 angularVelocity = this.trackingSpace.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
             return (linearVelocity, angularVelocity);
         }
     }
