@@ -22,7 +22,7 @@ namespace HandPosing.Interaction
         {
             get
             {
-                return _grabbedBy != null;
+                return _grabbedBy.Count > 0;
             }
         }
 
