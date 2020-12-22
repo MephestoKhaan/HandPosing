@@ -12,8 +12,9 @@ namespace HandPosing.Interaction
         [SerializeField]
         protected bool immovable;
 
-
+        [SerializeField]
         private Collider[] _grabPoints = null;
+
         private bool _isKinematic = false;
         private HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
         protected Rigidbody _body;
@@ -49,13 +50,16 @@ namespace HandPosing.Interaction
 
             Snappable = this.GetComponent<Snappable>();
 
-            var colliders  = this.GetComponentsInChildren<Collider>().Where(c => !c.isTrigger);
-            if (colliders == null
-                || colliders.Count() == 0)
+            if (_grabPoints == null || _grabPoints.Length == 0)
             {
-                throw new ArgumentException("Grabbables cannot have zero grab points and no collider -- please add a grab point or collider.");
+                var colliders = this.GetComponentsInChildren<Collider>().Where(c => !c.isTrigger);
+                if (colliders == null
+                    || colliders.Count() == 0)
+                {
+                    throw new ArgumentException("Grabbables cannot have zero grab points and no collider -- please add a grab point or collider.");
+                }
+                _grabPoints = colliders.ToArray();
             }
-            _grabPoints = colliders.ToArray();
 
         }
 
