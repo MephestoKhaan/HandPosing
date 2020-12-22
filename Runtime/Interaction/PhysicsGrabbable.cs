@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
+using System.Reflection;
 
 namespace HandPosing.Interaction
 {
@@ -11,17 +11,25 @@ namespace HandPosing.Interaction
         [SerializeField]
         private bool multiGrab;
 
-        private Joint _desiredJoint;
+
         private Dictionary<BaseGrabber, Joint> _joints = new Dictionary<BaseGrabber, Joint>();
 
         protected override bool MultiGrab => multiGrab;
 
-        protected override void Awake()
+        private void OnValidate()
         {
-            base.Awake();
             if (customJoint != null)
             {
-                _desiredJoint = CopyCustomJoint(customJoint);
+                if (customJoint.gameObject == this.gameObject)
+                {
+                    Debug.LogError("Set the custom Joint to a disabled child GameObject");
+                    GameObject holder = CreateJointHolder();
+                    customJoint = CloneJoint(customJoint, holder);
+                }
+                else
+                {
+                    customJoint.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -29,16 +37,16 @@ namespace HandPosing.Interaction
         {
             base.GrabBegin(hand, grabPoint);
 
-            if(immovable)
+            if (immovable)
             {
                 return;
             }
 
 
             Joint joint = null;
-            if (_desiredJoint != null)
+            if (customJoint != null)
             {
-                joint = CloneJoint(_desiredJoint, this.gameObject) as Joint;
+                joint = CloneJoint(customJoint, this.gameObject) as Joint;
             }
             else
             {
@@ -59,10 +67,8 @@ namespace HandPosing.Interaction
         public override void GrabEnd(BaseGrabber hand, Vector3 linearVelocity, Vector3 angularVelocity)
         {
             RemoveJoint(hand);
-
             base.GrabEnd(hand, linearVelocity, angularVelocity);
         }
-
 
         public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot) { }
 
@@ -83,30 +89,23 @@ namespace HandPosing.Interaction
             return joint;
         }
 
-        protected Joint CopyCustomJoint(Joint joint)
+        protected GameObject CreateJointHolder()
         {
             GameObject savedJointHolder = new GameObject();
+            savedJointHolder.name = "Saved Joint";
+            savedJointHolder.SetActive(false);
             savedJointHolder.transform.SetParent(this.transform);
             Rigidbody body = savedJointHolder.AddComponent<Rigidbody>();
             body.isKinematic = true;
-            CloneJoint(joint, savedJointHolder);
-            savedJointHolder.name = "Saved Joint";
-            savedJointHolder.SetActive(false);
-            Destroy(joint);
-            return savedJointHolder.GetComponent<Joint>();
+            return savedJointHolder;
         }
 
-        private static Component CloneJoint(Joint joint, GameObject destination)
+        private static Joint CloneJoint(Joint joint, GameObject destination)
         {
             System.Type jointType = typeof(Joint);
-            Component clone = destination.gameObject.AddComponent(joint.GetType());
+            Joint clone = destination.gameObject.AddComponent(joint.GetType()) as Joint;
 
-            PropertyInfo[] properties = joint.GetType().GetProperties(
-                BindingFlags.FlattenHierarchy
-                | BindingFlags.Public
-                | BindingFlags.Instance);
-
-            foreach (var foundProperty in properties)
+            foreach (var foundProperty in joint.GetType().GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance))
             {
                 if ((foundProperty.DeclaringType.IsSubclassOf(jointType)
                     || foundProperty.DeclaringType == jointType)
