@@ -84,7 +84,7 @@ namespace HandPosing.Interaction
         {
             if (GrabbedObject != null)
             {
-                GrabEnd();
+                GrabEnd(false);
             }
             allGrabbers.Remove(this);
         }
@@ -97,7 +97,7 @@ namespace HandPosing.Interaction
             );
             if (canRelease)
             {
-                GrabEnd();
+                GrabEnd(false);
             }
         }
 
@@ -141,7 +141,7 @@ namespace HandPosing.Interaction
             else if (prevFlex > GrabFlexThresold.x
                 && currentFlex <= GrabFlexThresold.x)
             {
-                GrabEnd();
+                GrabEnd(true);
             }
 
             if (GrabbedObject == null && currentFlex > 0)
@@ -211,7 +211,7 @@ namespace HandPosing.Interaction
             GrabbedObject.MoveTo(grabbablePosition, grabbableRotation);
         }
 
-        protected virtual void GrabEnd()
+        protected virtual void GrabEnd(bool canGrab = true)
         {
             if (GrabbedObject != null)
             {
@@ -220,7 +220,10 @@ namespace HandPosing.Interaction
                 ReleaseGrabbedObject(linearVelocity, angularVelocity);
             }
 
-            GrabVolumeEnable(true);
+            if(canGrab)
+            {
+                GrabVolumeEnable(true);
+            }
         }
 
         protected void ReleaseGrabbedObject(Vector3 linearVelocity, Vector3 angularVelocity)
