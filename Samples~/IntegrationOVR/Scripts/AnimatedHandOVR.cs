@@ -6,6 +6,10 @@ using HandPosing.Interaction;
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// Purely based on the Hand.cs script from Oculus Plugin, but with BaseGrabber compatibility added instead of OVRGrabber.
+    /// Uses an Animator to change the fingers of the hand when using controllers.
+    /// </summary>
     [RequireComponent(typeof(BaseGrabber))]
     public class AnimatedHandOVR : MonoBehaviour
     {

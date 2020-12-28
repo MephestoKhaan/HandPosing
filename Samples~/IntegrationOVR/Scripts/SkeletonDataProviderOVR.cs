@@ -3,13 +3,23 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// Custom implementation for the Oculus plugin of the SkeletonDataProvider.
+    /// It is important to note that since OVRSkeleton gets executed at -80, we want
+    /// to update the data as soon as it is available (hence the -70)
+    /// </summary>
     [DefaultExecutionOrder(-70)]
     public class SkeletonDataProviderOVR : SkeletonDataProvider
     {
+        /// <summary>
+        /// Oculus Skeleton provider for the hand.
+        /// </summary>
         [SerializeField]
         private OVRSkeleton ovrSkeleton;
 
-
+        /// <summary>
+        /// List of bone IDs in Oculus and the HandPosing data to perform the translation.
+        /// </summary>
         private static readonly Dictionary<OVRSkeleton.BoneId, BoneId> OVRToPosingIDs =
             new Dictionary<OVRSkeleton.BoneId, BoneId>()
             {

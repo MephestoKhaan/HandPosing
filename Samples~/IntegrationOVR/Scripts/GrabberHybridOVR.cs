@@ -4,6 +4,11 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// Custom grabber for the Oculus Plugin
+    /// This Grabber supports grabbing with both Oculus Hand tracking, using Pinch gesture
+    /// and grabbing using Oculus Touch controllers, using the Primary Hand Trigger.
+    /// </summary>
     public class GrabberHybridOVR : BaseGrabber
     {
         [Header("OVR dependencies")]
@@ -11,9 +16,17 @@ namespace HandPosing.OVRIntegration
         private OVRHand trackedHand;
         [SerializeField]
         private Transform trackingSpace;
+        /// <summary>
+        /// Release (X) and Grab (Y) values for the controller trigger.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Release (X) and Grab (Y) values for the controller trigger.")]
         private Vector2 grabThresoldController = new Vector2(0.35f, 0.85f);
+        /// <summary>
+        /// Release (X) and Grab (Y) values for the pinching gesture.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Release (X) and Grab (Y) values for the pinching gesture.")]
         private Vector2 grabThresoldHand = new Vector2(0f,0.95f);
 
         [SerializeField]

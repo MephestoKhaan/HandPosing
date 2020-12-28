@@ -2,8 +2,16 @@
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// This is a custom implementation for Oculus plugin of the AnchorsUpdateNotifier.
+    /// Since OVRCameraRig sometimes updates anchors at Update, FixedUpdate or even OnBeforeRender,
+    /// this will inform the puppet system of the right moments these updates occur.
+    /// </summary>
     public class UpdateNotifierOVR : AnchorsUpdateNotifier
     {
+        /// <summary>
+        /// The player Camera Rig, where the update mode is set.
+        /// </summary>
         [SerializeField]
         private OVRCameraRig ovrCameraRig;
 

@@ -5,6 +5,11 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// Script for moving Oculus Avatar hands with the puppeting system.
+    /// Oculus Avatar hands are generated at runtime and only support controllers by default,
+    /// with this script the pose can be overriden at runtime in first-person avatars.
+    /// </summary>
     public class AvatarHandPuppetOVR : MonoBehaviour
     {
         [SerializeField]
@@ -51,6 +56,9 @@ namespace HandPosing.OVRIntegration
             }
         }
 
+        /// <summary>
+        /// Searchs for the right handeness hand in the Avatar if available.
+        /// </summary>
         private void FindHand()
         {
             if (_avatarHandComponent == null)
@@ -60,6 +68,11 @@ namespace HandPosing.OVRIntegration
             }
         }
 
+        /// <summary>
+        /// Extracts all the bones under a hand transform
+        /// </summary>
+        /// <param name="transform">The root transform from which to search for joints</param>
+        /// <param name="joints">The shared Joints collection to be populated</param>
         private void ExtractJointsRecursive(Transform transform, ref List<Transform> joints)
         {
             joints.Add(transform);
@@ -70,6 +83,11 @@ namespace HandPosing.OVRIntegration
             }
         }
 
+        /// <summary>
+        /// Converts a list of tracked finger bones to the Avatar trasform system
+        /// </summary>
+        /// <param name="joints">The list of finger bones, in the same order as the avatar</param>
+        /// <param name="avatarTransforms">The bones converted in Avatar compatible instances</param>
         private void JointsToAvatarTransforms(List<Transform> joints, ref ovrAvatarTransform[] avatarTransforms)
         {
             if(avatarTransforms == null
