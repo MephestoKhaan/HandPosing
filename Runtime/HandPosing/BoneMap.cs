@@ -3,13 +3,28 @@ using UnityEngine;
 
 namespace HandPosing
 {
+    /// <summary>
+    /// Stores the translation between hand tracked data and the represented bone.
+    /// </summary>
     [System.Serializable]
     public class BoneMap
     {
+        /// <summary>
+        /// The unique identifier for the bone.
+        /// </summary>
         public BoneId id;
+        /// <summary>
+        /// The trasform that this bone drives.
+        /// </summary>
         public Transform transform;
+        /// <summary>
+        /// The rotation difference between the hand-tracked bone, and the represented bone.
+        /// </summary>
         public Vector3 rotationOffset;
 
+        /// <summary>
+        /// Get the rotationOffset as a Quaternion.
+        /// </summary>
         public Quaternion RotationOffset
         {
             get
@@ -19,14 +34,33 @@ namespace HandPosing
         }
     }
 
+    /// <summary>
+    /// A special mapping for the base of the hand, indicating the position and rotation difference
+    /// between the hand-tracking system and its representation.
+    /// </summary>
     [System.Serializable]
     public class HandMap
     {
+        /// <summary>
+        /// The unique identifier for the base of the hand. Tipically the wrist.
+        /// </summary>
         public BoneId id;
+        /// <summary>
+        /// The base transform for the hand representation.
+        /// </summary>
         public Transform transform;
+        /// <summary>
+        /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
+        /// </summary>
         public Vector3 rotationOffset;
+        /// <summary>        
+        /// The position difference at the base of the hand between the hand-tracking system and the representation.
+        /// </summary>
         public Vector3 positionOffset;
 
+        /// <summary>
+        /// Get the rotationOffset as a quaternion.
+        /// </summary>
         public Quaternion RotationOffset
         {
             get
@@ -35,6 +69,9 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// Get the position/rotation offset as a more compact Pose.
+        /// </summary>
         public Pose Offset
         {
             get
@@ -43,6 +80,9 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// Set the position/rotation of the hand to the default value.
+        /// </summary>
         public void Apply()
         {
             this.transform.localPosition = this.positionOffset;
@@ -50,6 +90,10 @@ namespace HandPosing
         }
     }
 
+    /// <summary>
+    /// A collection of bone maps to transform between hand-tracking data and their representation.
+    /// Implements ISerializationCallbackReceiver to be able to store data as a Dictionary that survives serialization callbacks.
+    /// </summary>
     [System.Serializable]
     public class BoneCollection : Dictionary<BoneId, BoneMap>, ISerializationCallbackReceiver
     {

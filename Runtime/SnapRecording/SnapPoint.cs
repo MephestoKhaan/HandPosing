@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace HandPosing.SnapRecording
 {
+    /// <summary>
+    /// Serializable data-only version of the SnapPoint so it can be stored when they
+    /// are generated at Play-Mode (where Hand-tracking works).
+    /// </summary>
     [System.Serializable]
     public struct SnapPointData
     {
@@ -15,25 +19,51 @@ namespace HandPosing.SnapRecording
         public float scale;
     }
 
+    /// <summary>
+    /// A single snap point. 
+    /// When not using different hand-scales this is the main type of BaseSnapPoint to use.
+    /// </summary>
     [ExecuteInEditMode]
     public class SnapPoint : BaseSnapPoint
     {
+        /// <summary>
+        /// Relative pose of the hand at this point.
+        /// </summary>
         [SerializeField]
         private HandPose pose;
 
         [Space]
+        /// <summary>
+        /// If provided, surface in which this pose is valid
+        /// If ommited, just the transform position/rotation can be snapped to.
+        /// Not mandatory.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Not mandatory surface in which this pose is valid.")]
         private SnapSurface surface;
+        /// <summary>
+        /// If provided, visual representation of the hand pose at this point.
+        /// Not mandatory.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Not mandatory visual representation of the hand pose at this point.")]
         private HandGhost ghost;
         [Space]
-
+        /// <summary>
+        /// Creates an Inspector button to create a mirrored duplicate of this point.
+        /// </summary>
         [InspectorButton("Mirror")]
         public string CreateMirror;
 
         [Space]
+        /// <summary>
+        /// Maximum distance from the surface at which the measures are valid.
+        /// </summary>
         [SerializeField]
         private float maxDistance = 0.1f;
+        /// <summary>
+        /// How much to favour linear distance versus angular distance when scoring poses.
+        /// </summary>
         [SerializeField]
         [Range(0f, 1f)]
         private float positionRotationWeight = 0.5f;
@@ -42,8 +72,14 @@ namespace HandPosing.SnapRecording
         private SnapSurface _previousSurface;
         private Transform _previousRelativeTo;
 
+        /// <summary>
+        /// General getter for the grip of the snapPoint, which shoud be exactly at the snapPoint position.
+        /// </summary>
         private Transform GripPoint { get => this.transform; }
 
+        /// <summary>
+        /// Scale of the recorded hand.
+        /// </summary>
         public float Scale
         {
             get
@@ -72,6 +108,11 @@ namespace HandPosing.SnapRecording
 
         #region generation
 
+        /// <summary>
+        /// Creates a new SnapPoint under the given object
+        /// </summary>
+        /// <param name="parent">The relative object for the snap point</param>
+        /// <returns>An non-populated SnapPoint</returns>
         public static SnapPoint Create(Transform parent)
         {
             GameObject go = new GameObject("Snap Point");
@@ -80,6 +121,12 @@ namespace HandPosing.SnapRecording
             return record;
         }
 
+        /// <summary>
+        /// Generates a new SnapPoint that mirrors this one. Left hand becomes right hand and vice-versa.
+        /// The mirror axis is defined by the surface of the snap point, if any, if none a best-guess is provided
+        /// but note that it can then moved manually in the editor.
+        /// </summary>
+        /// <returns>A new snapPoint for the opposite hand of this one</returns>
         public SnapPoint Mirror()
         {
             SnapPoint record = Create(this.transform.parent);
@@ -116,12 +163,18 @@ namespace HandPosing.SnapRecording
             }
         }
 #endif
-
+        /// <summary>
+        /// Updates the data of the pose from the attached ghost
+        /// </summary>
         private void RefreshGhostPose()
         {
             this.pose = ghost.ReadPose(relativeTo);
         }
 
+        /// <summary>
+        /// Serializes the data of the SnapPoint so it can be stored 
+        /// </summary>
+        /// <returns>The struct data to recreate the snap point</returns>
         public SnapPointData SaveData()
         {
             return new SnapPointData()
@@ -136,6 +189,11 @@ namespace HandPosing.SnapRecording
             };
         }
 
+        /// <summary>
+        /// Populates the SnapPoint with the serialized data version
+        /// </summary>
+        /// <param name="data">The serialized data for the SnapPoint.</param>
+        /// <param name="relativeTo">The object the data refers to.</param>
         public void LoadData(SnapPointData data, Transform relativeTo)
         {
             SetPose(data.pose, relativeTo);
@@ -147,6 +205,11 @@ namespace HandPosing.SnapRecording
             LoadSurface(data.surfaceData);
         }
 
+        /// <summary>
+        /// Applies the given position/rotation to the SnapPoint
+        /// </summary>
+        /// <param name="snapPose">Relative hand position/rotation.</param>
+        /// <param name="relativeTo">Reference coordinates for the pose.</param>
         public void SetPose(HandPose snapPose, Transform relativeTo)
         {
             pose = snapPose;
@@ -154,6 +217,10 @@ namespace HandPosing.SnapRecording
             this.transform.SetPose(snapPose.relativeGrip, Space.Self);
         }
 
+        /// <summary>
+        /// Creates a visual representation of the Hand position at this point using a Hand ghost
+        /// </summary>
+        /// <param name="ghostProvider">The prefabs collection for the ghosts generation</param>
         public void LoadGhost(HandGhostProvider ghostProvider)
         {
             HandGhost ghostPrototype = ghostProvider?.GetHand(pose.handeness);
@@ -168,6 +235,10 @@ namespace HandPosing.SnapRecording
             }
         }
 
+        /// <summary>
+        /// Populates the surface of the SnapPoint from the stored data
+        /// </summary>
+        /// <param name="surfaceData">Data-only version of the surface.</param>
         private void LoadSurface(SnapSurfaceData surfaceData)
         {
             if (surfaceData == null)
@@ -186,6 +257,10 @@ namespace HandPosing.SnapRecording
             WireSurface();
         }
 
+        /// <summary>
+        /// Connects all the dependencies of the visual-representation of the hand so it
+        /// updates with the data.
+        /// </summary>
         private void WireGhost()
         {
             if (_previousGhost != null)
@@ -200,6 +275,9 @@ namespace HandPosing.SnapRecording
             _previousGhost = ghost;
         }
 
+        /// <summary>
+        /// Connects the dependencies of the visual representation of the surface.
+        /// </summary>
         private void WireSurface()
         {
             if (surface != null)
@@ -241,6 +319,14 @@ namespace HandPosing.SnapRecording
             return bestForwardPose ?? bestBackwardPose.Value;
         }
 
+        /// <summary>
+        /// Finds the most similar pose at this SnapPoint to the user hand pose
+        /// </summary>
+        /// <param name="userPose">The user current hand pose.</param>
+        /// <param name="snapPose">The snap point hand pose.</param>
+        /// <param name="scoreWeight">Position to rotation scoring ratio.</param>
+        /// <param name="direction">Direction in which the snapping ocurred.</param>
+        /// <returns>The adjusted best pose at the surface.</returns>
         private ScoredHandPose CompareNearPoses(HandPose userPose, HandPose snapPose, float scoreWeight, SnapDirection direction)
         {
             Pose desired = userPose.ToPose(relativeTo);
@@ -252,6 +338,15 @@ namespace HandPosing.SnapRecording
             return new ScoredHandPose(adjustedPose, bestScore, direction);
         }
 
+        /// <summary>
+        /// Compares two poses to a reference and returns the most similar one
+        /// </summary>
+        /// <param name="a">First pose to compare with the reference.</param>
+        /// <param name="b">Second pose to compare with the reference.</param>
+        /// <param name="reference">Reference pose to measure from.</param>
+        /// <param name="normalisedWeight">Position to rotation scoring ratio.</param>
+        /// <param name="bestScore">Out value with the score of the best pose.</param>
+        /// <returns>The most similar pose to reference out of a and b</returns>
         private Pose SelectBestPose(Pose a, Pose b, Pose reference, float normalisedWeight, out float bestScore)
         {
             float aScore = PoseUtils.Similitude(reference, a, maxDistance);

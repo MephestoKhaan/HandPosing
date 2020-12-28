@@ -4,15 +4,33 @@ using UnityEngine;
 
 namespace HandPosing.Interaction
 {
+    /// <summary>
+    /// Sample implementation for a Grabber (without dependencies) that works with the snapping system.
+    /// Inherit from this class to be able to reuse the provided Grabber-Grabbable classes or
+    /// completely implement (or adapt!) your own by implementing the much smaller IGrabNotifier.
+    /// </summary>
     public abstract class BaseGrabber : MonoBehaviour, IGrabNotifier
     {
+        /// <summary>
+        /// Grip point of the hand. 
+        /// Used to measure distance to grabbables.
+        /// </summary>
         [SerializeField]
         private Transform gripTransform = null;
+        /// <summary>
+        /// Trigger zones that detect grabbables.
+        /// </summary>
         [SerializeField]
         private Collider[] grabVolumes = null;
+        /// <summary>
+        /// Callbacks indicating when the hand tracking has updated.
+        /// Not mandatory.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Not mandatory callbacks indicating when the hand tracking has updated.")]
         private AnchorsUpdateNotifier updateNotifier;
 
+        
         private Pose _grabbedObjectOffset;
 
         private bool _usingUpdateNotifier;
@@ -21,18 +39,39 @@ namespace HandPosing.Interaction
         private Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
         private bool _nearGrab = false;
 
+        /// <summary>
+        /// Current grabbed object.
+        /// </summary>
         public Grabbable GrabbedObject { get; private set; } = null;
 
+        #region IGrabNotifier
         public Action<GameObject> OnGrabStarted { get; set; }
         public Action<GameObject, float> OnGrabAttemp { get; set; }
         public Action<GameObject> OnGrabEnded { get; set; }
 
         public abstract Vector2 GrabFlexThresold { get; }
         public abstract float CurrentFlex();
+
+        public Snappable FindClosestSnappable()
+        {
+            var closestGrabbable = FindClosestGrabbable();
+            return closestGrabbable.Item1?.GetComponent<Snappable>();
+        }
+        #endregion
+
+        /// <summary>
+        /// Relative velocities of the hand for throwing.
+        /// </summary>
+        /// <param name="to">The point at which to measure the velocity.</param>
+        /// <returns>The linear and angular velocity of the hand at the given pose.</returns>
         protected abstract (Vector3, Vector3) HandRelativeVelocity(Pose to);
 
         #region clearer
         private static HashSet<BaseGrabber> allGrabbers = new HashSet<BaseGrabber>();
+        /// <summary>
+        /// Unsuscribe all the objects grabbed by all hands.
+        /// </summary>
+        /// <param name="grabbable"></param>
         public static void ClearAllGrabs(Grabbable grabbable)
         {
             foreach (var grabber in allGrabbers)
@@ -89,6 +128,10 @@ namespace HandPosing.Interaction
             allGrabbers.Remove(this);
         }
 
+        /// <summary>
+        /// Release a grabbable from this grabber.
+        /// </summary>
+        /// <param name="grabbable">The grabbable to be released.</param>
         public void ForceRelease(Grabbable grabbable)
         {
             bool canRelease = (
@@ -101,6 +144,11 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Unsuscribe an object from the list of touched grabbables.
+        /// The object will not be a grabbing candidate until it is touched again.
+        /// </summary>
+        /// <param name="grabbable">The grabbable to be unsuscribed</param>
         public void ForceUntouch(Grabbable grabbable)
         {
             if (_grabCandidates.ContainsKey(grabbable))
@@ -117,12 +165,15 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Called when the hands have moved, or in Udpdate if no notifier was provided.
+        /// </summary>
         private void UpdateAnchors()
         {
             UpdateGrabStates();
         }
 
-        protected void UpdateGrabStates()
+        private void UpdateGrabStates()
         {
             float prevFlex = _prevFlex;
             _prevFlex = CurrentFlex();
@@ -130,7 +181,13 @@ namespace HandPosing.Interaction
             MoveGrabbedObject(transform.position, transform.rotation);
         }
 
-        protected void CheckForGrabOrRelease(float prevFlex, float currentFlex)
+        /// <summary>
+        /// Checks the current grabbing gesture and tries to grab/release/approach a grabbable.
+        /// This key method triggers the callbacks for the snapping system.
+        /// </summary>
+        /// <param name="prevFlex">Last grabbing gesture strength, normalised.</param>
+        /// <param name="currentFlex">Current gragginb gesture strength, normalised.</param>
+        private void CheckForGrabOrRelease(float prevFlex, float currentFlex)
         {
             if (prevFlex < GrabFlexThresold.y
                 && currentFlex >= GrabFlexThresold.y)
@@ -156,6 +213,11 @@ namespace HandPosing.Interaction
             }
         }
 
+
+        /// <summary>
+        /// Triggers how close the grabber is to start grabbing a nearby object, informing the snapping system.
+        /// </summary>
+        /// <param name="factor">Current normalised value for the grab attemp, 1 indicates a grab.</param>
         private void NearGrab(float factor)
         {
             if (factor == 0f)
@@ -175,6 +237,9 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Search for a nearby object and grab it.
+        /// </summary>
         protected virtual void GrabBegin()
         {
             Grabbable closestGrabbable;
@@ -188,6 +253,11 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Attach a given grabbable to the hand, storing the offset to the hand so it can be kept while holding.
+        /// </summary>
+        /// <param name="closestGrabbable">The object to be grabbed.</param>
+        /// <param name="closestGrabbableCollider">The collider of the grabbable, not used.</param>
         protected virtual void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
         {
             GrabbedObject = closestGrabbable;
@@ -200,6 +270,11 @@ namespace HandPosing.Interaction
             _grabbedObjectOffset.rotation = Quaternion.Inverse(transform.rotation) * GrabbedObject.transform.rotation;
         }
 
+        /// <summary>
+        /// Update the grabbed object position/rotation using the offset recorded when the grab started.
+        /// </summary>
+        /// <param name="pos">Current position of the grabber.</param>
+        /// <param name="rot">Current rotation of the grabber.</param>
         protected virtual void MoveGrabbedObject(Vector3 pos, Quaternion rot)
         {
             if (GrabbedObject == null)
@@ -211,6 +286,12 @@ namespace HandPosing.Interaction
             GrabbedObject.MoveTo(grabbablePosition, grabbableRotation);
         }
 
+        /// <summary>
+        /// Releases the current grabbed object
+        /// </summary>
+        /// <param name="canGrab">
+        /// If the hand can grab again anything within reach after this release.
+        /// Set False if the grab was ended artifially, not by the user actually ungrasping.</param>
         protected virtual void GrabEnd(bool canGrab = true)
         {
             if (GrabbedObject != null)
@@ -226,6 +307,11 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Throw the current grabbed object.
+        /// </summary>
+        /// <param name="linearVelocity">Linear velocity of the throw.</param>
+        /// <param name="angularVelocity">Angular velocity of the throw.</param>
         protected void ReleaseGrabbedObject(Vector3 linearVelocity, Vector3 angularVelocity)
         {
             GrabbedObject.GrabEnd(this, linearVelocity, angularVelocity);
@@ -233,6 +319,10 @@ namespace HandPosing.Interaction
             GrabbedObject = null;
         }
 
+        /// <summary>
+        /// Release an object without throwing it.
+        /// </summary>
+        /// <param name="grabbable">Object to release</param>
         public virtual void OffhandGrabbed(Grabbable grabbable)
         {
             if (GrabbedObject == grabbable)
@@ -243,11 +333,6 @@ namespace HandPosing.Interaction
 
         #region grabbable detection
 
-        public Snappable FindClosestSnappable()
-        {
-            var closestGrabbable = FindClosestGrabbable();
-            return closestGrabbable.Item1?.GetComponent<Snappable>();
-        }
 
         private (Grabbable, Collider) FindClosestGrabbable()
         {

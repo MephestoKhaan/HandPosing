@@ -29,6 +29,11 @@ namespace HandPosing.SnapSurfaces
         public float angle = 120f;
     }
 
+    /// <summary>
+    /// This type of surface defines a cylinder in which the grip pose is valid around an object.
+    /// An angle can be used to constrain the cylinder and not use a full circle.
+    /// The radious is automatically specified as the distance from the axis of the cylinder to the original grip position.
+    /// </summary>
     [System.Serializable]
     public class CylinderSurface : SnapSurface
     {
@@ -41,6 +46,9 @@ namespace HandPosing.SnapSurfaces
             set => _data = value as CylinderSurfaceData; 
         }
 
+        /// <summary>
+        /// Direction from the axis of the cylinder to the original grip position.
+        /// </summary>
         public Vector3 StartAngleDir
         {
             get
@@ -53,6 +61,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// Direction from the axis of the cylinder to the maximum angle alowance.
+        /// </summary>
         public Vector3 EndAngleDir
         {
             get
@@ -61,6 +72,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// Base cap of the cylinder, in world coordinates.
+        /// </summary>
         public Vector3 StartPoint
         {
             get
@@ -87,6 +101,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// End cap of the cylinder, in world coordinates.
+        /// </summary>
         public Vector3 EndPoint
         {
             get
@@ -113,6 +130,10 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The maximum angle for the surface of the cylinder, starting from the original grip position.
+        /// To invert the direction of the angle, swap the caps order.
+        /// </summary>
         public float Angle
         {
             get
@@ -125,6 +146,10 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The generated radious of the cylinder.
+        /// Represents the distance from the axis of the cylinder to the original grip position.
+        /// </summary>
         public float Radious
         {
             get
@@ -139,6 +164,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The direction of the central axis of the cylinder.
+        /// </summary>
         public Vector3 Direction
         {
             get
@@ -160,6 +188,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The rotation of the central axis of the cylinder.
+        /// </summary>
         private Quaternion Rotation
         {
             get

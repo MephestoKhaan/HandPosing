@@ -3,9 +3,21 @@ using UnityEngine;
 
 namespace HandPosing.SnapRecording
 {
+    /// <summary>
+    /// This SnapPoint is actually a Composition of several basic SnapPoints that can be 
+    /// interpolated in between according to the hand scale.
+    /// 
+    /// If enabling hand scaling, create several normal SnapPoints at different scales for
+    /// the same pose, and then group them together with this class before assigning it to
+    /// the Snappable, so the system can interpolate between all of them depending on the 
+    /// size of the user's hand.
+    /// </summary>
     public class SnapPointInterpolator : BaseSnapPoint
     {
         [Space]
+        /// <summary>
+        /// The list of basic Snap Points to interpolate to based on their scales.
+        /// </summary>
         [SerializeField]
         private List<SnapPoint> points;
 
@@ -54,7 +66,11 @@ namespace HandPosing.SnapRecording
             return result.Value;
         }
 
-
+        /// <summary>
+        /// Finds the two nearest (upper and lower) snap points to interpolate from given a scale.
+        /// </summary>
+        /// <param name="scale">The user scale</param>
+        /// <returns>The SnapPoints inmediately under and over the scale, and the interpolation factor between them.</returns>
         private (SnapPoint, SnapPoint, float) FindRange(float scale)
         {
             SnapPoint under = null;
@@ -104,6 +120,5 @@ namespace HandPosing.SnapRecording
             }
             DestroyImmediate(this.gameObject);
         }
-
     }
 }

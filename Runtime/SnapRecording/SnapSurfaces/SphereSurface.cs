@@ -23,6 +23,12 @@ namespace HandPosing.SnapSurfaces
         public Vector3 centre;
     }
 
+    /// <summary>
+    /// Especifies an entire sphere around an object in which the grip point is valid.
+    /// 
+    /// One of the main advantages of spheres is that the rotation of the hand pose does
+    /// not really matters, as it will always fit the surface correctly.
+    /// </summary>
     [System.Serializable]
     public class SphereSurface : SnapSurface
     {
@@ -35,6 +41,9 @@ namespace HandPosing.SnapSurfaces
             set => _data = value as SphereSurfaceData;
         }
 
+        /// <summary>
+        /// The centre of the sphere in world coordinates.
+        /// </summary>
         public Vector3 Centre
         {
             get
@@ -61,6 +70,10 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The radious of the sphere, this is automatically calculated as the distance between
+        /// the centre and the original grip pose.
+        /// </summary>
         public float Radious
         {
             get
@@ -73,6 +86,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The direction of the sphere, measured from the centre to the original grip position.
+        /// </summary>
         public Vector3 Direction
         {
             get
@@ -81,6 +97,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The rotation of the sphere from the recorded grip position.
+        /// </summary>
         public Quaternion Rotation
         {
             get

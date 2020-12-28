@@ -4,32 +4,84 @@ using UnityEngine.Events;
 
 namespace HandPosing
 {
+    /// <summary>
+    /// This class controls the representation of a hand (typically a skin-mesh renderer) by
+    /// moving its position/rotation and the rotations of the bones that compose it.
+    /// 
+    /// The data that drives this puppet could come from a hand-tracking system but sometimes
+    /// it is overriden by the snapping system. 
+    /// In that matter, it is also important to note the difference between tracked data and its representation,
+    /// sometimes they might differ when the representation is overriden.
+    /// </summary>
     [DefaultExecutionOrder(-10)]
     public class HandPuppet : MonoBehaviour
     {
+        /// <summary>
+        /// The hand-tracking data provider.
+        /// </summary>
         [SerializeField]
+        [Tooltip("The hand-tracking data provider")]
         private SkeletonDataProvider skeleton;
+        /// <summary>
+        /// Callbacks indicating when the hand tracking has updated.
+        /// Not mandatory.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Callbacks indicating when the hand tracking has updated. Not mandatory.")]
         private AnchorsUpdateNotifier updateNotifier;
+        /// <summary>
+        /// The parent anchor of the hand.
+        /// </summary>
         [SerializeField]
+        [Tooltip("The parent anchor of the hand.")]
         private Transform handAnchor;
+        /// <summary>
+        /// Transform for the grip point of the hand. Tipically at the centre of the hand.
+        /// It is important that the grip point is well alligned with the palm.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Transform for the grip point of the hand. Should be at the centre of the hand and alligned with it.")]
         private Transform gripPoint;
+        /// <summary>
+        /// Handeness of the hand.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Is this a right or a left hand?")]
         private Handeness handeness;
+        /// <summary>
+        /// Should the Hand adjusts its size to the user's
+        /// </summary>
         [SerializeField]
+        [Tooltip("Should the hand size adjust to the user (when using hand-tracking)")]
         private bool autoAdjustScale;
 
+        /// <summary>
+        /// Offset of the hand when using hand-tracking.
+        /// Note that the default position is for when using controllers.
+        /// </summary>
         [SerializeField]
+        [Tooltip("Offset of the hand (from the anchor) when using hand-tracking instead of controllers.")]
         private HandMap trackedHandOffset;
+        /// <summary>
+        /// Bones of the hand and their relative rotations compared to hand-tracking.
+        /// </summary>
         [SerializeField]
         private List<BoneMap> boneMaps;
 
+        /// <summary>
+        /// Callback triggered when the user changes control mode to Hand Tracking.
+        /// </summary>
         [SerializeField]
         private UnityEvent OnUsingHands;
+        /// <summary>
+        /// Callback triggered when the user changes control mode to Controllers.
+        /// </summary>
         [SerializeField]
         private UnityEvent OnUsingControllers;
 
+        /// <summary>
+        /// General getter for the bones of the hand.
+        /// </summary>
         public List<BoneMap> Bones
         {
             get
@@ -38,14 +90,9 @@ namespace HandPosing
             }
         }
 
-        public HandMap HandOffset
-        {
-            get
-            {
-                return trackedHandOffset;
-            }
-        }
-
+        /// <summary>
+        /// Current scale of the represented hand.
+        /// </summary>
         public float Scale
         {
             get
@@ -58,6 +105,9 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// General getter for the grip point of the hand.
+        /// </summary>
         public Transform Grip
         {
             get
@@ -65,6 +115,10 @@ namespace HandPosing
                 return gripPoint;
             }
         }
+
+        /// <summary>
+        /// True if the user is using hand-tracking, false if using controllers.
+        /// </summary>
         public bool IsTrackingHands
         {
             get
@@ -73,6 +127,9 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// Relative pose of the representated grip from the hand anchor.
+        /// </summary>
         public Pose GripOffset
         {
             get
@@ -81,6 +138,9 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// World rotation of the tracked 
+        /// </summary>
         public Pose TrackedGripPose
         {
             get
@@ -95,7 +155,13 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// Callback before applying the puppeting to the hand representation.
+        /// </summary>
         public System.Action OnPoseBeforeUpdate;
+        /// <summary>
+        /// Callback after applying the puppeting to the hand representation.
+        /// </summary>
         public System.Action OnPoseUpdated;
 
         private BoneCollection _bonesCache;
@@ -117,8 +183,6 @@ namespace HandPosing
         private bool _offsetInitialised = false;
         private bool _usingUpdateNotifier;
         private bool _trackingHands;
-
-
 
         private void Awake()
         {
@@ -252,12 +316,25 @@ namespace HandPosing
 
         #region pose lerping
 
+        /// <summary>
+        /// Moves the hand and its bones towards a given pose and bones using interpolation.
+        /// The target pose is specified in local units from a reference transform.
+        /// </summary>
+        /// <param name="pose">The target position/rotation of the hand and its bones to move to</param>
+        /// <param name="relativeTo">The relative transform from which the pose is given. Typically an object that is going to be grabbed.</param>
+        /// <param name="bonesWeight">Interpolation factor for the bones. 0 for staying with the current values, 1 for fully overriding with the new ones.</param>
+        /// <param name="positionWeight">Interpolation factor of the bone position/rotation. 0 for staying at the current pose, 1 for fully overriding with the provided one.</param>
         public void LerpToPose(HandPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
         {
             LerpBones(pose.Bones, bonesWeight);
             LerpGripOffset(pose, positionWeight, relativeTo);
         }
 
+        /// <summary>
+        /// Rotates the bones of the hand towards the given ones using interpolation.
+        /// </summary>
+        /// <param name="bones">The target bone rotations.</param>
+        /// <param name="weight">Interpolation factor for the bones. 0 for staying with the current values, 1 for fully overriding with the new ones.</param>
         public void LerpBones(List<BoneRotation> bones, float weight)
         {
             if (weight > 0f)
@@ -274,11 +351,25 @@ namespace HandPosing
             }
         }
 
+        /// <summary>
+        /// Moves the hand positing/rotation towards the given Grip pose using interpolation.
+        /// The target pose is specified in local units from a reference transform.
+        /// </summary>
+        /// <param name="pose">The relative target position for the grip point of the hand</param>
+        /// <param name="weight">Interpolation factor, 0 for not changing the hand, 1 for fully alligning the grip point with the given pose.</param>
+        /// <param name="relativeTo">The reference transform in which the pose is provided.</param>
         public void LerpGripOffset(HandPose pose, float weight, Transform relativeTo)
         {
             LerpGripOffset(pose.relativeGrip, weight, relativeTo);
         }
 
+        /// <summary>
+        /// Moves the hand at a given pose towards the given Grip pose using interpolation.
+        /// The target pose is specified in local units from a reference transform.
+        /// </summary>
+        /// <param name="pose">The relative target position for the grip point of the hand</param>
+        /// <param name="weight">Interpolation factor, 0 for not changing the hand, 1 for fully alligning the grip point with the given pose.</param>
+        /// <param name="relativeTo">The reference transform in which the pose is provided. If null, the Hand Anchor coordinates are used</param>
         public void LerpGripOffset(Pose pose, float weight, Transform relativeTo = null)
         {
             Pose gripOffset = this.gripPoint.RelativeOffset(this.transform);
@@ -292,6 +383,12 @@ namespace HandPosing
 
         #region currentPoses
 
+        /// <summary>
+        /// Gets the current represented hand pose oriented in relation to a given object.
+        /// </summary>
+        /// <param name="relativeTo">The object from which to obtain the pose. Typically an object that is going to be grabbed.</param>
+        /// <param name="includeBones">True for including all the bones data in the result (default False)</param>
+        /// <returns>A new HandPose</returns>
         public HandPose TrackedPose(Transform relativeTo, bool includeBones = false)
         {
             HandPose pose = new HandPose();

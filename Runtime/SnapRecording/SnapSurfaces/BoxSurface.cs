@@ -37,6 +37,11 @@ namespace HandPosing.SnapSurfaces
         public Vector3 eulerAngles;
     }
 
+    /// <summary>
+    /// This SnapSurface defines a Rectangle around which the grip point is valid.
+    /// Since the grip point might be offset from the fingers, a valid range for each opposite
+    /// side of the rectangle can be set so the grabbing fingers are constrained to the object bounds.
+    /// </summary>
     [System.Serializable]
     public class BoxSurface : SnapSurface
     {
@@ -49,6 +54,9 @@ namespace HandPosing.SnapSurfaces
             set => _data = value as BoxSurfaceData;
         }
 
+        /// <summary>
+        /// The lateral displacement of the grip point in the main side.
+        /// </summary>
         public float WidthOffset
         {
             get
@@ -60,6 +68,12 @@ namespace HandPosing.SnapSurfaces
                 _data.widthOffset = value;
             }
         }
+
+        /// <summary>
+        /// The range at which the sides are constrained.
+        /// X,Y for the back and forward sides range.
+        /// Z,W for the left and right sides range.
+        /// </summary>
         public Vector4 SnapOffset
         {
             get
@@ -72,7 +86,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
-
+        /// <summary>
+        /// The size of the rectangle. Y is ignored.
+        /// </summary>
         public Vector3 Size
         {
             get
@@ -85,6 +101,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The rotation of the rectange from the Grip point
+        /// </summary>
         public Quaternion Rotation
         {
             get
@@ -97,6 +116,9 @@ namespace HandPosing.SnapSurfaces
             }
         }
 
+        /// <summary>
+        /// The forward direction of the rectangle (based on its rotation)
+        /// </summary>
         public Vector3 Direction
         {
             get

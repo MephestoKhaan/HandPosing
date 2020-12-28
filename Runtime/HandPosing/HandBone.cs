@@ -2,6 +2,9 @@
 
 namespace HandPosing
 {
+	/// <summary>
+	/// Valid identifiers for the bones of a hand.
+	/// </summary>
 	public enum BoneId
 	{
 		Invalid,
@@ -25,11 +28,25 @@ namespace HandPosing
 		Hand_Pinky3
 	}
 
+	/// <summary>
+	/// Data for a bone of hand.
+	/// </summary>
 	public struct HandBone 
     {
+		/// <summary>
+		/// The unique identifier of the bone.
+		/// </summary>
 		public BoneId Id { get; private set; }
+		/// <summary>
+		/// The transform this bone drives.
+		/// </summary>
 		public Transform Transform { get; private set; }
 
+		/// <summary>
+		/// Default constructor.
+		/// </summary>
+		/// <param name="id">Unique identifier of the bone.</param>
+		/// <param name="transform">Transform that this bone drives.</param>
 		public HandBone(BoneId id, Transform transform)
         {
 			Id = id;
