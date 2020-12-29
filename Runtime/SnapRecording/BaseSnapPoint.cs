@@ -27,15 +27,15 @@ namespace HandPosing.SnapRecording
         protected bool snapsBack;
         /// <summary>
         /// Indicates how firmly the grab strength must be so the hand can slide. 
-        /// Normalised, a value of 1 will never slide, a value of 0.5 will start sliding only 
+        /// Normalised, a value of 1 will always slide, a value of 0.5 will start sliding only 
         /// when the grab is half-released.
         /// 
         /// It is recommended to use this only with grabs based on physics Joints.
         /// </summary>
         [SerializeField]
         [Range(0f, 1f)]
-        [Tooltip("Indicates how firmly the grab strength must be so the hand can slide. Use with Physics grabs")]
-        protected float slideThresold = 1f;
+        [Tooltip("Indicates how firmly the grab strength must be so the hand can slide (0 never slides, 1 always). Use with Physics grabs.")]
+        protected float slideThresold = 0f;
 
         /// <summary>
         /// General getter for the transform of the object this snap point refers to
