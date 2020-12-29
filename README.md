@@ -13,7 +13,8 @@ Don't forget to import the Samples like the **Oculus Integration (OVR)** to star
 
 You could also download the latest stable package in the [releases section](https://github.com/MephestoKhaan/HandPosing/releases/). But the method above is the preferred one.
 
-Please refer to the [Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for the documentation.
+Please refer to the [Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for guidance.
+You can also find the full code documentation [here](https://mephestokhaan.github.io/HandPosing/Documentation/html/annotated.html) 
 
 This is a work in progress, and things are subject to change. I hope it serves others either as a useful tool or at least as a starting point for their grabbing-interaction implementations. At this moment I won't be accepting **Pull Requests** but reach me in the issues if something is not right or have any feature in mind that you think is missing.
 
