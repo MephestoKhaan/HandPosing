@@ -1,6 +1,6 @@
 {
 	"name": "com.mefistofiles.handposing",
-	"version": "1.2.3",
+	"version": "1.2.4",
 	"displayName": "HandPosing",
 	"description": "A tool for generating Hand-Poses using HandTracking",
 	"unity": "2019.4",
@@ -34,6 +34,11 @@
 			"displayName": "Poses Gallery (Requires IntegrationOVR)",
 			"description": "Samples covering all current types of poses and grabbers.",
 			"path": "Samples~/PosesGallery"
+		},
+		{
+			"displayName": "Oculus Avatars control(Requires IntegrationOVR)",
+			"description": "Control an Oculus Avatar Hands.",
+			"path": "Samples~/AvatarControl"
 		}
 	]
 }
