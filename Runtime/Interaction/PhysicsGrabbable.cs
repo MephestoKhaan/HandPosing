@@ -24,7 +24,7 @@ namespace HandPosing.Interaction
         /// </summary>
         [SerializeField]
         [Tooltip("Not mandatory. Specify a custom joint to mimic when grabbing, must be disabled.")]
-        private Joint customJoint;
+        private ConfigurableJoint customJoint;
 
         /// <summary>
         /// Using physics, multiple grabbers can held the object. 
@@ -48,7 +48,7 @@ namespace HandPosing.Interaction
             {
                 if (customJoint.gameObject == this.gameObject)
                 {
-                    Debug.LogError("Set the custom Joint to a disabled child GameObject");
+                    Debug.LogError($"Set the custom Configurable Joint at {this.name} to a disabled child GameObject", this.gameObject);
                     GameObject holder = CreateJointHolder();
                     customJoint = CloneJoint(customJoint, holder);
                 }
@@ -154,25 +154,60 @@ namespace HandPosing.Interaction
         }
 
         /// <summary>
-        /// Using reflection, copy all the relevant properties of a joint onto a new one.
+        /// Copy all the properties of a ConfigurableJoint onto a new one.
         /// </summary>
         /// <param name="joint">The Joint to be copied.</param>
         /// <param name="destination">The GameObject that will contain the new Joint.</param>
         /// <returns>The created Joint.</returns>
-        private static Joint CloneJoint(Joint joint, GameObject destination)
+        private static ConfigurableJoint CloneJoint(ConfigurableJoint joint, GameObject destination)
         {
-            System.Type jointType = typeof(Joint);
-            Joint clone = destination.gameObject.AddComponent(joint.GetType()) as Joint;
+            ConfigurableJoint clone = destination.gameObject.AddComponent<ConfigurableJoint>();
 
-            foreach (var foundProperty in joint.GetType().GetProperties(BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Instance))
-            {
-                if ((foundProperty.DeclaringType.IsSubclassOf(jointType)
-                    || foundProperty.DeclaringType == jointType)
-                    && foundProperty.CanWrite)
-                {
-                    foundProperty.SetValue(clone, foundProperty.GetValue(joint, null), null);
-                }
-            }
+            //From Joint
+            clone.connectedBody = joint.connectedBody;
+            clone.axis = joint.axis;
+            clone.anchor = joint.anchor;
+            clone.connectedAnchor = joint.connectedAnchor;
+            clone.autoConfigureConnectedAnchor = joint.autoConfigureConnectedAnchor;
+            clone.breakForce = joint.breakForce;
+            clone.breakTorque = joint.breakTorque;
+            clone.enableCollision = joint.enableCollision;
+            clone.enablePreprocessing = joint.enablePreprocessing;
+            clone.massScale = joint.massScale;
+            clone.connectedMassScale = joint.connectedMassScale;
+            ///From ConfigurableJoint
+            clone.projectionAngle = joint.projectionAngle;
+            clone.projectionDistance = joint.projectionDistance;
+            clone.projectionMode = joint.projectionMode;
+            clone.slerpDrive = joint.slerpDrive;
+            clone.angularYZDrive = joint.angularYZDrive;
+            clone.angularXDrive = joint.angularXDrive;
+            clone.rotationDriveMode = joint.rotationDriveMode;
+            clone.targetAngularVelocity = joint.targetAngularVelocity;
+            clone.targetRotation = joint.targetRotation;
+            clone.zDrive = joint.zDrive;
+            clone.yDrive = joint.yDrive;
+            clone.xDrive = joint.xDrive;
+            clone.targetVelocity = joint.targetVelocity;
+            clone.targetPosition = joint.targetPosition;
+            clone.angularZLimit = joint.angularZLimit;
+            clone.angularYLimit = joint.angularYLimit;
+            clone.highAngularXLimit = joint.highAngularXLimit;
+            clone.lowAngularXLimit = joint.lowAngularXLimit;
+            clone.linearLimit = joint.linearLimit;
+            clone.angularYZLimitSpring = joint.angularYZLimitSpring;
+            clone.angularXLimitSpring = joint.angularXLimitSpring;
+            clone.linearLimitSpring = joint.linearLimitSpring;
+            clone.angularZMotion = joint.angularZMotion;
+            clone.angularYMotion = joint.angularYMotion;
+            clone.angularXMotion = joint.angularXMotion;
+            clone.zMotion = joint.zMotion;
+            clone.yMotion = joint.yMotion;
+            clone.xMotion = joint.xMotion;
+            clone.secondaryAxis = joint.secondaryAxis;
+            clone.configuredInWorldSpace = joint.configuredInWorldSpace;
+            clone.swapBodies = joint.swapBodies;
+
             return clone;
         }
 
