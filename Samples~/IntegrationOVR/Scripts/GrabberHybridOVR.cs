@@ -14,8 +14,6 @@ namespace HandPosing.OVRIntegration
         [Header("OVR dependencies")]
         [SerializeField]
         private OVRHand trackedHand;
-        [SerializeField]
-        private Transform trackingSpace;
         /// <summary>
         /// Release (X) and Grab (Y) values for the controller trigger.
         /// </summary>
@@ -33,7 +31,15 @@ namespace HandPosing.OVRIntegration
         private Handeness handeness;
 
         private OVRInput.Controller touch;
-        private OVRInput.Controller hand;
+
+        private Vector3 _prevPosition;
+        private Quaternion _prevRotation;
+
+        private Vector3 _velocity;
+        private Vector3 _angularVelocity;
+
+        private const float VELOCITY_DAMPING = 20f;
+
 
         protected override void Reset()
         {
@@ -51,10 +57,41 @@ namespace HandPosing.OVRIntegration
         protected override void Awake()
         {
             touch = handeness == Handeness.Right ? OVRInput.Controller.RTouch : OVRInput.Controller.LTouch;
-            hand = handeness == Handeness.Right ? OVRInput.Controller.RHand : OVRInput.Controller.LHand;
             base.Awake();
         }
 
+        protected override void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
+        {
+            base.Grab(closestGrabbable, closestGrabbableCollider);
+
+            if (GrabbedObject != null)
+            {
+                _prevPosition = GrabbedObject.transform.position;
+                _prevRotation = GrabbedObject.transform.rotation;
+            }
+        }
+
+        protected void LateUpdate()
+        {
+            if (GrabbedObject != null)
+            {
+                Vector3 instantVelocity = (GrabbedObject.transform.position - _prevPosition) / Time.deltaTime;
+
+                Quaternion deltaRotation = GrabbedObject.transform.rotation * Quaternion.Inverse(_prevRotation);
+                float theta = 2.0f * Mathf.Acos(Mathf.Clamp(deltaRotation.w, -1.0f, 1.0f));
+                if (theta > Mathf.PI)
+                {
+                    theta -= 2.0f * Mathf.PI;
+                }
+                Vector3 angularVelocity = new Vector3(deltaRotation.x, deltaRotation.y, deltaRotation.z).normalized * theta / Time.deltaTime;
+
+                _velocity = Vector3.Lerp(instantVelocity, _velocity, Time.deltaTime * VELOCITY_DAMPING);
+                _angularVelocity = Vector3.Lerp(angularVelocity, _angularVelocity, Time.deltaTime * VELOCITY_DAMPING);
+
+                _prevPosition = GrabbedObject.transform.position;
+                _prevRotation = GrabbedObject.transform.rotation;
+            }
+        }
         public override float CurrentFlex()
         {
             if (IsUsingHands)
@@ -80,11 +117,7 @@ namespace HandPosing.OVRIntegration
 
         protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose)
         {
-            OVRInput.Controller controller = IsUsingHands ? hand : touch;
-
-            Vector3 linearVelocity = this.trackingSpace.rotation * OVRInput.GetLocalControllerVelocity(controller);
-            Vector3 angularVelocity = this.trackingSpace.rotation * OVRInput.GetLocalControllerAngularVelocity(controller);
-            return (linearVelocity, angularVelocity);
+            return (_velocity, _angularVelocity);
         }
     }
 }
