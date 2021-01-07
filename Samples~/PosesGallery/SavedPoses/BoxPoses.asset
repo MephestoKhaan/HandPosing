@@ -15,8 +15,8 @@ MonoBehaviour:
   _snapPoints:
   - pose:
       relativeGrip:
-        position: {x: -0.07767333, y: 0.0020940304, z: 0.04785928}
-        rotation: {x: 0.20525682, y: -0.4301498, z: -0.5803212, w: -0.6603549}
+        position: {x: -0.07767386, y: 0.0020942688, z: 0.04785931}
+        rotation: {x: 0.2052569, y: -0.43014994, z: -0.58032143, w: -0.66035503}
       handeness: 1
       _bones:
       - boneID: 2
