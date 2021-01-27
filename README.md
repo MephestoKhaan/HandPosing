@@ -13,6 +13,8 @@ Don't forget to import the Samples like the **Oculus Integration (OVR)** to star
 
 You could also download the latest stable package in the [releases section](https://github.com/MephestoKhaan/HandPosing/releases/). But the method above is the preferred one.
 
+There is a full Unity Project to serve as a game-demo [here](https://github.com/MephestoKhaan/HandPosing_demo)
+
 Please refer to the [Wiki](https://github.com/MephestoKhaan/HandPosing/wiki) for guidance.
 You can also find the full code documentation [here](https://mephestokhaan.github.io/HandPosing/Documentation/html/annotated.html) 
 
