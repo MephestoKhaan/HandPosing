@@ -91,9 +91,9 @@ namespace HandPosing.Interaction
         /// <returns>The generated SnapPoint.</returns>
         public SnapPoint AddSnapPoint(HandPuppet puppet)
         {
-            HandPose pose = puppet.TrackedPose(this.transform, true);
+            HandPose rawPose = puppet.TrackedPose(this.transform, true);
             SnapPoint snapPoint = GenerateSnapPoint();
-            snapPoint.SetPose(pose, this.transform);
+            snapPoint.SetPose(rawPose, this.transform);
             snapPoint.LoadGhost(ghostProvider);
 
             return snapPoint;

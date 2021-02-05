@@ -345,7 +345,8 @@ namespace HandPosing
                     if (BonesCache.ContainsKey(boneId))
                     {
                         Transform boneTransform = BonesCache[boneId].transform;
-                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, bone.rotation, weight);
+                        Quaternion targetRot = BonesCache[boneId].RotationOffset * bone.rotation;
+                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, targetRot, weight);
                     }
                 }
             }
@@ -401,12 +402,13 @@ namespace HandPosing
                 foreach (var bone in BonesCache)
                 {
                     BoneMap boneMap = bone.Value;
-                    Quaternion rotation = boneMap.transform.localRotation;
+                    Quaternion rotation = boneMap.TrackedRotation;
                     pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
                 }
             }
             return pose;
         }
+
         #endregion
     }
 }

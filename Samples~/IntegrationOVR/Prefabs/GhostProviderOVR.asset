@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0c1abeb4cdab745a87b33e13f24750, type: 3}
   m_Name: GhostProviderOVR
   m_EditorClassIdentifier: 
-  leftHand: {fileID: 2620313736512842725, guid: 9c9caced691e39a4dac8e89ddac879ad,
+  leftHand: {fileID: 2186238356769882176, guid: fa5cfeae0d3031e41affab84f2263840,
     type: 3}
-  rightHand: {fileID: 3297801683976904522, guid: 279607e4686b2404fa13d68aa4f51637,
+  rightHand: {fileID: 4796675561261683715, guid: 63b28ea3e535bab48a39e62ea8e097d7,
     type: 3}

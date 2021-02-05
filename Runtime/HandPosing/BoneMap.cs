@@ -32,6 +32,17 @@ namespace HandPosing
                 return Quaternion.Euler(rotationOffset);
             }
         }
+
+        /// <summary>
+        /// Get the raw rotation of the bone, as taken from the tracking data
+        /// </summary>
+        public Quaternion TrackedRotation
+        {
+            get
+            {
+                return Quaternion.Inverse(RotationOffset) * transform.localRotation;
+            }
+        }
     }
 
     /// <summary>
