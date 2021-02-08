@@ -48,6 +48,10 @@ namespace HandPosing.Interaction
         public Action<GameObject> OnGrabStarted { get; set; }
         public Action<GameObject, float> OnGrabAttemp { get; set; }
         public Action<GameObject> OnGrabEnded { get; set; }
+        public Action<GameObject> OnGrabAttemptFail { get; set; }
+
+
+
 
         public abstract Vector2 GrabFlexThresold { get; }
         public abstract float CurrentFlex();
@@ -187,7 +191,7 @@ namespace HandPosing.Interaction
         /// </summary>
         /// <param name="prevFlex">Last grabbing gesture strength, normalised.</param>
         /// <param name="currentFlex">Current gragginb gesture strength, normalised.</param>
-        private void CheckForGrabOrRelease(float prevFlex, float currentFlex)
+        protected virtual void CheckForGrabOrRelease(float prevFlex, float currentFlex)
         {
             if (prevFlex < GrabFlexThresold.y
                 && currentFlex >= GrabFlexThresold.y)
@@ -218,7 +222,7 @@ namespace HandPosing.Interaction
         /// Triggers how close the grabber is to start grabbing a nearby object, informing the snapping system.
         /// </summary>
         /// <param name="factor">Current normalised value for the grab attemp, 1 indicates a grab.</param>
-        private void NearGrab(float factor)
+        protected void NearGrab(float factor)
         {
             if (factor == 0f)
             {
@@ -334,7 +338,7 @@ namespace HandPosing.Interaction
         #region grabbable detection
 
 
-        private (Grabbable, Collider) FindClosestGrabbable()
+        protected (Grabbable, Collider) FindClosestGrabbable()
         {
             float closestMagSq = float.MaxValue;
             Grabbable closestGrabbable = null;

@@ -34,6 +34,16 @@ namespace HandPosing.Interaction
         protected Rigidbody _body;
 
         /// <summary>
+        /// Event called when the object is grabbed
+        /// </summary>
+        public Action<BaseGrabber> OnGrabbed;
+        /// <summary>
+        /// Event called when the object is released
+        /// </summary>
+        public Action<BaseGrabber> OnReleased;
+
+
+        /// <summary>
         /// True if the object is being held by a Grabber.
         /// </summary>
         public bool IsGrabbed
@@ -116,6 +126,8 @@ namespace HandPosing.Interaction
                 _grabbedBy.Add(hand);
             }
             _body.isKinematic = true;
+
+            OnGrabbed?.Invoke(hand);
         }
 
         /// <summary>
@@ -136,6 +148,8 @@ namespace HandPosing.Interaction
                 _body.velocity = linearVelocity;
                 _body.angularVelocity = angularVelocity;
             }
+
+            OnReleased?.Invoke(hand);
         }
 
         /// <summary>
