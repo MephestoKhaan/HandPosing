@@ -65,10 +65,9 @@ namespace HandPosing.Interaction
         /// If a custom joint was provided, duplicate it and mimic its values, if not it will use a fixe joint.
         /// </summary>
         /// <param name="hand">The grabber hand</param>
-        /// <param name="grabPoint">The collider selected for the grab.</param>
-        public override void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        public override void GrabBegin(BaseGrabber hand)
         {
-            base.GrabBegin(hand, grabPoint);
+            base.GrabBegin(hand);
 
             if (immovable)
             {

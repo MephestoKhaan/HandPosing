@@ -109,8 +109,7 @@ namespace HandPosing.Interaction
         /// When the object is grabbed, record the grabber and disable physics.
         /// </summary>
         /// <param name="hand">Grabber hand.</param>
-        /// <param name="grabPoint">Collider being held.</param>
-        public virtual void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        public virtual void GrabBegin(BaseGrabber hand)
         {
             if(!MultiGrab)
             {

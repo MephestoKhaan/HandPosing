@@ -61,6 +61,7 @@ GameObject:
   - component: {fileID: 101258742030416579}
   - component: {fileID: 3678650823691474357}
   - component: {fileID: 3048245330775714576}
+  - component: {fileID: 1846981817}
   m_Layer: 0
   m_Name: Snapping_TrackedHandLeftOVR
   m_TagString: Untagged
@@ -75,7 +76,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7996358526218092163}
-  m_LocalRotation: {x: 0.6213777, y: 0.47814256, z: -0.46278653, w: 0.41364005}
+  m_LocalRotation: {x: 0.6213792, y: 0.47813937, z: -0.46278408, w: 0.41364428}
   m_LocalPosition: {x: -0.049478292, y: -0.006088197, z: -0.11017745}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -84,7 +85,7 @@ Transform:
   - {fileID: 7645059647401531088}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 106.94, y: 38.04599, z: -46.500977}
 --- !u!54 &7996358526214889319
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -245,10 +246,23 @@ MonoBehaviour:
   - {fileID: 7996358526206686973}
   - {fileID: 7996358526206686543}
   updateNotifier: {fileID: 0}
-  trackedHand: {fileID: 0}
-  grabThresoldController: {x: 0.35, y: 0.95}
-  grabThresoldHand: {x: 0, y: 0.9}
-  handeness: 0
+  flexInterface: {fileID: 1846981817}
+--- !u!114 &1846981817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7996358526218092163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d49bdd7f015ce34ebcef4318edda787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flexhand: {fileID: 0}
+  controller: 1
+  grabThresoldController: {x: 0.35, y: 0.55}
+  grabThresoldHand: {x: 0.35, y: 0.95}
 --- !u!1 &7996358526218126863
 GameObject:
   m_ObjectHideFlags: 0
@@ -278,7 +292,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7996358526217837431}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -170, y: 85, z: 7}
 --- !u!1 &7996358526218179299
 GameObject:
   m_ObjectHideFlags: 0
