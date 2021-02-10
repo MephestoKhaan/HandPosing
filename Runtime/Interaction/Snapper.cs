@@ -218,8 +218,8 @@ namespace HandPosing.Interaction
             {
                 return null;
             }
-            Snappable snappable = grabbable.GetComponent<Snappable>();
-            if (snappable != null)
+
+            if (grabbable.TryGetComponent<Snappable>(out Snappable snappable))
             {
                 HandPose userPose = this.puppet.TrackedPose(snappable.transform);
                 BaseSnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);

@@ -2,7 +2,6 @@
 using UnityEngine;
 using HandPosing.OVRIntegration.GrabEngine;
 
-
 namespace HandPosing.OVRIntegration
 {
     /// <summary>
@@ -13,7 +12,7 @@ namespace HandPosing.OVRIntegration
     public class GrabberHybridOVR : BaseGrabber
     {
         [SerializeField]
-        private Component flexInterface; 
+        private Component flexInterface;
 
         private Vector3 _prevPosition;
         private Quaternion _prevRotation;
@@ -30,6 +29,7 @@ namespace HandPosing.OVRIntegration
         }
 
         private const float VELOCITY_DAMPING = 20f;
+
 
         protected override void Grab(Grabbable closestGrabbable)
         {
@@ -69,9 +69,7 @@ namespace HandPosing.OVRIntegration
         }
 
         public override float CurrentFlex() => Flex.GrabStrength;
-
         public override Vector2 GrabFlexThresold => Flex.GrabThresold;
-
         public override Vector2 AttempFlexThresold => Flex.FailGrabThresold;
 
         protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose) => (_velocity, _angularVelocity);

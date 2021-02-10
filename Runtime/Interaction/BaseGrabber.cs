@@ -56,12 +56,13 @@ namespace HandPosing.Interaction
         /// </summary>
         public Grabbable GrabbedObject { get; private set; } = null;
 
+        public Action<bool> OnIgnoreTriggers { get; set; }
+
         #region IGrabNotifier
         public Action<GameObject> OnGrabStarted { get; set; }
         public Action<GameObject, float> OnGrabAttemp { get; set; }
         public Action<GameObject> OnGrabEnded { get; set; }
         public Action<GameObject> OnGrabAttemptFail { get; set; }
-
 
         public abstract Vector2 GrabFlexThresold { get; }
         public abstract Vector2 AttempFlexThresold { get; }
@@ -277,8 +278,10 @@ namespace HandPosing.Interaction
 
         protected virtual void GrabFailed()
         {
-            if (!_timeSinceLastFail.HasValue
-                || Time.timeSinceLevelLoad - _timeSinceLastFail.Value > GRAB_ATTEMPT_DURATION)
+            bool sentFailedEventRecently = _timeSinceLastFail.HasValue
+                && Time.timeSinceLevelLoad - _timeSinceLastFail.Value < GRAB_ATTEMPT_DURATION;
+
+            if (!sentFailedEventRecently)
             {
                 Grabbable failedGrabbable = _lastGrabCandidate;
                 if (failedGrabbable == null)
@@ -336,13 +339,13 @@ namespace HandPosing.Interaction
         protected virtual void Grab(Grabbable closestGrabbable)
         {
             GrabbedObject = closestGrabbable;
-            GrabbedObject.GrabBegin(this);
-
+            GrabbedObject?.GrabBegin(this);
             OnGrabStarted?.Invoke(GrabbedObject?.gameObject);
 
+            Transform grabedTransform = closestGrabbable.transform;
             _grabbedObjectOffset = new Pose();
-            _grabbedObjectOffset.position = Quaternion.Inverse(transform.rotation) * (GrabbedObject.transform.position - transform.position);
-            _grabbedObjectOffset.rotation = Quaternion.Inverse(transform.rotation) * GrabbedObject.transform.rotation;
+            _grabbedObjectOffset.position = Quaternion.Inverse(transform.rotation) * (grabedTransform.position - transform.position);
+            _grabbedObjectOffset.rotation = Quaternion.Inverse(transform.rotation) * grabedTransform.rotation;
         }
 
         /// <summary>
@@ -464,6 +467,7 @@ namespace HandPosing.Interaction
                 Collider grabVolume = grabVolumes[i];
                 grabVolume.enabled = _grabVolumeEnabled;
             }
+            OnIgnoreTriggers?.Invoke(!_grabVolumeEnabled);
 
             if (!_grabVolumeEnabled)
             {
@@ -471,7 +475,7 @@ namespace HandPosing.Interaction
             }
         }
 
-        private void OnTriggerEnter(Collider otherCollider)
+        public void OnTriggerEnter(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)
@@ -486,7 +490,7 @@ namespace HandPosing.Interaction
             _lastGrabCandidate = null;
         }
 
-        private void OnTriggerExit(Collider otherCollider)
+        public void OnTriggerExit(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)
