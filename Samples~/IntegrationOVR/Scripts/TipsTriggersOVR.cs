@@ -5,13 +5,13 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration
 {
+    [RequireComponent(typeof(OVRSkeleton))]
     public class TipsTriggersOVR : MonoBehaviour
     {
         [SerializeField]
-        private OVRSkeleton skeleton;
-        [SerializeField]
         private GrabberHybridOVR grabber;
 
+        private OVRSkeleton _skeleton;
         private List<OVRBoneCapsule> _allCapsules;
 
         private readonly List<OVRSkeleton.BoneId> TIP_BONES = new List<OVRSkeleton.BoneId>
@@ -22,6 +22,11 @@ namespace HandPosing.OVRIntegration
             OVRSkeleton.BoneId.Hand_Ring3,
             OVRSkeleton.BoneId.Hand_Pinky3
         };
+
+        private void Awake()
+        {
+            _skeleton = this.GetComponent<OVRSkeleton>();
+        }
 
         private void OnEnable()
         {
@@ -41,12 +46,12 @@ namespace HandPosing.OVRIntegration
 
         private IEnumerator Start()
         {
-            while (!skeleton.IsInitialized)
+            while (!_skeleton.IsInitialized)
             {
                 yield return null;
             }
 
-            _allCapsules = new List<OVRBoneCapsule>(skeleton.Capsules);
+            _allCapsules = new List<OVRBoneCapsule>(_skeleton.Capsules);
             SetUpCapsuleTriggerLogic();
         }
 
