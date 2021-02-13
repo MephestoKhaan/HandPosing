@@ -92,6 +92,7 @@ GameObject:
   - component: {fileID: 2064097538271242702}
   - component: {fileID: 7744700711333424663}
   - component: {fileID: 2130573002}
+  - component: {fileID: 7359067381948254510}
   m_Layer: 0
   m_Name: Snapping_TrackedHandRightOVR
   m_TagString: Untagged
@@ -276,7 +277,9 @@ MonoBehaviour:
   - {fileID: 2064097536874379337}
   - {fileID: 2064097536875445079}
   updateNotifier: {fileID: 0}
-  flexInterface: {fileID: 2130573002}
+  flexInterfaces:
+  - {fileID: 2130573002}
+  - {fileID: 7359067381948254510}
 --- !u!114 &2130573002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,10 +292,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d49bdd7f015ce34ebcef4318edda787, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  flexhand: {fileID: 0}
+  flexHand: {fileID: 0}
+  grabThresold: {x: 0.35, y: 0.95}
+--- !u!114 &7359067381948254510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064097536887151827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a4ecd3b02b31374aae9ae1f9041266d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   controller: 2
-  grabThresoldController: {x: 0.35, y: 0.55}
-  grabThresoldHand: {x: 0.35, y: 0.95}
+  grabThresold: {x: 0.35, y: 0.55}
 --- !u!1 &2064097536887152357
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,9 +410,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88e2e1bfe11ec6c438b0ade27eaeded1, type: 3}
---- !u!4 &621979817179947973 stripped
+--- !u!4 &621979817179948023 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400048, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
     type: 3}
   m_PrefabInstance: {fileID: 621979817180346741}
   m_PrefabAsset: {fileID: 0}
@@ -497,9 +512,9 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 621979817180346741}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &621979817179948023 stripped
+--- !u!4 &621979817179947973 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400002, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
+  m_CorrespondingSourceObject: {fileID: 400048, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
     type: 3}
   m_PrefabInstance: {fileID: 621979817180346741}
   m_PrefabAsset: {fileID: 0}

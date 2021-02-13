@@ -5,6 +5,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
     public enum FlexType
     {
         Noop = 0, 
+        Controller,
         PinchTriggerFlex,
         SphereGrab
     }
@@ -17,11 +18,13 @@ namespace HandPosing.OVRIntegration.GrabEngine
     {
         FlexType InterfaceFlexType { get; }
 
+        bool IsValid { get; }
+
         /// <summary>
         /// Return normalized grab strength.
         /// </summary>
-        /// <returns>Grab strength, restricted to 0.0-1.0.</returns>
-        float GrabStrength { get; }
+        /// <returns>Grab strength, restricted to 0.0-1.0. Null if no strength is available</returns>
+        float? GrabStrength { get; }
 
         /// <summary>
         /// Return strenght values to start (Y) or stop (X) grabbing.

@@ -12,7 +12,7 @@ namespace HandPosing.OVRIntegration
     public class GrabberHybridOVR : BaseGrabber
     {
         [SerializeField]
-        private Component flexInterface;
+        private Component[] flexInterfaces;
 
         private Vector3 _prevPosition;
         private Quaternion _prevRotation;
@@ -24,7 +24,15 @@ namespace HandPosing.OVRIntegration
         {
             get
             {
-                return flexInterface as FlexInterface;
+                for (int i = 0; i < flexInterfaces.Length; i++)
+                {
+                    FlexInterface flex = flexInterfaces[i] as FlexInterface;
+                    if (flex.IsValid)
+                    {
+                        return flex;
+                    }
+                }
+                return null;
             }
         }
 
@@ -68,7 +76,7 @@ namespace HandPosing.OVRIntegration
             _prevRotation = relativeTo.rotation;
         }
 
-        public override float CurrentFlex() => Flex.GrabStrength;
+        public override float CurrentFlex() => Flex.GrabStrength??0f;
         public override Vector2 GrabFlexThresold => Flex.GrabThresold;
         public override Vector2 AttempFlexThresold => Flex.FailGrabThresold;
         public override float ReleasedFlexThresold => Flex.AlmostGrabRelease;

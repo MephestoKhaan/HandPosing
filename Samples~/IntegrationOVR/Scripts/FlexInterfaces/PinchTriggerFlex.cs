@@ -9,55 +9,44 @@ namespace HandPosing.OVRIntegration.GrabEngine
     public class PinchTriggerFlex : MonoBehaviour, FlexInterface
     {
         [SerializeField]
-        private OVRHand flexhand;
-        [SerializeField]
-        private OVRInput.Controller controller;
+        private OVRHand flexHand;
 
         [Space]
         [SerializeField]
-        [Tooltip("Grab threshold, hand controller")]
-        private Vector2 grabThresoldController = new Vector2(0.35f, 0.55f);
-        [SerializeField]
         [Tooltip("Grab threshold, hand pinch")]
-        private Vector2 grabThresoldHand = new Vector2(0.35f, 0.95f);
+        private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
 
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
         private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
 
         public FlexType InterfaceFlexType => FlexType.PinchTriggerFlex;
 
-        public float GrabStrength
+        public bool IsValid
         {
             get
             {
-                if (flexhand
-                    && flexhand.IsTracked)
+                return flexHand
+                    && flexHand.IsTracked;
+            }
+        }
+
+        public float? GrabStrength
+        {
+            get
+            {
+                if (IsValid)
                 {
                       return Math.Max(
-                          flexhand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
-                          flexhand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
+                          flexHand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
+                          flexHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
                 }
-                else
-                {
-                    return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger,controller);
-                }
+                return null;
             }
         }
 
         public Vector2 GrabThresold
         {
-            get
-            {
-                if (flexhand
-                    && flexhand.IsTracked)
-                {
-                    return grabThresoldHand;
-                }
-                else
-                {
-                    return grabThresoldController;
-                }
-            }
+            get => grabThresold;
         }
 
         public Vector2 FailGrabThresold

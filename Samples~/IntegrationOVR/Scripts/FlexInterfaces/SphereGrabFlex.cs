@@ -13,26 +13,23 @@ namespace HandPosing.OVRIntegration.GrabEngine
     public class SphereGrabFlex : MonoBehaviour, FlexInterface
     {
         [SerializeField]
-        private OVRInput.Controller _controller;
+        private OVRHand flexHand = null;
         [SerializeField]
-        private OVRHand _ovrHand = null;
-        [SerializeField]
-        private OVRSkeleton _skeleton = null;
+        private OVRSkeleton skeleton = null;
 
         [Space]
-        public OVRHand.HandFinger[] DisabledFingers;
         [SerializeField]
         [Range(0.0f, 0.05f)]
-        private float _fingerTipRadius = 0.01f;
+        private float fingerTipRadius = 0.01f;
         [SerializeField]
         [Range(0.0f, 0.1f)]
-        private float _poseVolumeRadius = 0.055f;
+        private float poseVolumeRadius = 0.055f;
         [SerializeField]
-        private Vector3 _poseVolumeOffset = new Vector3(0.0f, 0.04f, 0.0f);
+        private Vector3 poseVolumeOffset = new Vector3(0.0f, 0.04f, 0.0f);
         [SerializeField]
-        private bool _trackLowConfidenceHands = false;
+        private bool trackLowConfidenceHands = false;
         [SerializeField]
-        private bool _trackLowConfidenceFingers = false;
+        private bool trackLowConfidenceFingers = false;
         [SerializeField]
         [Tooltip("Grab threshold, hand sphere grab")]
         private Vector2 grabThresoldHand = new Vector2(0.25f, 0.75f);
@@ -44,6 +41,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 return FlexType.SphereGrab;
             }
         }
+
+        private float? _lastGrabStrength;
 
         private float[] _fingerPoseStrength = new float[FINGER_COUNT];
         private float[] _fingerGrabStrength = new float[FINGER_COUNT];
@@ -75,7 +74,17 @@ namespace HandPosing.OVRIntegration.GrabEngine
         };
 
 
-        public float GrabStrength
+        public bool IsValid
+        {
+            get
+            {
+                return flexHand
+                    && flexHand.IsTracked;
+            }
+        }
+
+
+        public float? GrabStrength
         {
             get => CalculateGrabStrength();
         }
@@ -101,25 +110,31 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => GrabThresold.x * ALMOST_GRAB_RELEASE_PERCENT;
         }
 
-        public float CalculateGrabStrength()
+        public float? CalculateGrabStrength()
         {
-            UpdateFingerTips();
-            UpdateVolumeCenter();
+            if (!IsValid)
+            {
+                return null;
+            }
 
             if (CanTrackHand())
             {
+                UpdateFingerTips();
+                UpdateVolumeCenter();
+
                 CalculatePinchStrength();
                 CalculatePoseStrength();
+                _lastGrabStrength =  StorePerFingerGrabAndGetFinalValue();
             }
 
-            return StorePerFingerGrabAndGetFinalValue();
+            return _lastGrabStrength;
         }
 
         private bool CanTrackHand()
         {
-            if (_ovrHand == null
-                || !_ovrHand.IsDataValid
-                || (!_ovrHand.IsDataHighConfidence && !_trackLowConfidenceHands))
+            if (flexHand == null
+                || !flexHand.IsDataValid
+                || (!flexHand.IsDataHighConfidence && !trackLowConfidenceHands))
             {
                 return false;
             }
@@ -130,9 +145,9 @@ namespace HandPosing.OVRIntegration.GrabEngine
         {
             OVRHand.HandFinger finger = HAND_FINGERS[fingerIndex];
 
-            if (_ovrHand != null
-                || !_ovrHand.IsDataValid
-                || (!_trackLowConfidenceFingers && _ovrHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High))
+            if (flexHand == null
+                || !flexHand.IsDataValid
+                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
             {
                 return false;
             }
@@ -149,7 +164,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 }
 
                 var tipId = FINGER_TIPS[i];
-                OVRBone fingerTip = _skeleton.Bones[(int)tipId];
+                OVRBone fingerTip = skeleton.Bones[(int)tipId];
                 _fingerTipCenter[i] = fingerTip.Transform.position;
             }
 
@@ -157,13 +172,13 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         private void UpdateVolumeCenter()
         {
-            OVRBone baseBone = _skeleton.Bones[(int)OVRSkeleton.BoneId.Hand_Start];
-            _poseVolumeCenter = baseBone.Transform.position + baseBone.Transform.TransformDirection(_poseVolumeOffset);
+            OVRBone baseBone = skeleton.Bones[(int)OVRSkeleton.BoneId.Hand_Start];
+            _poseVolumeCenter = baseBone.Transform.position + baseBone.Transform.TransformDirection(poseVolumeOffset);
         }
 
         private void CalculatePinchStrength()
         {
-            for (int i = 0; i <= FINGER_COUNT; ++i)
+            for (int i = 0; i < FINGER_COUNT; ++i)
             {
                 if (!CanTrackFinger(i))
                 {
@@ -171,18 +186,18 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 }
 
                 var fingerId = HAND_FINGERS[i];
-                _pinchStrength[i] = _ovrHand.GetFingerPinchStrength(fingerId);
+                _pinchStrength[i] = flexHand.GetFingerPinchStrength(fingerId);
             }
         }
 
         private void CalculatePoseStrength()
         {
-            float outsidePoseVolumeRadius = _poseVolumeRadius + _fingerTipRadius;
-            float insidePoseVolumeRadius = _poseVolumeRadius - _fingerTipRadius;
+            float outsidePoseVolumeRadius = poseVolumeRadius + fingerTipRadius;
+            float insidePoseVolumeRadius = poseVolumeRadius - fingerTipRadius;
             float sqrOutsidePoseVolume = outsidePoseVolumeRadius * outsidePoseVolumeRadius;
             float sqrInsidePoseVolume = insidePoseVolumeRadius * insidePoseVolumeRadius;
 
-            for (int i = 0; i <= FINGER_COUNT; ++i)
+            for (int i = 0; i < FINGER_COUNT; ++i)
             {
                 float sqrDist = (_poseVolumeCenter - _fingerTipCenter[i]).sqrMagnitude;
                 if (sqrDist >= sqrOutsidePoseVolume)
@@ -197,7 +212,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 {
                     // interpolate in-between; 1 inside, 0 outside
                     float distance = Mathf.Sqrt(sqrDist);
-                    _fingerPoseStrength[i] = 1.0f - Mathf.Clamp01((distance - insidePoseVolumeRadius) / (2.0f * _fingerTipRadius));
+                    _fingerPoseStrength[i] = 1.0f - Mathf.Clamp01((distance - insidePoseVolumeRadius) / (2.0f * fingerTipRadius));
                 }
             }
         }

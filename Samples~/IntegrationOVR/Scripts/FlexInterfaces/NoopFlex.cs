@@ -9,8 +9,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
     public class NoopFlex : FlexInterface
     {
         public FlexType InterfaceFlexType => FlexType.Noop;
-
-        public float GrabStrength => 0f;
+        public bool IsValid => true;
+        public float? GrabStrength => null;
         public Vector2 GrabThresold => Vector2.one;
         public Vector2 FailGrabThresold => Vector2.one;
         public float AlmostGrabRelease => -1f;
