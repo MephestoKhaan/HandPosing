@@ -66,6 +66,7 @@ namespace HandPosing.Interaction
 
         public abstract Vector2 GrabFlexThresold { get; }
         public abstract Vector2 AttempFlexThresold { get; }
+        public abstract float ReleasedFlexThresold { get; }
 
         public abstract float CurrentFlex();
 
@@ -213,7 +214,7 @@ namespace HandPosing.Interaction
         /// <param name="currentFlex">Current gragginb gesture strength, normalised.</param>
         protected void CheckForGrabOrRelease(float prevFlex, float currentFlex)
         {
-            if (CheckGrabFailed(prevFlex, currentFlex))
+            if (CheckGrabFailed(currentFlex))
             {
                 GrabFailed();
             }
@@ -250,7 +251,7 @@ namespace HandPosing.Interaction
         }
 
 
-        private bool CheckGrabFailed(float prevFlex, float currentFlex)
+        private bool CheckGrabFailed(float currentFlex)
         {
             if(GrabbedObject != null)
             {
@@ -259,7 +260,7 @@ namespace HandPosing.Interaction
 
             bool justReleasedAfterAttempt = _timeSinceGrabAttempt.HasValue
                 && Time.timeSinceLevelLoad - _timeSinceGrabAttempt.Value > FAIL_SUSTAIN_TIME
-                && currentFlex <= GrabFlexThresold.x;
+                && currentFlex <= ReleasedFlexThresold;
 
             if (justReleasedAfterAttempt)
             {

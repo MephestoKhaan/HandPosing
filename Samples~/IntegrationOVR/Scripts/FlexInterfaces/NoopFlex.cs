@@ -13,5 +13,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
         public float GrabStrength => 0f;
         public Vector2 GrabThresold => Vector2.one;
         public Vector2 FailGrabThresold => Vector2.one;
+        public float AlmostGrabRelease => -1f;
     }
 }

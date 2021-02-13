@@ -5,7 +5,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
     public enum FlexType
     {
         Noop = 0, 
-        PinchTriggerFlex
+        PinchTriggerFlex,
+        SphereGrab
     }
 
     /// <summary>
@@ -30,5 +31,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         /// Return strenght values to indicate a grabbing attempt, can be narrower than GrabThresold.
         /// </summary>
         Vector2 FailGrabThresold { get; }
+
+        float AlmostGrabRelease { get; }
     }
 }

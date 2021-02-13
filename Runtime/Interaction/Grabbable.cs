@@ -33,6 +33,11 @@ namespace HandPosing.Interaction
         private HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
         protected Rigidbody _body;
 
+        public Rigidbody Body
+        {
+            get => _body;
+        }
+
         /// <summary>
         /// Event called when the object is grabbed
         /// </summary>

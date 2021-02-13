@@ -15,10 +15,10 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         [Space]
         [SerializeField]
-        [Tooltip("Grab threshold, left hand controller")]
+        [Tooltip("Grab threshold, hand controller")]
         private Vector2 grabThresoldController = new Vector2(0.35f, 0.55f);
         [SerializeField]
-        [Tooltip("Grab threshold, left hand pinch")]
+        [Tooltip("Grab threshold, hand pinch")]
         private Vector2 grabThresoldHand = new Vector2(0.35f, 0.95f);
 
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
@@ -69,6 +69,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 failThresold.y *= ALMOST_PINCH_UPPER_PERCENT;
                 return failThresold;
             }
+        }
+
+        public float AlmostGrabRelease
+        {
+            get => GrabThresold.x;
         }
     }
 }
