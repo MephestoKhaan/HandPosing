@@ -24,9 +24,9 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private float fingerTipRadius = 0.01f;
         [SerializeField]
         [Range(0.0f, 0.1f)]
-        private float poseVolumeRadius = 0.055f;
+        private float poseVolumeRadius = 0.07f;
         [SerializeField]
-        private Vector3 poseVolumeOffset = new Vector3(0.0f, 0.04f, 0.0f);
+        private Vector3 poseVolumeOffset = new Vector3(0.07f, -0.03f, 0.0f);
         [SerializeField]
         private bool trackLowConfidenceHands = false;
         [SerializeField]

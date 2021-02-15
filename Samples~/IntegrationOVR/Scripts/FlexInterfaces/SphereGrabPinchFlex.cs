@@ -6,19 +6,10 @@ namespace HandPosing.OVRIntegration.GrabEngine
 {
     public class SphereGrabPinchFlex : MonoBehaviour, FlexInterface
     {
-        [Space]
-        [SerializeField]
-        [Tooltip("Grab threshold, hand sphere grab")]
-        private Vector2 grabThresoldHand = new Vector2(0.35f, 0.95f);
-
         [SerializeField]
         private SphereGrabFlex sphereFlex;
         [SerializeField]
         private PinchTriggerFlex pinchFlex;
-
-        private const float ALMOST_GRAB_LOWER_PERCENT = 1.2f;
-        private const float ALMOST_GRAB_UPPER_PERCENT = 0.75f;
-        private const float ALMOST_GRAB_RELEASE_PERCENT = 1f;
 
         public FlexType InterfaceFlexType
         {
@@ -47,23 +38,30 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         public Vector2 GrabThresold
         {
-            get => grabThresoldHand;
+            get
+            {
+                return new Vector2(
+                    Mathf.Min(sphereFlex.GrabThresold.x, pinchFlex.GrabThresold.x),
+                    Mathf.Max(sphereFlex.GrabThresold.y, pinchFlex.GrabThresold.y));
+            }
         }
 
         public Vector2 FailGrabThresold
         {
             get
             {
-                Vector2 failThresold = GrabThresold;
-                failThresold.x *= ALMOST_GRAB_LOWER_PERCENT;
-                failThresold.y *= ALMOST_GRAB_UPPER_PERCENT;
-                return failThresold;
+                return new Vector2(
+                    Mathf.Min(sphereFlex.FailGrabThresold.x, pinchFlex.FailGrabThresold.x),
+                    Mathf.Max(sphereFlex.FailGrabThresold.y, pinchFlex.FailGrabThresold.y));
             }
         }
 
         public float AlmostGrabRelease
         {
-            get => GrabThresold.x * ALMOST_GRAB_RELEASE_PERCENT;
+            get
+            {
+                return Mathf.Min(sphereFlex.AlmostGrabRelease, pinchFlex.AlmostGrabRelease);
+            }
         }
 
         public float? CalculateGrabStrength()
