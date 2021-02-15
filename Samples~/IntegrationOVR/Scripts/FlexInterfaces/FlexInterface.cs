@@ -7,7 +7,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
         Noop = 0, 
         Controller,
         PinchTriggerFlex,
-        SphereGrab
+        SphereGrab,
+        SpherePinchGrab
     }
 
     /// <summary>

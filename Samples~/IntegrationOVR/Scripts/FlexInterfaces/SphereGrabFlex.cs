@@ -1,5 +1,6 @@
 // Copyright(c) Facebook Technologies, LLC and its affiliates. All rights reserved.
 
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HandPosing.OVRIntegration.GrabEngine
@@ -31,8 +32,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [SerializeField]
         private bool trackLowConfidenceFingers = false;
         [SerializeField]
+        private List<OVRHand.HandFinger> fingersToIgnore = new List<OVRHand.HandFinger>();
+        [SerializeField]
         [Tooltip("Grab threshold, hand sphere grab")]
         private Vector2 grabThresoldHand = new Vector2(0.25f, 0.75f);
+
 
         public FlexType InterfaceFlexType
         {
@@ -49,6 +53,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private float[] _pinchStrength = new float[FINGER_COUNT];
         private Vector3[] _fingerTipCenter = new Vector3[FINGER_COUNT];
         private Vector3 _poseVolumeCenter = Vector3.zero;
+        private bool[] _cachedIgnoreFingers;
 
         private const float ALMOST_GRAB_LOWER_PERCENT = 1.7f;
         private const float ALMOST_GRAB_UPPER_PERCENT = 0.9f;
@@ -110,7 +115,21 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => GrabThresold.x * ALMOST_GRAB_RELEASE_PERCENT;
         }
 
-        public float? CalculateGrabStrength()
+        private bool IsFinderIgnored(int fingerIndex)
+        {
+            if(_cachedIgnoreFingers == null)
+            {
+                _cachedIgnoreFingers = new bool[FINGER_COUNT];
+                for (int i = 0; i < FINGER_COUNT; ++i)
+                {
+                    _cachedIgnoreFingers[i] = fingersToIgnore.Contains(HAND_FINGERS[i]);
+                }
+            }
+
+            return _cachedIgnoreFingers[fingerIndex];
+        }
+
+        private float? CalculateGrabStrength()
         {
             if (!IsValid)
             {
@@ -124,7 +143,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
                 CalculatePinchStrength();
                 CalculatePoseStrength();
-                _lastGrabStrength =  StorePerFingerGrabAndGetFinalValue();
+                _lastGrabStrength = StorePerFingerGrabAndGetFinalValue();
             }
 
             return _lastGrabStrength;
@@ -230,11 +249,16 @@ namespace HandPosing.OVRIntegration.GrabEngine
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
                 var grabStrength = Mathf.Max(_pinchStrength[i], _fingerGrabStrength[i]);
+                _fingerGrabStrength[i] = grabStrength;
+
+                if (IsFinderIgnored(i))
+                {
+                    continue;
+                }
                 if (minGrabStrength > grabStrength)
                 {
                     minGrabStrength = grabStrength;
                 }
-                _fingerGrabStrength[i] = grabStrength;
             }
 
             return minGrabStrength;
