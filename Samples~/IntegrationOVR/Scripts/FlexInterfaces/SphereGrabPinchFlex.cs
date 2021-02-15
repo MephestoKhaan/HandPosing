@@ -83,28 +83,29 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
+
         public float? CalculateGrabStrength()
         {
             _lastWasSphereFlex = false;
-            float pinchStrenght = pinchFlex.GrabStrength ?? -1f;
-            if (pinchStrenght == 1f)
+            float pinchStrength = pinchFlex.GrabStrength ?? -1f;
+            if (pinchStrength == 1f)
             {
                 return 1f;
             }
-            float sphereStrenght = sphereFlex.GrabStrength ?? -1f;
 
-            if(sphereStrenght > pinchStrenght)
+            float sphereStrength = sphereFlex.GrabStrength ?? -1f;
+            if (sphereStrength > pinchStrength)
             {
                 _lastWasSphereFlex = true;
-                return sphereStrenght;
+                return sphereStrength;
             }
 
-            if(pinchStrenght == -1f)
+            if (pinchStrength == -1f)
             {
                 return null;
             }
 
-            return pinchStrenght;
+            return pinchStrength;
         }
     }
 }
