@@ -24,5 +24,6 @@ namespace HandPosing
         /// Detected scale of the hand.
         /// </summary>
         public virtual float? HandScale { get => 1f; }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace HandPosing.OVRIntegration
@@ -44,7 +45,6 @@ namespace HandPosing.OVRIntegration
                 {OVRSkeleton.BoneId.Hand_Pinky3 , BoneId.Hand_Pinky3}
             };
 
-
         private List<HandBone> _bones;
         public override List<HandBone> Bones
         {
@@ -89,26 +89,29 @@ namespace HandPosing.OVRIntegration
         }
 
         private bool CanInitialise
-            => ovrSkeleton != null
+        {
+            get
+            {
+                return ovrSkeleton != null
                   && ovrSkeleton.IsInitialized
                   && _bones == null;
+            }
+        }
 
         private void Reset()
         {
             ovrSkeleton = this.GetComponent<OVRSkeleton>();
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
-            if (CanInitialise)
+            while (!CanInitialise)
             {
-                InitializeBones();
+                yield return null;
             }
-            else
-            {
-                Debug.LogError("OVR Bones not initialised!", this);
-            }
+            InitializeBones();
         }
+
 
         private void InitializeBones()
         {
@@ -123,12 +126,5 @@ namespace HandPosing.OVRIntegration
             this.enabled = false;
         }
 
-        private void Update()
-        {
-            if(CanInitialise)
-            {
-                InitializeBones();
-            }
-        }
     }
 }

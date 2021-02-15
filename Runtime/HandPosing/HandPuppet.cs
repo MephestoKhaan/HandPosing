@@ -265,6 +265,7 @@ namespace HandPosing
                 Scale = autoAdjustScale? (skeleton.HandScale ?? 1f) : 1f;
                 OnUsingHands?.Invoke();
             }
+
             SetLivePose(skeleton.Bones);
         }
 
