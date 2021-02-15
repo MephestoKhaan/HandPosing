@@ -11,6 +11,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [SerializeField]
         private PinchTriggerFlex pinchFlex;
 
+        private bool _lastWasSphereFlex;
+
         public FlexType InterfaceFlexType
         {
             get
@@ -40,9 +42,14 @@ namespace HandPosing.OVRIntegration.GrabEngine
         {
             get
             {
-                return new Vector2(
-                    Mathf.Min(sphereFlex.GrabThresold.x, pinchFlex.GrabThresold.x),
-                    Mathf.Max(sphereFlex.GrabThresold.y, pinchFlex.GrabThresold.y));
+                if (_lastWasSphereFlex)
+                {
+                    return sphereFlex.GrabThresold;
+                }
+                else
+                {
+                    return pinchFlex.GrabThresold;
+                }
             }
         }
 
@@ -50,9 +57,14 @@ namespace HandPosing.OVRIntegration.GrabEngine
         {
             get
             {
-                return new Vector2(
-                    Mathf.Min(sphereFlex.FailGrabThresold.x, pinchFlex.FailGrabThresold.x),
-                    Mathf.Max(sphereFlex.FailGrabThresold.y, pinchFlex.FailGrabThresold.y));
+                if (_lastWasSphereFlex)
+                {
+                    return sphereFlex.FailGrabThresold;
+                }
+                else
+                {
+                    return pinchFlex.FailGrabThresold;
+                }
             }
         }
 
@@ -60,26 +72,39 @@ namespace HandPosing.OVRIntegration.GrabEngine
         {
             get
             {
-                return Mathf.Min(sphereFlex.AlmostGrabRelease, pinchFlex.AlmostGrabRelease);
+                if (_lastWasSphereFlex)
+                {
+                    return sphereFlex.AlmostGrabRelease;
+                }
+                else
+                {
+                    return pinchFlex.AlmostGrabRelease;
+                }
             }
         }
 
         public float? CalculateGrabStrength()
         {
+            _lastWasSphereFlex = false;
             float pinchStrenght = pinchFlex.GrabStrength ?? -1f;
             if (pinchStrenght == 1f)
             {
                 return 1f;
             }
             float sphereStrenght = sphereFlex.GrabStrength ?? -1f;
-            float grabStrenght = Mathf.Max(pinchStrenght, sphereStrenght);
 
-            if(grabStrenght == -1f)
+            if(sphereStrenght > pinchStrenght)
+            {
+                _lastWasSphereFlex = true;
+                return sphereStrenght;
+            }
+
+            if(pinchStrenght == -1f)
             {
                 return null;
             }
 
-            return grabStrenght;
+            return pinchStrenght;
         }
     }
 }
