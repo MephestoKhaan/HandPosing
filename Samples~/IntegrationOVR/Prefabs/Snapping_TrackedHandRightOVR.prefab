@@ -93,6 +93,8 @@ GameObject:
   - component: {fileID: 7744700711333424663}
   - component: {fileID: 2130573002}
   - component: {fileID: 7359067381948254510}
+  - component: {fileID: 621979817853562402}
+  - component: {fileID: 621979817853562404}
   m_Layer: 0
   m_Name: Snapping_TrackedHandRightOVR
   m_TagString: Untagged
@@ -278,7 +280,7 @@ MonoBehaviour:
   - {fileID: 2064097536875445079}
   updateNotifier: {fileID: 0}
   flexInterfaces:
-  - {fileID: 2130573002}
+  - {fileID: 621979817853562404}
   - {fileID: 7359067381948254510}
 --- !u!114 &2130573002
 MonoBehaviour:
@@ -293,6 +295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flexHand: {fileID: 0}
+  trackLowConfidenceFingers: 0
   grabThresold: {x: 0.35, y: 0.95}
 --- !u!114 &7359067381948254510
 MonoBehaviour:
@@ -308,6 +311,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: 2
   grabThresold: {x: 0.35, y: 0.55}
+--- !u!114 &621979817853562402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064097536887151827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2ece6cd8d708147bd52ae64e1e6070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flexHand: {fileID: 0}
+  skeleton: {fileID: 0}
+  fingerTipRadius: 0.01
+  poseVolumeRadius: 0.07
+  poseVolumeOffset: {x: 0.07, y: -0.03, z: 0}
+  trackLowConfidenceHands: 0
+  trackLowConfidenceFingers: 0
+  fingersToIgnore: 04000000
+  grabThresoldHand: {x: 0.25, y: 0.75}
+--- !u!114 &621979817853562404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2064097536887151827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff700274dab95c4db2b4c071444c45d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabThresoldHand: {x: 0.35, y: 0.95}
+  sphereFlex: {fileID: 621979817853562402}
+  pinchFlex: {fileID: 2130573002}
 --- !u!1 &2064097536887152357
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +449,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88e2e1bfe11ec6c438b0ade27eaeded1, type: 3}
+--- !u!4 &621979817179947973 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400048, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
+    type: 3}
+  m_PrefabInstance: {fileID: 621979817180346741}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &621979817179948023 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400002, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
@@ -509,12 +554,6 @@ Transform:
 --- !u!4 &621979817179947999 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400042, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
-    type: 3}
-  m_PrefabInstance: {fileID: 621979817180346741}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &621979817179947973 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 400048, guid: 88e2e1bfe11ec6c438b0ade27eaeded1,
     type: 3}
   m_PrefabInstance: {fileID: 621979817180346741}
   m_PrefabAsset: {fileID: 0}

@@ -4918,8 +4918,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410140554}
-  m_LocalRotation: {x: -0.023050936, y: -0.67568654, z: 0.10361046, w: 0.72950757}
-  m_LocalPosition: {x: -0.010557529, y: 0.01649921, z: -0.10139945}
+  m_LocalRotation: {x: -0.023051128, y: -0.67568654, z: 0.10361046, w: 0.72950757}
+  m_LocalPosition: {x: -0.010557573, y: 0.016499318, z: -0.10139954}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 334867695}
@@ -8605,17 +8605,17 @@ PrefabInstance:
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.010557443
+      value: -0.010557465
       objectReference: {fileID: 0}
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.016496662
+      value: 0.016496632
       objectReference: {fileID: 0}
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.101400614
+      value: -0.10140067
       objectReference: {fileID: 0}
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
@@ -8625,7 +8625,7 @@ PrefabInstance:
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0230513
+      value: -0.02305124
       objectReference: {fileID: 0}
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
@@ -8635,7 +8635,7 @@ PrefabInstance:
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.103610225
+      value: 0.103610255
       objectReference: {fileID: 0}
     - target: {fileID: 1167143201079711953, guid: 63b28ea3e535bab48a39e62ea8e097d7,
         type: 3}
@@ -9740,8 +9740,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.016959645, y: -0.044345737, z: -0.109592505}
-      rotation: {x: 0.6685813, y: 0.071048595, z: 0.099519886, w: -0.7335174}
+      position: {x: 0.016959703, y: -0.044345617, z: -0.10959254}
+      rotation: {x: 0.66858137, y: 0.07104845, z: 0.099519774, w: -0.73351735}
     handeness: 1
     _bones:
     - boneID: 2
@@ -11776,7 +11776,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 855396870}
-  m_LocalRotation: {x: -0.023051312, y: -0.67568666, z: 0.1036092, w: 0.7295076}
+  m_LocalRotation: {x: -0.02305132, y: -0.67568666, z: 0.10360917, w: 0.7295076}
   m_LocalPosition: {x: -0.010556152, y: 0.016496705, z: -0.10140124}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -12654,8 +12654,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 903199116}
-  m_LocalRotation: {x: -0.02305286, y: -0.67568636, z: 0.103611685, w: 0.72950745}
-  m_LocalPosition: {x: -0.010557175, y: 0.01649724, z: -0.10139556}
+  m_LocalRotation: {x: -0.023052918, y: -0.67568636, z: 0.10361183, w: 0.72950757}
+  m_LocalPosition: {x: -0.010557143, y: 0.01649727, z: -0.10139556}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 218586810}
@@ -13046,7 +13046,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 7645059645558001139}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7645059645558001140}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51eb3b5203579b848804c98dd1571c7d, type: 3}
@@ -13202,7 +13202,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 943816506}
-  m_LocalRotation: {x: 0.72950625, y: -0.10361096, z: -0.6756879, w: 0.023050666}
+  m_LocalRotation: {x: 0.7295062, y: -0.10361084, z: -0.67568785, w: 0.023050694}
   m_LocalPosition: {x: 0.010742776, y: 0.015979629, z: -0.104183495}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -15139,7 +15139,7 @@ MonoBehaviour:
   pose:
     relativeGrip:
       position: {x: -0.011551591, y: 0.0062320232, z: 0.0070944424}
-      rotation: {x: -0.0154239265, y: 0.19512656, z: -0.005300106, w: -0.98064303}
+      rotation: {x: -0.015423956, y: 0.19512656, z: -0.005300084, w: -0.98064303}
     handeness: 1
     _bones:
     - boneID: 2
@@ -16106,8 +16106,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: -0.008221399, y: -0.0019763708, z: 0.012445301}
-      rotation: {x: -0.43036133, y: 0.59487784, z: 0.5945877, w: -0.32768214}
+      position: {x: -0.008221302, y: -0.00197649, z: 0.01244542}
+      rotation: {x: -0.4303613, y: 0.5948776, z: 0.5945876, w: -0.32768205}
     handeness: 1
     _bones:
     - boneID: 2
@@ -19637,8 +19637,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.034306902, y: 0.048431873, z: 0.0080281785}
-      rotation: {x: -0.013234544, y: 0.31207886, z: 0.60706514, w: -0.7306875}
+      position: {x: 0.034306876, y: 0.048431873, z: 0.008028193}
+      rotation: {x: -0.013234668, y: 0.31207883, z: 0.607065, w: -0.7306874}
     handeness: 1
     _bones:
     - boneID: 2
@@ -20666,8 +20666,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1490269978}
-  m_LocalRotation: {x: -0.023051308, y: -0.67568654, z: 0.103610136, w: 0.7295076}
-  m_LocalPosition: {x: -0.010557592, y: 0.01649661, z: -0.10140064}
+  m_LocalRotation: {x: -0.023051266, y: -0.67568684, z: 0.10361025, w: 0.7295072}
+  m_LocalPosition: {x: -0.010557499, y: 0.016496655, z: -0.10140063}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2043692704}
@@ -21006,8 +21006,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: -0.032415003, y: 0.04491532, z: 0.13932288}
-      rotation: {x: -0.24439423, y: 0.36352274, z: 0.12553748, w: -0.8901478}
+      position: {x: -0.032414973, y: 0.04491532, z: 0.1393229}
+      rotation: {x: -0.24439406, y: 0.3635231, z: 0.12553747, w: -0.8901475}
     handeness: 1
     _bones:
     - boneID: 2
@@ -21625,8 +21625,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540568132}
-  m_LocalRotation: {x: -0.023050334, y: -0.67568624, z: 0.10361067, w: 0.72950786}
-  m_LocalPosition: {x: -0.010558248, y: 0.01649592, z: -0.10140019}
+  m_LocalRotation: {x: -0.023050305, y: -0.6756863, z: 0.10361055, w: 0.7295078}
+  m_LocalPosition: {x: -0.0105582215, y: 0.016495943, z: -0.10140014}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1296421749}
@@ -22008,8 +22008,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.14022475, y: 0.05814767, z: -0.035073355}
-      rotation: {x: -0.17522755, y: 0.6827476, z: -0.094465144, w: -0.7030131}
+      position: {x: 0.14022481, y: 0.05814767, z: -0.03507337}
+      rotation: {x: -0.17522752, y: 0.6827476, z: -0.094465196, w: -0.7030132}
     handeness: 1
     _bones:
     - boneID: 2
@@ -22119,7 +22119,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 621979817853562400}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621979817853562401}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51eb3b5203579b848804c98dd1571c7d, type: 3}
@@ -24010,8 +24010,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.049586214, y: 0.012196779, z: -0.022848267}
-      rotation: {x: -0.15562461, y: -0.57056296, z: -0.50017375, w: 0.6325073}
+      position: {x: 0.049586214, y: 0.012196779, z: -0.022848243}
+      rotation: {x: -0.15562463, y: -0.57056284, z: -0.5001736, w: 0.6325074}
     handeness: 0
     _bones:
     - boneID: 2
@@ -28444,7 +28444,7 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.008221976, y: -0.0019772053, z: 0.0124412775}
+      position: {x: 0.0082220435, y: -0.0019772053, z: 0.0124412775}
       rotation: {x: 0.43036148, y: 0.5948775, z: 0.5945879, w: 0.32768103}
     handeness: 0
     _bones:
@@ -28743,7 +28743,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2040709656}
   m_LocalRotation: {x: 0.72950715, y: -0.10360977, z: -0.6756871, w: 0.023051828}
-  m_LocalPosition: {x: 0.010741547, y: 0.015978098, z: -0.10418196}
+  m_LocalPosition: {x: 0.010741524, y: 0.015978105, z: -0.1041819}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 122460783}
@@ -30076,6 +30076,16 @@ PrefabInstance:
       propertyPath: flexHand
       value: 
       objectReference: {fileID: 479991096}
+    - target: {fileID: 621979817853562402, guid: d7bd83fd0123da74eb60c0f446429bd3,
+        type: 3}
+      propertyPath: flexHand
+      value: 
+      objectReference: {fileID: 479991096}
+    - target: {fileID: 621979817853562402, guid: d7bd83fd0123da74eb60c0f446429bd3,
+        type: 3}
+      propertyPath: skeleton
+      value: 
+      objectReference: {fileID: 479991099}
     - target: {fileID: 2064097536887151827, guid: d7bd83fd0123da74eb60c0f446429bd3,
         type: 3}
       propertyPath: m_Name
@@ -30156,40 +30166,8 @@ PrefabInstance:
       propertyPath: updateNotifier
       value: 
       objectReference: {fileID: 126286815}
-    - target: {fileID: 7744700711333424663, guid: d7bd83fd0123da74eb60c0f446429bd3,
-        type: 3}
-      propertyPath: flexInterfaces.Array.data[0]
-      value: 
-      objectReference: {fileID: 621979817853562402}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d7bd83fd0123da74eb60c0f446429bd3, type: 3}
---- !u!1 &621979817853562401 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2064097536887151827, guid: d7bd83fd0123da74eb60c0f446429bd3,
-    type: 3}
-  m_PrefabInstance: {fileID: 621979817853562400}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &621979817853562402
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 621979817853562401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c2ece6cd8d708147bd52ae64e1e6070, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flexHand: {fileID: 479991096}
-  skeleton: {fileID: 479991099}
-  fingerTipRadius: 0.01
-  poseVolumeRadius: 0.07
-  poseVolumeOffset: {x: 0.07, y: -0.03, z: 0}
-  trackLowConfidenceHands: 0
-  trackLowConfidenceFingers: 0
-  fingersToIgnore: 04000000
-  grabThresoldHand: {x: 0.25, y: 0.75}
 --- !u!1 &705470454713836159
 GameObject:
   m_ObjectHideFlags: 0
@@ -30306,11 +30284,16 @@ PrefabInstance:
       propertyPath: updateNotifier
       value: 
       objectReference: {fileID: 126286815}
-    - target: {fileID: 3048245330775714576, guid: 9686c5d5c94736246ab0d8f5920d3445,
+    - target: {fileID: 7645059645558001141, guid: 9686c5d5c94736246ab0d8f5920d3445,
         type: 3}
-      propertyPath: flexInterfaces.Array.data[0]
+      propertyPath: flexHand
       value: 
-      objectReference: {fileID: 7645059645558001141}
+      objectReference: {fileID: 1171957569}
+    - target: {fileID: 7645059645558001141, guid: 9686c5d5c94736246ab0d8f5920d3445,
+        type: 3}
+      propertyPath: skeleton
+      value: 
+      objectReference: {fileID: 1171957572}
     - target: {fileID: 7996358526217837431, guid: 9686c5d5c94736246ab0d8f5920d3445,
         type: 3}
       propertyPath: m_RootOrder
@@ -30388,30 +30371,3 @@ PrefabInstance:
       objectReference: {fileID: 126286815}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9686c5d5c94736246ab0d8f5920d3445, type: 3}
---- !u!1 &7645059645558001140 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7996358526218092163, guid: 9686c5d5c94736246ab0d8f5920d3445,
-    type: 3}
-  m_PrefabInstance: {fileID: 7645059645558001139}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7645059645558001141
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7645059645558001140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c2ece6cd8d708147bd52ae64e1e6070, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  flexHand: {fileID: 1171957569}
-  skeleton: {fileID: 1171957572}
-  fingerTipRadius: 0.01
-  poseVolumeRadius: 0.07
-  poseVolumeOffset: {x: -0.07, y: 0.03, z: 0}
-  trackLowConfidenceHands: 0
-  trackLowConfidenceFingers: 0
-  fingersToIgnore: 04000000
-  grabThresoldHand: {x: 0.25, y: 0.75}
