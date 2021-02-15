@@ -20,7 +20,7 @@ namespace HandPosing.OVRIntegration
         private Vector3 _velocity;
         private Vector3 _angularVelocity;
 
-        private FlexInterface Flex
+        public FlexInterface Flex
         {
             get
             {
