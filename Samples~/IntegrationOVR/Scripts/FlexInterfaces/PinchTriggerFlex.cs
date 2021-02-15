@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace HandPosing.OVRIntegration.GrabEngine
@@ -10,16 +9,29 @@ namespace HandPosing.OVRIntegration.GrabEngine
     {
         [SerializeField]
         private OVRHand flexHand;
+        [SerializeField]
+        private bool trackLowConfidenceFingers = false;
 
         [Space]
         [SerializeField]
         [Tooltip("Grab threshold, hand pinch")]
         private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
 
+
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
         private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
 
+        private const int FINGER_COUNT = 2;
+        private float[] _pinchStrength = new float[FINGER_COUNT];
+        private static readonly OVRHand.HandFinger[] PINCHING_FINGERS = new OVRHand.HandFinger[FINGER_COUNT]
+        {
+            OVRHand.HandFinger.Index,
+            OVRHand.HandFinger.Middle
+        };
+
+
         public FlexType InterfaceFlexType => FlexType.PinchTriggerFlex;
+
 
         public bool IsValid
         {
@@ -36,9 +48,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             {
                 if (IsValid)
                 {
-                      return Math.Max(
-                          flexHand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
-                          flexHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
+                    return CalculateStrength();
                 }
                 return null;
             }
@@ -63,6 +73,33 @@ namespace HandPosing.OVRIntegration.GrabEngine
         public float AlmostGrabRelease
         {
             get => GrabThresold.x;
+        }
+
+        private float CalculateStrength()
+        {
+            float maxPinch = 0f;
+            for(int i = 0; i < FINGER_COUNT; i++)
+            {
+                if (CanTrackFinger(i))
+                {
+                    _pinchStrength[i] = flexHand.GetFingerPinchStrength(PINCHING_FINGERS[i]);
+                }
+                maxPinch = Mathf.Max(maxPinch, _pinchStrength[i]);
+            }
+            return maxPinch;
+        }
+
+        private bool CanTrackFinger(int fingerIndex)
+        {
+            OVRHand.HandFinger finger = PINCHING_FINGERS[fingerIndex];
+
+            if (flexHand == null
+                || !flexHand.IsDataValid
+                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
