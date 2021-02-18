@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HandPosing.OVRIntegration
@@ -10,6 +10,10 @@ namespace HandPosing.OVRIntegration
     {
         [SerializeField]
         private GrabberHybridOVR grabber;
+
+
+        [SerializeField]
+        private bool disableRest;
 
         private OVRSkeleton _skeleton;
         private List<OVRBoneCapsule> _allCapsules;
@@ -62,14 +66,29 @@ namespace HandPosing.OVRIntegration
                 Debug.LogError("Ensure EnableCapsulePhysics is enabled in the OVRSkeleton");
                 return;
             }
+
+            List<OVRBoneCapsule> _tipCapsules = new List<OVRBoneCapsule>();
             foreach (var tipBone in TIP_BONES)
             {
                 OVRBoneCapsule capsule = _allCapsules.Find(c => c.BoneIndex == (short)tipBone);
+                _tipCapsules.Add(capsule);
 
                 capsule.CapsuleCollider.isTrigger = true;
                 TriggerRelay relay = capsule.CapsuleRigidbody.gameObject.AddComponent<TriggerRelay>();
                 relay.Grabber = grabber;
             }
+
+            if(disableRest)
+            {
+                var midCapsules = _allCapsules.Except(_tipCapsules);
+                foreach (var midCapsule in midCapsules)
+                {
+                    midCapsule.CapsuleCollider.enabled = false;
+                }
+            }
+               
+
+
         }
 
 

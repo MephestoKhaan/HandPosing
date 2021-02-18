@@ -34,7 +34,8 @@ namespace HandPosing.SnapRecording
         /// <param name="relativeTo">The relative coordinates for the hand position/rotation</param>
         public void SetPose(HandPose userPose, Transform relativeTo)
         {
-            puppet.LerpToPose(userPose, relativeTo, 1f, 1f);
+            puppet.LerpBones(userPose.Bones, 1f);
+            puppet.LerpGripOffset(userPose, 1f, relativeTo);
         }
 
         /// <summary>

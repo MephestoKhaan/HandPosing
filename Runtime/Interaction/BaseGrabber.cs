@@ -22,6 +22,7 @@ namespace HandPosing.Interaction
         /// </summary>
         [SerializeField]
         private Collider[] grabVolumes = null;
+
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.
@@ -29,6 +30,10 @@ namespace HandPosing.Interaction
         [SerializeField]
         [Tooltip("Not mandatory callbacks indicating when the hand tracking has updated.")]
         private AnchorsUpdateNotifier updateNotifier;
+
+
+        [SerializeField]
+        private Transform movingTransform = null;
 
         private Pose _grabbedObjectOffset;
 
@@ -206,7 +211,7 @@ namespace HandPosing.Interaction
             }
 
             CheckForGrabOrRelease(prevFlex, _flex);
-            MoveGrabbedObject(transform.position, transform.rotation);
+            MoveGrabbedObject(movingTransform.position, movingTransform.rotation);
         }
 
         /// <summary>
@@ -349,8 +354,8 @@ namespace HandPosing.Interaction
 
             Transform grabedTransform = closestGrabbable.transform;
             _grabbedObjectOffset = new Pose();
-            _grabbedObjectOffset.position = Quaternion.Inverse(transform.rotation) * (grabedTransform.position - transform.position);
-            _grabbedObjectOffset.rotation = Quaternion.Inverse(transform.rotation) * grabedTransform.rotation;
+            _grabbedObjectOffset.position = Quaternion.Inverse(movingTransform.rotation) * (grabedTransform.position - movingTransform.position);
+            _grabbedObjectOffset.rotation = Quaternion.Inverse(movingTransform.rotation) * grabedTransform.rotation;
         }
 
         /// <summary>

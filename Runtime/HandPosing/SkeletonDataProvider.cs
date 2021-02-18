@@ -15,6 +15,10 @@ namespace HandPosing
         /// </summary>
         public abstract bool IsTracking { get; }
 
+        public abstract bool IsHandHighConfidence { get; }
+
+        public abstract bool IsFingerHighConfidence(BoneId fingerId);
+
         /// <summary>
         /// Collection of received bones.
         /// </summary>
@@ -24,6 +28,7 @@ namespace HandPosing
         /// Detected scale of the hand.
         /// </summary>
         public virtual float? HandScale { get => 1f; }
+
 
     }
 }

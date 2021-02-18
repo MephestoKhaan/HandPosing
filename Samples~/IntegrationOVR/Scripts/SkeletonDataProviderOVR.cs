@@ -17,6 +17,8 @@ namespace HandPosing.OVRIntegration
         /// </summary>
         [SerializeField]
         private OVRSkeleton ovrSkeleton;
+        [SerializeField]
+        private OVRHand ovrHand;
 
         /// <summary>
         /// List of bone IDs in Oculus and the HandPosing data to perform the translation.
@@ -45,6 +47,28 @@ namespace HandPosing.OVRIntegration
                 {OVRSkeleton.BoneId.Hand_Pinky3 , BoneId.Hand_Pinky3}
             };
 
+        private static readonly Dictionary<BoneId, OVRHand.HandFinger> PosingIDsToFinger =
+            new Dictionary<BoneId, OVRHand.HandFinger>()
+            {
+                { BoneId.Hand_Thumb0, OVRHand.HandFinger.Thumb },
+                { BoneId.Hand_Thumb1, OVRHand.HandFinger.Thumb},
+                { BoneId.Hand_Thumb2, OVRHand.HandFinger.Thumb},
+                { BoneId.Hand_Thumb3, OVRHand.HandFinger.Thumb},
+                { BoneId.Hand_Index1, OVRHand.HandFinger.Index},
+                { BoneId.Hand_Index2, OVRHand.HandFinger.Index},
+                { BoneId.Hand_Index3, OVRHand.HandFinger.Index},
+                { BoneId.Hand_Middle1, OVRHand.HandFinger.Middle},
+                { BoneId.Hand_Middle2, OVRHand.HandFinger.Middle},
+                { BoneId.Hand_Middle3, OVRHand.HandFinger.Middle},
+                { BoneId.Hand_Ring1, OVRHand.HandFinger.Ring},
+                { BoneId.Hand_Ring2, OVRHand.HandFinger.Ring},
+                { BoneId.Hand_Ring3, OVRHand.HandFinger.Ring},
+                { BoneId.Hand_Pinky0, OVRHand.HandFinger.Pinky},
+                { BoneId.Hand_Pinky1, OVRHand.HandFinger.Pinky},
+                { BoneId.Hand_Pinky2, OVRHand.HandFinger.Pinky},
+                { BoneId.Hand_Pinky3, OVRHand.HandFinger.Pinky}
+            };
+
         private List<HandBone> _bones;
         public override List<HandBone> Bones
         {
@@ -59,10 +83,28 @@ namespace HandPosing.OVRIntegration
             get
             {
                 return ovrSkeleton != null
-                    && ovrSkeleton.IsDataValid
                     && ovrSkeleton.IsInitialized
+                    && ovrSkeleton.IsDataValid
                     && _bones != null;
             }
+        }
+
+        public override bool IsHandHighConfidence
+        {
+            get
+            {
+                return IsTracking
+                    && ovrHand.IsDataHighConfidence;
+            }
+        }
+
+        public override bool IsFingerHighConfidence(BoneId fingerId)
+        {
+            if (PosingIDsToFinger.TryGetValue(fingerId, out OVRHand.HandFinger id))
+            {
+                return ovrHand.GetFingerConfidence(id) == OVRHand.TrackingConfidence.High;
+            }
+            return true;
         }
 
 
@@ -123,8 +165,6 @@ namespace HandPosing.OVRIntegration
                     _bones.Add(new HandBone(id, bone.Transform));
                 }
             }
-            this.enabled = false;
         }
-
     }
 }

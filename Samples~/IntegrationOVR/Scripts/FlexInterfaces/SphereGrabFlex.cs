@@ -146,6 +146,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 _lastGrabStrength = StorePerFingerGrabAndGetFinalValue();
             }
 
+
+
             return _lastGrabStrength;
         }
 
@@ -248,8 +250,8 @@ namespace HandPosing.OVRIntegration.GrabEngine
             float minGrabStrength = float.MaxValue;
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
-                var grabStrength = _fingerGrabStrength[i];// Mathf.Max(_pinchStrength[i], _fingerGrabStrength[i]);
-                //_fingerGrabStrength[i] = grabStrength;
+                var grabStrength = Mathf.Max(_pinchStrength[i], _fingerGrabStrength[i]);
+                _fingerGrabStrength[i] = grabStrength;
 
                 if (IsFinderIgnored(i))
                 {

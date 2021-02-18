@@ -38,7 +38,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get
             {
                 return flexHand
-                    && flexHand.IsTracked;
+                    && flexHand.IsDataValid;
             }
         }
 
@@ -78,12 +78,18 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private float CalculateStrength()
         {
             float maxPinch = 0f;
-            for(int i = 0; i < FINGER_COUNT; i++)
+            for(int i = 0; i < 1; i++)
             {
+                float rawPinch = flexHand.GetFingerPinchStrength(PINCHING_FINGERS[i]); 
                 if (CanTrackFinger(i))
                 {
-                    _pinchStrength[i] = flexHand.GetFingerPinchStrength(PINCHING_FINGERS[i]);
+                    _pinchStrength[i] = rawPinch;
                 }
+                else
+                {
+                    _pinchStrength[i] = Mathf.Max(_pinchStrength[i], rawPinch);
+                }
+
                 maxPinch = Mathf.Max(maxPinch, _pinchStrength[i]);
             }
             return maxPinch;
@@ -93,9 +99,12 @@ namespace HandPosing.OVRIntegration.GrabEngine
         {
             OVRHand.HandFinger finger = PINCHING_FINGERS[fingerIndex];
 
+
             if (flexHand == null
-                || !flexHand.IsDataValid
-                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
+                || !flexHand.IsTracked
+                || (flexHand.HandConfidence != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers)
+                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers)
+                || (flexHand.GetFingerConfidence(OVRHand.HandFinger.Thumb) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
             {
                 return false;
             }

@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using HandPosing.SnapRecording;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
 namespace HandPosing.Editor
 {
-    [CustomEditor(typeof(HandPuppet))]
-    public class HandPuppetEditor : UnityEditor.Editor
+    [CustomEditor(typeof(HandGhost))]
+    public class HandGhostEditor : UnityEditor.Editor
     {
         public void OnSceneGUI()
         {
-            HandPuppet puppet = (target as HandPuppet);
-
+            HandGhost ghost = (target as HandGhost);
+            HandPuppet puppet = ghost.GetComponent<HandPuppet>();
             if (puppet?.Bones != null)
             {
                 DrawBonesRotator(puppet.Bones, puppet);
@@ -30,9 +31,8 @@ namespace HandPosing.Editor
             {
                 foreach (var bone in bones)
                 {
-                    Quaternion rotation = Handles.RotationHandle(bone.transform.rotation * Quaternion.Euler(bone.rotationOffset), 
-                        bone.transform.position / scale);
-                    bone.rotationOffset = (Quaternion.Inverse(bone.transform.rotation) *  rotation).eulerAngles;
+                    Quaternion rotation = Handles.RotationHandle(bone.transform.rotation, bone.transform.position / scale);
+                    bone.transform.rotation = rotation;
                 }
             }
         }

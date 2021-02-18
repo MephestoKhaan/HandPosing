@@ -47,8 +47,7 @@ namespace HandPosing.Interaction
 
         private float _grabStartTime;
         private bool _isGrabbing;
-        private Pose _grabOffset;
-        private Pose _prevOffset;
+        private Pose _trackOffset;
 
         private Coroutine _lastUpdateRoutine;
 
@@ -73,13 +72,13 @@ namespace HandPosing.Interaction
         {
             get
             {
-                if(IsSnapping)
+                if (IsSnapping)
                 {
-                    float boundedFlex = _grabNotifier.GrabFlexThresold.x 
+                    float boundedFlex = _grabNotifier.GrabFlexThresold.x
                         + _grabNotifier.CurrentFlex() * (1f - _grabNotifier.GrabFlexThresold.x);
-                    return boundedFlex <= _grabSnap.SlideThresold; 
+                    return boundedFlex <= _grabSnap.SlideThresold;
                 }
-                return false;   
+                return false;
             }
         }
 
@@ -161,7 +160,9 @@ namespace HandPosing.Interaction
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
                 this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
-                _grabOffset = this.puppet.GripOffset;
+
+                _trackOffset = this.puppet.TrackedHandGripOffset;
+
                 _grabStartTime = Time.timeSinceLevelLoad;
                 _isGrabbing = true;
             }
@@ -174,7 +175,7 @@ namespace HandPosing.Interaction
         /// <param name="grabbable">The released object.</param>
         private void GrabEnded(GameObject grabbable)
         {
-            this.puppet.LerpGripOffset(Pose.identity, 0f, null);
+            this.puppet.LerpGripOffset(Pose.identity, 0f, this.transform);
             _isGrabbing = false;
             _grabSnap = null;
         }
@@ -243,7 +244,7 @@ namespace HandPosing.Interaction
         {
             if (IsSliding)
             {
-                AttachPhysics(); 
+                //   AttachPhysics();
             }
         }
 
@@ -253,10 +254,11 @@ namespace HandPosing.Interaction
         /// </summary>
         private void AfterPuppetUpdate()
         {
-            if (this.puppet.IsTrackingHands)
+            AttachToObjectOffseted();
+            /*if (this.puppet.IsTrackingHands)
             {
                 AttachToObjectOffseted();
-            }
+            }*/
         }
 
         /// <summary>
@@ -266,10 +268,15 @@ namespace HandPosing.Interaction
         /// </summary>
         private void LateUpdate()
         {
-            if (!this.puppet.IsTrackingHands)
+            //if (!this.puppet.IsTrackingHands)
             {
-                AttachToObjectOffseted();
+                //AttachToObjectOffseted();
             }
+
+            /*if (IsSnapping)
+            {
+                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
+            }*/
         }
 
         /// <summary>
@@ -279,11 +286,10 @@ namespace HandPosing.Interaction
         /// </summary>
         private void OnBeforeRender()
         {
-            if (IsSnapping)
+            /*if (IsSnapping)
             {
-                _prevOffset = this.puppet.GripOffset;
                 this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-            }
+            }*/
         }
 
         /// <summary>
@@ -296,7 +302,8 @@ namespace HandPosing.Interaction
         {
             if (IsSnapping)
             {
-                this.puppet.LerpGripOffset(_prevOffset, 1f);
+                //this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
+                //this.puppet.LerpGripOffset(_prevOffset, 1f);
             }
         }
         #endregion
@@ -312,17 +319,19 @@ namespace HandPosing.Interaction
             if (_grabSnap != null)
             {
                 this.puppet.LerpBones(_grabPose.Pose.Bones, _bonesOverrideFactor);
-                
+
                 if (_isGrabbing)
                 {
                     if (_grabSnap.SnapsBack)
                     {
                         _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
                     }
-                    this.puppet.LerpGripOffset(_grabOffset, _offsetOverrideFactor);
+
+                    this.puppet.LerpGripOffset(_trackOffset, _offsetOverrideFactor, this.transform);
+
                     if (IsSliding)
                     {
-                        SlidePose();
+                        //   SlidePose();
                     }
                 }
                 else
