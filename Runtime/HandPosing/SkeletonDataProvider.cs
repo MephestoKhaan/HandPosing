@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HandPosing
 {
@@ -15,14 +14,15 @@ namespace HandPosing
         /// </summary>
         public abstract bool IsTracking { get; }
 
-        public abstract bool IsHandHighConfidence { get; }
-
-        public abstract bool IsFingerHighConfidence(BoneId fingerId);
+        /// <summary>
+        /// Collection of received fingers, in local coordinates
+        /// </summary>
+        public abstract BoneRotation[] Fingers { get; }
 
         /// <summary>
-        /// Collection of received bones.
+        /// Hand start pose, in global coordinates
         /// </summary>
-        public abstract List<HandBone> Bones { get; }
+        public abstract BoneRotation Hand { get; }
 
         /// <summary>
         /// Detected scale of the hand.

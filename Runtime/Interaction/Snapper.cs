@@ -22,7 +22,7 @@ namespace HandPosing.Interaction
         /// Unity does not allow to assign Interfaces in the inspector, so a general Component is needed.
         /// </summary>
         [SerializeField]
-        [Tooltip("This MUST implement IGrabNotifier")]
+        [Tooltip("It MUST implement IGrabNotifier")]
         private Component grabber;
         /// <summary>
         /// The puppet of the hand, used to override the position/rotation and bones so they adapt
@@ -48,6 +48,7 @@ namespace HandPosing.Interaction
         private float _grabStartTime;
         private bool _isGrabbing;
         private Pose _trackOffset;
+        private Pose _prevOffset;
 
         private Coroutine _lastUpdateRoutine;
 
@@ -160,9 +161,7 @@ namespace HandPosing.Interaction
                 _offsetOverrideFactor = _bonesOverrideFactor = 1f;
 
                 this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
-
-                _trackOffset = this.puppet.TrackedHandGripOffset;
-
+                _trackOffset = this.puppet.TrackedGripOffset;
                 _grabStartTime = Time.timeSinceLevelLoad;
                 _isGrabbing = true;
             }
@@ -244,7 +243,7 @@ namespace HandPosing.Interaction
         {
             if (IsSliding)
             {
-                //   AttachPhysics();
+             //   AttachPhysics();
             }
         }
 
@@ -254,11 +253,10 @@ namespace HandPosing.Interaction
         /// </summary>
         private void AfterPuppetUpdate()
         {
-            AttachToObjectOffseted();
-            /*if (this.puppet.IsTrackingHands)
+            if (this.puppet.IsTrackingHands)
             {
-                AttachToObjectOffseted();
-            }*/
+               AttachToObjectOffseted();
+            }
         }
 
         /// <summary>
@@ -268,15 +266,17 @@ namespace HandPosing.Interaction
         /// </summary>
         private void LateUpdate()
         {
-            //if (!this.puppet.IsTrackingHands)
+            if (!this.puppet.IsTrackingHands)
             {
-                //AttachToObjectOffseted();
+            //    AttachToObjectOffseted();
             }
 
-            /*if (IsSnapping)
+            if (IsSnapping)
             {
+                Pose localPose = this.transform.GetPose();
+                _prevOffset = PoseUtils.RelativeOffset(this.puppet.Grip.GetPose(), localPose);
                 this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-            }*/
+            }
         }
 
         /// <summary>
@@ -286,10 +286,11 @@ namespace HandPosing.Interaction
         /// </summary>
         private void OnBeforeRender()
         {
-            /*if (IsSnapping)
+            if (IsSnapping)
             {
-                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-            }*/
+                //_prevOffset = this.puppet.TrackedGripOffset;
+                //this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
+            }
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace HandPosing.Interaction
             if (IsSnapping)
             {
                 //this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-                //this.puppet.LerpGripOffset(_prevOffset, 1f);
+                this.puppet.LerpGripOffset(_prevOffset, 1f,this.transform);
             }
         }
         #endregion
@@ -331,7 +332,7 @@ namespace HandPosing.Interaction
 
                     if (IsSliding)
                     {
-                        //   SlidePose();
+                        SlidePose();
                     }
                 }
                 else

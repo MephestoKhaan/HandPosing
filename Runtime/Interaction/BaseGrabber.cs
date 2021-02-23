@@ -31,10 +31,6 @@ namespace HandPosing.Interaction
         [Tooltip("Not mandatory callbacks indicating when the hand tracking has updated.")]
         private AnchorsUpdateNotifier updateNotifier;
 
-
-        [SerializeField]
-        private Transform movingTransform = null;
-
         private Pose _grabbedObjectOffset;
 
         private bool _usingUpdateNotifier;
@@ -211,7 +207,7 @@ namespace HandPosing.Interaction
             }
 
             CheckForGrabOrRelease(prevFlex, _flex);
-            MoveGrabbedObject(movingTransform.position, movingTransform.rotation);
+            MoveGrabbedObject(this.transform.position, this.transform.rotation);
         }
 
         /// <summary>
@@ -354,8 +350,8 @@ namespace HandPosing.Interaction
 
             Transform grabedTransform = closestGrabbable.transform;
             _grabbedObjectOffset = new Pose();
-            _grabbedObjectOffset.position = Quaternion.Inverse(movingTransform.rotation) * (grabedTransform.position - movingTransform.position);
-            _grabbedObjectOffset.rotation = Quaternion.Inverse(movingTransform.rotation) * grabedTransform.rotation;
+            _grabbedObjectOffset.position = Quaternion.Inverse(this.transform.rotation) * (grabedTransform.position - this.transform.position);
+            _grabbedObjectOffset.rotation = Quaternion.Inverse(this.transform.rotation) * grabedTransform.rotation;
         }
 
         /// <summary>

@@ -23,11 +23,9 @@ namespace HandPosing.OVRIntegration
         /// <summary>
         /// List of bone IDs in Oculus and the HandPosing data to perform the translation.
         /// </summary>
-        private static readonly Dictionary<OVRSkeleton.BoneId, BoneId> OVRToPosingIDs =
+        private static readonly Dictionary<OVRSkeleton.BoneId, BoneId> OVRFingersToPosingIDs =
             new Dictionary<OVRSkeleton.BoneId, BoneId>()
             {
-                {OVRSkeleton.BoneId.Invalid , BoneId.Invalid},
-                {OVRSkeleton.BoneId.Hand_Start , BoneId.Hand_Start},
                 {OVRSkeleton.BoneId.Hand_Thumb0 , BoneId.Hand_Thumb0},
                 {OVRSkeleton.BoneId.Hand_Thumb1 , BoneId.Hand_Thumb1},
                 {OVRSkeleton.BoneId.Hand_Thumb2 , BoneId.Hand_Thumb2},
@@ -69,12 +67,26 @@ namespace HandPosing.OVRIntegration
                 { BoneId.Hand_Pinky3, OVRHand.HandFinger.Pinky}
             };
 
-        private List<HandBone> _bones;
-        public override List<HandBone> Bones
+        private static readonly List<OVRSkeleton.BoneId> OVRSkeletonFingerIds = new List<OVRSkeleton.BoneId>(OVRFingersToPosingIDs.Keys);
+        private static readonly List<BoneId> FingerBoneIds = new List<BoneId>(OVRFingersToPosingIDs.Values);
+
+        private static readonly (OVRSkeleton.BoneId, BoneId) HandBoneIDs = (OVRSkeleton.BoneId.Hand_Start, BoneId.Hand_Start);
+
+        private BoneRotation[] _fingers;
+        public override BoneRotation[] Fingers
         {
             get
             {
-                return _bones;
+                return _fingers;
+            }
+        }
+
+        private BoneRotation _hand;
+        public override BoneRotation Hand
+        {
+            get
+            {
+                return _hand;
             }
         }
 
@@ -85,11 +97,11 @@ namespace HandPosing.OVRIntegration
                 return ovrSkeleton != null
                     && ovrSkeleton.IsInitialized
                     && ovrSkeleton.IsDataValid
-                    && _bones != null;
+                    && _fingers != null;
             }
         }
 
-        public override bool IsHandHighConfidence
+        private bool IsHandHighConfidence
         {
             get
             {
@@ -98,7 +110,7 @@ namespace HandPosing.OVRIntegration
             }
         }
 
-        public override bool IsFingerHighConfidence(BoneId fingerId)
+        private bool IsFingerHighConfidence(BoneId fingerId)
         {
             if (PosingIDsToFinger.TryGetValue(fingerId, out OVRHand.HandFinger id))
             {
@@ -130,41 +142,51 @@ namespace HandPosing.OVRIntegration
             return null;
         }
 
-        private bool CanInitialise
-        {
-            get
-            {
-                return ovrSkeleton != null
-                  && ovrSkeleton.IsInitialized
-                  && _bones == null;
-            }
-        }
 
         private void Reset()
         {
             ovrSkeleton = this.GetComponent<OVRSkeleton>();
+            ovrHand = this.GetComponent<OVRHand>();
         }
 
         private IEnumerator Start()
         {
-            while (!CanInitialise)
+            while (ovrSkeleton == null
+                  || !ovrSkeleton.IsInitialized)
             {
                 yield return null;
             }
-            InitializeBones();
+            _fingers = new BoneRotation[OVRFingersToPosingIDs.Count];
         }
 
-
-        private void InitializeBones()
+        private void Update()
         {
-            _bones = new List<HandBone>(ovrSkeleton.Bones.Count);
-            foreach (var bone in ovrSkeleton.Bones)
+            if (_fingers != null)
             {
-                if (OVRToPosingIDs.TryGetValue(bone.Id, out BoneId id))
-                {
-                    _bones.Add(new HandBone(id, bone.Transform));
-                }
+                UpdateBones();
             }
+        }
+
+        private void UpdateBones()
+        {
+            for (int i = 0; i < OVRFingersToPosingIDs.Count; i++)
+            {
+                OVRBone ovrBone = ovrSkeleton.Bones[(int)OVRSkeletonFingerIds[i]];
+                _fingers[i] = new BoneRotation()
+                {
+                    boneID = FingerBoneIds[i],
+                    rotation = ovrBone.Transform.localRotation,
+                    position = ovrBone.Transform.localPosition
+                };
+            }
+
+            OVRBone ovrHand = ovrSkeleton.Bones[(int)HandBoneIDs.Item1];
+            _hand = new BoneRotation
+            {
+                boneID = HandBoneIDs.Item2,
+                rotation = ovrHand.Transform.rotation,
+                position = ovrHand.Transform.position
+            };
         }
     }
 }

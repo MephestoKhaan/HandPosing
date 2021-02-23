@@ -78,7 +78,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private float CalculateStrength()
         {
             float maxPinch = 0f;
-            for(int i = 0; i < 1; i++)
+            for(int i = 0; i < FINGER_COUNT; i++)
             {
                 float rawPinch = flexHand.GetFingerPinchStrength(PINCHING_FINGERS[i]); 
                 if (CanTrackFinger(i))
