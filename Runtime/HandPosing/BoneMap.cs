@@ -52,18 +52,14 @@ namespace HandPosing
     [System.Serializable]
     public class HandMap
     {
-        /// <summary>
-        /// The unique identifier for the base of the hand. Tipically the wrist.
-        /// </summary>
-        public BoneId id;
-        /// <summary>
-        /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
-        /// </summary>
-        public Vector3 rotationOffset;
         /// <summary>        
         /// The position difference at the base of the hand between the hand-tracking system and the representation.
         /// </summary>
         public Vector3 positionOffset;
+        /// <summary>
+        /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
+        /// </summary>
+        public Vector3 rotationOffset;
 
         /// <summary>
         /// Get the rotationOffset as a quaternion.
@@ -87,14 +83,6 @@ namespace HandPosing
             }
         }
 
-        /// <summary>
-        /// Set the position/rotation of the hand to the default value.
-        /// </summary>
-        public void Apply(Transform t)
-        {
-            t.localPosition = this.positionOffset;
-            t.localRotation = RotationOffset;
-        }
     }
 
     /// <summary>

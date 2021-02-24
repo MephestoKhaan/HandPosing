@@ -213,7 +213,7 @@ namespace HandPosing
 
         private void CacheGripOffsets()
         {
-            _originalHandOffset = HandOffsetMapping();
+            //_originalHandOffset = HandOffsetMapping();
             _originalGripOffset = this.transform.RelativeOffset(this.gripPoint);
             //_pupettedGripOffset = OffsetedGripPose();
             _offsetInitialised = true;
@@ -269,22 +269,10 @@ namespace HandPosing
                 _trackingHands = false;
                 Scale = 1f;
                 OnUsingControllers?.Invoke();
-                _originalHandOffset.Apply(this.transform);//TODO <--------------------------
+                
             }
-            SetRootPose(controllerAnchor.GetPose());
+            SetRootPose(controllerAnchor.GetPose(),true);
         }
-
-        #region bone restoring
-        private HandMap HandOffsetMapping()
-        {
-            return new HandMap()
-            {
-                id = trackedHandOffset.id,
-                positionOffset = this.transform.localPosition,
-                rotationOffset = this.transform.localRotation.eulerAngles
-            };
-        }
-        #endregion
 
         private void SetLivePose(SkeletonDataProvider skeletonData)
         {
@@ -303,12 +291,16 @@ namespace HandPosing
             }
 
             Pose rootPose = new Pose(hand.position, hand.rotation);
-            SetRootPose(rootPose);
+            SetRootPose(rootPose, false);
         }
 
-        private void SetRootPose(Pose rootPose)
+        private void SetRootPose(Pose rootPose, bool applyOffset)
         {
             _trackedPose = rootPose;
+            if (applyOffset)
+            {
+                rootPose = PoseUtils.Multiply(rootPose, trackedHandOffset.Offset);
+            }
             this.transform.SetPose(rootPose, Space.World);
         }
 
