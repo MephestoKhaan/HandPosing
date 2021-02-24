@@ -24,9 +24,6 @@ namespace HandPosing
         private SkeletonDataProvider skeleton;
 
 
-        [SerializeField]
-        [Tooltip("The transform for the tracked controller")]
-        private Transform controllerAnchor;
 
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
@@ -56,12 +53,19 @@ namespace HandPosing
         private bool autoAdjustScale;
 
         /// <summary>
-        /// Offset of the hand when using hand-tracking.
-        /// Note that the default position is for when using controllers.
+        /// Transform for the tracked controller so it moves this hand
         /// </summary>
         [SerializeField]
-        [Tooltip("Offset of the hand (from the anchor) when using hand-tracking instead of controllers.")]
-        private HandMap trackedHandOffset;
+        [Tooltip("The transform for the tracked controller")]
+        private Transform controllerAnchor;
+        /// <summary>
+        /// Offset of the hand when using controllers.
+        /// Note that the default position is for when using hand-tracking.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Offset of the hand (from the anchor) when using controllers instead of hand-tracking.")]
+        private HandMap controllerOffset;
+
         /// <summary>
         /// Bones of the hand and their relative rotations compared to hand-tracking.
         /// </summary>
@@ -150,7 +154,7 @@ namespace HandPosing
                 {
                     CacheGripOffsets();
                 }
-                Pose offset = _originalGripOffset;// _trackingHands ? _pupettedGripOffset : _originalGripOffset;
+                Pose offset = _originalGripOffset;
                 offset.position = offset.position * Scale;
                 return this.transform.GlobalPose(offset);
             }
@@ -178,10 +182,8 @@ namespace HandPosing
             }
         }
 
-        private HandMap _originalHandOffset;
         private Pose _originalGripOffset;
         private Pose _trackedPose;
-        //private Pose _pupettedGripOffset;
         private bool _offsetInitialised = false;
         private bool _usingUpdateNotifier;
         private bool _trackingHands;
@@ -213,19 +215,8 @@ namespace HandPosing
 
         private void CacheGripOffsets()
         {
-            //_originalHandOffset = HandOffsetMapping();
             _originalGripOffset = this.transform.RelativeOffset(this.gripPoint);
-            //_pupettedGripOffset = OffsetedGripPose();
             _offsetInitialised = true;
-        }
-
-        private Pose OffsetedGripPose()
-        {
-            Pose trackingOffset = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            Pose gripOffset = this.transform.RelativeOffset(this.gripPoint);
-            Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingOffset);
-            Pose translateGrip = PoseUtils.Multiply(hand, gripOffset);
-            return translateGrip;
         }
 
         private void Update()
@@ -296,11 +287,11 @@ namespace HandPosing
 
         private void SetRootPose(Pose rootPose, bool applyOffset)
         {
-            _trackedPose = rootPose;
             if (applyOffset)
             {
-                rootPose = PoseUtils.Multiply(rootPose, trackedHandOffset.Offset);
+                rootPose = PoseUtils.Multiply(rootPose, controllerOffset.AsPose);
             }
+            _trackedPose = rootPose;
             this.transform.SetPose(rootPose, Space.World);
         }
 
