@@ -15,7 +15,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [Space]
         [SerializeField]
         [Tooltip("Grab threshold, hand pinch")]
-        private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
+        private Vector2 grabThresold = new Vector2(0.01f, 0.9f);
 
 
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;

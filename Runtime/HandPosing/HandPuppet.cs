@@ -272,7 +272,7 @@ namespace HandPosing
                 _trackingHands = false;
                 Scale = 1f;
                 OnUsingControllers?.Invoke();
-                _originalHandOffset.Apply();
+                _originalHandOffset.Apply(this.transform);
             }
         }
 
@@ -282,9 +282,8 @@ namespace HandPosing
             return new HandMap()
             {
                 id = trackedHandOffset.id,
-                transform = trackedHandOffset.transform,
-                positionOffset = trackedHandOffset.transform.localPosition,
-                rotationOffset = trackedHandOffset.transform.localRotation.eulerAngles
+                positionOffset = this.transform.localPosition,
+                rotationOffset = this.transform.localRotation.eulerAngles
             };
         }
         #endregion
@@ -363,7 +362,7 @@ namespace HandPosing
 
             Pose inverseGrip = this.gripPoint.RelativeOffset(this.transform);
             Pose targetPose = PoseUtils.Multiply(targetGrip, inverseGrip);
-            this.trackedHandOffset.transform.SetPose(targetPose);
+            this.transform.SetPose(targetPose);
 
         }
         #endregion

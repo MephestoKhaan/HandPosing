@@ -57,10 +57,6 @@ namespace HandPosing
         /// </summary>
         public BoneId id;
         /// <summary>
-        /// The base transform for the hand representation.
-        /// </summary>
-        public Transform transform;
-        /// <summary>
         /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
         /// </summary>
         public Vector3 rotationOffset;
@@ -94,10 +90,10 @@ namespace HandPosing
         /// <summary>
         /// Set the position/rotation of the hand to the default value.
         /// </summary>
-        public void Apply()
+        public void Apply(Transform t)
         {
-            this.transform.localPosition = this.positionOffset;
-            this.transform.localRotation = RotationOffset;
+            t.localPosition = this.positionOffset;
+            t.localRotation = RotationOffset;
         }
     }
 

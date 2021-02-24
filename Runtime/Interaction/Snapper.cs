@@ -243,7 +243,7 @@ namespace HandPosing.Interaction
         {
             if (IsSliding)
             {
-             //   AttachPhysics();
+                AttachPhysics();
             }
         }
 
@@ -255,7 +255,7 @@ namespace HandPosing.Interaction
         {
             if (this.puppet.IsTrackingHands)
             {
-               AttachToObjectOffseted();
+                AttachToObjectOffseted();
             }
         }
 
@@ -268,7 +268,7 @@ namespace HandPosing.Interaction
         {
             if (!this.puppet.IsTrackingHands)
             {
-            //    AttachToObjectOffseted();
+                AttachToObjectOffseted();
             }
         }
 

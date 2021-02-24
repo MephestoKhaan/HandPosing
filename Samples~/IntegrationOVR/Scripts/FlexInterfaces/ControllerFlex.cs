@@ -9,7 +9,7 @@ public class ControllerFlex : MonoBehaviour, FlexInterface
 
     [SerializeField]
     [Tooltip("Grab threshold, hand controller")]
-    private Vector2 grabThresold = new Vector2(0.35f, 0.55f);
+    private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
 
     private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
     private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
