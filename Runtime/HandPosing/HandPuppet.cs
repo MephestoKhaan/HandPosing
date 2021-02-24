@@ -22,6 +22,12 @@ namespace HandPosing
         [SerializeField]
         [Tooltip("The hand-tracking data provider")]
         private SkeletonDataProvider skeleton;
+
+
+        [SerializeField]
+        [Tooltip("The transform for the tracked controller")]
+        private Transform controllerAnchor;
+
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.
@@ -130,7 +136,7 @@ namespace HandPosing
             {
                 return PoseUtils.RelativeOffset(Grip.GetPose(), _trackedPose);
             }
-        } 
+        }
 
 
         /// <summary>
@@ -182,21 +188,14 @@ namespace HandPosing
 
         private void Awake()
         {
-            if (skeleton == null)
+            if (updateNotifier != null)
             {
-                this.enabled = false;
+                updateNotifier.OnAnchorsEveryUpdate += UpdateHandPose;
+                _usingUpdateNotifier = true;
             }
             else
             {
-                if (updateNotifier != null)
-                {
-                    updateNotifier.OnAnchorsEveryUpdate += UpdateHandPose;
-                    _usingUpdateNotifier = true;
-                }
-                else
-                {
-                    _usingUpdateNotifier = false;
-                }
+                _usingUpdateNotifier = false;
             }
             CacheGripOffsets();
         }
@@ -211,7 +210,6 @@ namespace HandPosing
             }
             return bonesCollection;
         }
-
 
         private void CacheGripOffsets()
         {
@@ -261,7 +259,6 @@ namespace HandPosing
                 Scale = autoAdjustScale ? (skeleton.HandScale ?? 1f) : 1f;
                 OnUsingHands?.Invoke();
             }
-
             SetLivePose(skeleton);
         }
 
@@ -272,8 +269,9 @@ namespace HandPosing
                 _trackingHands = false;
                 Scale = 1f;
                 OnUsingControllers?.Invoke();
-                _originalHandOffset.Apply(this.transform);
+                _originalHandOffset.Apply(this.transform);//TODO <--------------------------
             }
+            SetRootPose(controllerAnchor.GetPose());
         }
 
         #region bone restoring
@@ -304,9 +302,12 @@ namespace HandPosing
                 }
             }
 
-            Pose rootPose = new Pose(trackedHandOffset.positionOffset
-                    + trackedHandOffset.RotationOffset * hand.position,
-                    trackedHandOffset.RotationOffset * hand.rotation);
+            Pose rootPose = new Pose(hand.position, hand.rotation);
+            SetRootPose(rootPose);
+        }
+
+        private void SetRootPose(Pose rootPose)
+        {
             _trackedPose = rootPose;
             this.transform.SetPose(rootPose, Space.World);
         }
@@ -357,7 +358,7 @@ namespace HandPosing
         public void LerpGripOffset(Pose pose, float weight, Transform relativeTo)
         {
             Pose fromGrip = this.gripPoint.GetPose();
-            Pose toGrip = (relativeTo??this.transform).GlobalPose(pose);
+            Pose toGrip = (relativeTo ?? this.transform).GlobalPose(pose);
             Pose targetGrip = PoseUtils.Lerp(fromGrip, toGrip, weight);
 
             Pose inverseGrip = this.gripPoint.RelativeOffset(this.transform);
