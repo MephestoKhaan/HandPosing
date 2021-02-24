@@ -48,7 +48,7 @@ namespace HandPosing.Interaction
         private float _grabStartTime;
         private bool _isGrabbing;
         private Pose _trackOffset;
-        private Pose _prevOffset;
+        private Pose? _prevOffset;
 
         private Coroutine _lastUpdateRoutine;
 
@@ -270,13 +270,6 @@ namespace HandPosing.Interaction
             {
             //    AttachToObjectOffseted();
             }
-
-            if (IsSnapping)
-            {
-                Pose localPose = this.transform.GetPose();
-                _prevOffset = PoseUtils.RelativeOffset(this.puppet.Grip.GetPose(), localPose);
-                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-            }
         }
 
         /// <summary>
@@ -288,8 +281,8 @@ namespace HandPosing.Interaction
         {
             if (IsSnapping)
             {
-                //_prevOffset = this.puppet.TrackedGripOffset;
-                //this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
+                _prevOffset = this.transform.GetPose();
+                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
             }
         }
 
@@ -301,10 +294,10 @@ namespace HandPosing.Interaction
         /// </summary>
         private void OnEndOfFrame()
         {
-            if (IsSnapping)
+            if (_prevOffset.HasValue)
             {
-                //this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
-                this.puppet.LerpGripOffset(_prevOffset, 1f,this.transform);
+                this.transform.SetPose(_prevOffset.Value);
+                _prevOffset = null;
             }
         }
         #endregion
