@@ -1,5 +1,21 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!54 &212315978
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7645059647401691888}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &7996358526218084115
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,13 +150,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeleton: {fileID: 0}
   updateNotifier: {fileID: 0}
-  handAnchor: {fileID: 0}
   gripPoint: {fileID: 7996358526217772523}
   handeness: 0
   autoAdjustScale: 0
   trackedHandOffset:
     id: 1
-    transform: {fileID: 7996358526217837431}
     rotationOffset: {x: 0, y: 0, z: 0}
     positionOffset: {x: 0, y: 0, z: 0}
   boneMaps:
@@ -266,7 +280,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flexHand: {fileID: 0}
   trackLowConfidenceFingers: 0
-  grabThresold: {x: 0.35, y: 0.95}
+  grabThresold: {x: 0.1, y: 0.9}
 --- !u!114 &1023544563685457361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -280,7 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: 1
-  grabThresold: {x: 0.35, y: 0.55}
+  grabThresold: {x: 0.35, y: 0.95}
 --- !u!114 &7645059645558001141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,7 +328,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cff700274dab95c4db2b4c071444c45d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  grabThresoldHand: {x: 0.35, y: 0.95}
   sphereFlex: {fileID: 7645059645558001141}
   pinchFlex: {fileID: 1846981817}
 --- !u!1 &7996358526218126863
@@ -554,6 +567,12 @@ Transform:
 --- !u!4 &7645059647401531236 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400042, guid: 442d5b4503ed83c4897ef44659446587,
+    type: 3}
+  m_PrefabInstance: {fileID: 7645059647401659854}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7645059647401691888 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100158, guid: 442d5b4503ed83c4897ef44659446587,
     type: 3}
   m_PrefabInstance: {fileID: 7645059647401659854}
   m_PrefabAsset: {fileID: 0}
