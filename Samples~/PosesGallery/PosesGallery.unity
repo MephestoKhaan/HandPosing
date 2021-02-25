@@ -4007,8 +4007,8 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.03430766, y: 0.048431158, z: 0.008028431}
-      rotation: {x: -0.013234396, y: 0.31207904, z: 0.6070654, w: -0.730687}
+      position: {x: 0.034307644, y: 0.048431158, z: 0.008028438}
+      rotation: {x: -0.013234452, y: 0.31207907, z: 0.6070654, w: -0.73068714}
     handeness: 1
     _bones:
     - boneID: 2
@@ -4884,8 +4884,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 348320310}
-  m_LocalRotation: {x: -0.023050744, y: -0.6756865, z: 0.10361034, w: 0.7295076}
-  m_LocalPosition: {x: -0.010557303, y: 0.01649648, z: -0.10140058}
+  m_LocalRotation: {x: -0.023050658, y: -0.6756865, z: 0.10361036, w: 0.7295077}
+  m_LocalPosition: {x: -0.010557311, y: 0.016496498, z: -0.1014006}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1952908949}
@@ -6385,6 +6385,8 @@ GameObject:
   - component: {fileID: 479991099}
   - component: {fileID: 479991098}
   - component: {fileID: 479991097}
+  - component: {fileID: 479991102}
+  - component: {fileID: 479991103}
   - component: {fileID: 479991101}
   m_Layer: 11
   m_Name: OVRHandPrefab
@@ -6483,6 +6485,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabber: {fileID: 1556942193}
   disableRest: 1
+--- !u!114 &479991102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479991095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4345d9d46dceac64d9477ab751c8df80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wrapee: {fileID: 479991097}
+--- !u!114 &479991103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479991095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fbacb2300456de4ca0f950f10598e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wrapee: {fileID: 479991097}
 --- !u!1 &484744127
 GameObject:
   m_ObjectHideFlags: 0
@@ -7569,7 +7597,7 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.049586542, y: 0.01219666, z: -0.022847729}
+      position: {x: 0.0495866, y: 0.012196541, z: -0.02284764}
       rotation: {x: -0.15562607, y: -0.5705635, z: -0.5001731, w: 0.63250715}
     handeness: 0
     _bones:
@@ -11657,7 +11685,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 854109803}
   m_LocalRotation: {x: -0.023051225, y: -0.67568684, z: 0.10361042, w: 0.7295072}
-  m_LocalPosition: {x: -0.010557277, y: 0.016497038, z: -0.10139998}
+  m_LocalPosition: {x: -0.010557213, y: 0.01649712, z: -0.10139999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1728323596}
@@ -12822,7 +12850,7 @@ MonoBehaviour:
   slideThresold: 0
   pose:
     relativeGrip:
-      position: {x: 0.016959205, y: -0.044350266, z: -0.109592386}
+      position: {x: 0.01695929, y: -0.044350266, z: -0.10959244}
       rotation: {x: 0.6685798, y: 0.071048886, z: 0.09951929, w: -0.7335187}
     handeness: 1
     _bones:
@@ -16754,6 +16782,8 @@ GameObject:
   - component: {fileID: 1171957572}
   - component: {fileID: 1171957571}
   - component: {fileID: 1171957570}
+  - component: {fileID: 1171957575}
+  - component: {fileID: 1171957576}
   - component: {fileID: 1171957574}
   m_Layer: 11
   m_Name: OVRHandPrefab
@@ -16852,6 +16882,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabber: {fileID: 930482754}
   disableRest: 1
+--- !u!114 &1171957575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171957568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4345d9d46dceac64d9477ab751c8df80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wrapee: {fileID: 1171957570}
+--- !u!114 &1171957576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1171957568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fbacb2300456de4ca0f950f10598e32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wrapee: {fileID: 1171957570}
 --- !u!1 &1172361511
 GameObject:
   m_ObjectHideFlags: 0
@@ -20841,7 +20897,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1493987674}
   m_LocalRotation: {x: 0.72950727, y: -0.10361026, z: -0.6756869, w: 0.02305135}
-  m_LocalPosition: {x: 0.010743566, y: 0.015979923, z: -0.10418351}
+  m_LocalPosition: {x: 0.010743681, y: 0.01597998, z: -0.10418363}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 291503202}
@@ -26989,8 +27045,8 @@ MonoBehaviour:
   slideThresold: 1
   pose:
     relativeGrip:
-      position: {x: -0.011552604, y: 0.0062320232, z: 0.007094502}
-      rotation: {x: -0.015423298, y: 0.19512703, z: -0.0053006713, w: -0.98064315}
+      position: {x: -0.011552544, y: 0.0062320232, z: 0.007094502}
+      rotation: {x: -0.015423323, y: 0.19512703, z: -0.0053006397, w: -0.98064315}
     handeness: 1
     _bones:
     - boneID: 2
@@ -28756,8 +28812,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1993491184}
-  m_LocalRotation: {x: -0.023051277, y: -0.67568696, z: 0.10361004, w: 0.7295073}
-  m_LocalPosition: {x: -0.010556983, y: 0.016496602, z: -0.10140082}
+  m_LocalRotation: {x: -0.023051288, y: -0.67568696, z: 0.10361, w: 0.7295073}
+  m_LocalPosition: {x: -0.010556929, y: 0.0164966, z: -0.101400845}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 596855826}
@@ -30891,7 +30947,7 @@ PrefabInstance:
         type: 3}
       propertyPath: skeleton
       value: 
-      objectReference: {fileID: 479991097}
+      objectReference: {fileID: 479991103}
     - target: {fileID: 2064097538271242696, guid: d7bd83fd0123da74eb60c0f446429bd3,
         type: 3}
       propertyPath: updateNotifier
@@ -31118,7 +31174,7 @@ PrefabInstance:
         type: 3}
       propertyPath: skeleton
       value: 
-      objectReference: {fileID: 1171957570}
+      objectReference: {fileID: 1171957576}
     - target: {fileID: 8744019561202681614, guid: 9686c5d5c94736246ab0d8f5920d3445,
         type: 3}
       propertyPath: updateNotifier

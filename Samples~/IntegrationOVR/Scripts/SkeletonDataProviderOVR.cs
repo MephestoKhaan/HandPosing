@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HandPosing.TrackingData;
 
 namespace HandPosing.OVRIntegration
 {
@@ -101,16 +102,13 @@ namespace HandPosing.OVRIntegration
             }
         }
 
-        private bool IsHandHighConfidence
+        public override bool IsHandHighConfidence()
         {
-            get
-            {
-                return IsTracking
-                    && ovrHand.IsDataHighConfidence;
-            }
+            return IsTracking
+                && ovrHand.IsDataHighConfidence;
         }
 
-        private bool IsFingerHighConfidence(BoneId fingerId)
+        public override bool IsFingerHighConfidence(BoneId fingerId)
         {
             if (PosingIDsToFinger.TryGetValue(fingerId, out OVRHand.HandFinger id))
             {
@@ -157,6 +155,7 @@ namespace HandPosing.OVRIntegration
                 yield return null;
             }
             _fingers = new BoneRotation[OVRFingersToPosingIDs.Count];
+            OnInitialized?.Invoke();
         }
 
         private void Update()
@@ -164,10 +163,11 @@ namespace HandPosing.OVRIntegration
             if (_fingers != null)
             {
                 UpdateBones();
+                OnUpdated?.Invoke(Time.deltaTime);
             }
         }
 
-        private void UpdateBones()
+        protected void UpdateBones()
         {
             for (int i = 0; i < OVRFingersToPosingIDs.Count; i++)
             {

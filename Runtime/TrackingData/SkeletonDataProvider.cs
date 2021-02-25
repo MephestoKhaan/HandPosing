@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace HandPosing
+namespace HandPosing.TrackingData
 {
     /// <summary>
     /// Abstract class to translate the hand-tracking data from specific systems to the one used by the HandPosing system.
@@ -29,6 +29,17 @@ namespace HandPosing
         /// </summary>
         public virtual float? HandScale { get => 1f; }
 
+        public virtual bool IsHandHighConfidence()
+        {
+            return true;
+        }
 
+        public virtual bool IsFingerHighConfidence(BoneId bone)
+        {
+            return true;
+        }
+
+        public System.Action OnInitialized;
+        public System.Action<float> OnUpdated;
     }
 }
