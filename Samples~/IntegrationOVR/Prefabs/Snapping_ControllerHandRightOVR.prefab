@@ -1276,6 +1276,8 @@ GameObject:
   - component: {fileID: 7195348242957399794}
   - component: {fileID: 1106670880}
   - component: {fileID: 1106670881}
+  - component: {fileID: 796815803}
+  - component: {fileID: 796815804}
   m_Layer: 0
   m_Name: Snapping_ControllerHandRightOVR
   m_TagString: Untagged
@@ -1433,7 +1435,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442438993032528950}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c58dbc119ebc564c95d34c9d9e55465, type: 3}
   m_Name: 
@@ -1475,7 +1477,7 @@ MonoBehaviour:
   - {fileID: 1442438993021150130}
   updateNotifier: {fileID: 0}
   flexInterfaces:
-  - {fileID: 1106670881}
+  - {fileID: 796815803}
   - {fileID: 1106670880}
 --- !u!114 &1106670880
 MonoBehaviour:
@@ -1506,6 +1508,41 @@ MonoBehaviour:
   flexHand: {fileID: 0}
   trackLowConfidenceFingers: 0
   grabThresold: {x: 0.01, y: 0.9}
+--- !u!114 &796815803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442438993032528950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff700274dab95c4db2b4c071444c45d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sphereFlex: {fileID: 796815804}
+  pinchFlex: {fileID: 1106670881}
+--- !u!114 &796815804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1442438993032528950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2ece6cd8d708147bd52ae64e1e6070, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flexHand: {fileID: 0}
+  skeleton: {fileID: 0}
+  fingerTipRadius: 0.01
+  poseVolumeRadius: 0.07
+  poseVolumeOffset: {x: 0.07, y: -0.03, z: 0}
+  trackLowConfidenceHands: 0
+  trackLowConfidenceFingers: 0
+  fingersToIgnore: 04000000
+  grabThresoldHand: {x: 0.25, y: 0.75}
 --- !u!1 &1442438993032529408
 GameObject:
   m_ObjectHideFlags: 0

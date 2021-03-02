@@ -240,6 +240,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Snapping_TrackedHandRightOVR Ghost
       objectReference: {fileID: 0}
+    - target: {fileID: 2064097536887151827, guid: d7bd83fd0123da74eb60c0f446429bd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2064097536887379165, guid: d7bd83fd0123da74eb60c0f446429bd3,
         type: 3}
       propertyPath: m_RootOrder
