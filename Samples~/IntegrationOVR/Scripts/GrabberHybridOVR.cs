@@ -20,6 +20,8 @@ namespace HandPosing.OVRIntegration
         private Vector3 _velocity;
         private Vector3 _angularVelocity;
 
+        private static readonly FlexInterface FLEX_NULL = new NoopFlex();
+
         public FlexInterface Flex
         {
             get
@@ -32,12 +34,11 @@ namespace HandPosing.OVRIntegration
                         return flex;
                     }
                 }
-                return null;
+                return FLEX_NULL;
             }
         }
 
         private const float VELOCITY_DAMPING = 20f;
-
 
         protected override void Grab(Grabbable closestGrabbable)
         {
