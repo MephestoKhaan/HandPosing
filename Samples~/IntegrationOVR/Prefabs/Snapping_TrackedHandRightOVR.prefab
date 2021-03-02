@@ -183,10 +183,10 @@ MonoBehaviour:
   gripPoint: {fileID: 2064097536887414607}
   handeness: 1
   autoAdjustScale: 0
-  trackedHandOffset:
-    id: 1
-    rotationOffset: {x: 0, y: 0, z: 0}
-    positionOffset: {x: 0, y: 0, z: 0}
+  controllerAnchor: {fileID: 0}
+  controllerOffset:
+    positionOffset: {x: 0, y: -0.02, z: -0.08}
+    rotationOffset: {x: -90, y: -90, z: 0}
   boneMaps:
   - id: 2
     transform: {fileID: 621979817179947985}
@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flexHand: {fileID: 0}
-  trackLowConfidenceFingers: 1
+  trackLowConfidenceFingers: 0
   grabThresold: {x: 0.1, y: 0.9}
 --- !u!114 &7359067381948254510
 MonoBehaviour:

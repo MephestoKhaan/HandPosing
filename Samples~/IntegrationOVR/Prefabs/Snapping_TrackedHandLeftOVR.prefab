@@ -153,10 +153,10 @@ MonoBehaviour:
   gripPoint: {fileID: 7996358526217772523}
   handeness: 0
   autoAdjustScale: 0
-  trackedHandOffset:
-    id: 1
-    rotationOffset: {x: 0, y: 0, z: 0}
-    positionOffset: {x: 0, y: 0, z: 0}
+  controllerAnchor: {fileID: 0}
+  controllerOffset:
+    positionOffset: {x: 0, y: -0.02, z: -0.08}
+    rotationOffset: {x: 90, y: 90, z: 0}
   boneMaps:
   - id: 2
     transform: {fileID: 7645059647401531242}
