@@ -73,8 +73,8 @@ namespace HandPosing.OVRIntegration
 
         private static readonly (OVRSkeleton.BoneId, BoneId) HandBoneIDs = (OVRSkeleton.BoneId.Hand_Start, BoneId.Hand_Start);
 
-        private BoneRotation[] _fingers;
-        public override BoneRotation[] Fingers
+        private BonePose[] _fingers;
+        public override BonePose[] Fingers
         {
             get
             {
@@ -82,8 +82,8 @@ namespace HandPosing.OVRIntegration
             }
         }
 
-        private BoneRotation _hand;
-        public override BoneRotation Hand
+        private BonePose _hand;
+        public override BonePose Hand
         {
             get
             {
@@ -154,7 +154,7 @@ namespace HandPosing.OVRIntegration
             {
                 yield return null;
             }
-            _fingers = new BoneRotation[OVRFingersToPosingIDs.Count];
+            _fingers = new BonePose[OVRFingersToPosingIDs.Count];
             OnInitialized?.Invoke();
         }
 
@@ -172,7 +172,7 @@ namespace HandPosing.OVRIntegration
             for (int i = 0; i < OVRFingersToPosingIDs.Count; i++)
             {
                 OVRBone ovrBone = ovrSkeleton.Bones[(int)OVRSkeletonFingerIds[i]];
-                _fingers[i] = new BoneRotation()
+                _fingers[i] = new BonePose()
                 {
                     boneID = FingerBoneIds[i],
                     rotation = ovrBone.Transform.localRotation,
@@ -181,7 +181,7 @@ namespace HandPosing.OVRIntegration
             }
 
             OVRBone ovrHand = ovrSkeleton.Bones[(int)HandBoneIDs.Item1];
-            _hand = new BoneRotation
+            _hand = new BonePose
             {
                 boneID = HandBoneIDs.Item2,
                 rotation = ovrHand.Transform.rotation,

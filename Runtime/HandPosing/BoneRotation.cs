@@ -31,7 +31,7 @@ namespace HandPosing
     /// Data indicating the rotation of a bone from a hand.
     /// </summary>
     [System.Serializable]
-    public struct BoneRotation
+    public struct BonePose
     {
         /// <summary>
         /// The unique identifier of the bone.
@@ -52,8 +52,8 @@ namespace HandPosing
         /// <param name="from">Base rotation to interpolate from.</param>
         /// <param name="to">Target rotation to interpolate to.</param>
         /// <param name="t">Interpolation factor, 0 for base, 1 for target rotation</param>
-        /// <returns>A new BoneRotation between base and target, null if bone is invalid.</returns>
-        public static BoneRotation? Lerp(BoneRotation from, BoneRotation to, float t)
+        /// <returns>A new BonePose between base and target, null if bone is invalid.</returns>
+        public static BonePose? Lerp(BonePose from, BonePose to, float t)
         {
             if (from.boneID != to.boneID)
             {
@@ -61,7 +61,7 @@ namespace HandPosing
                 return null;
             }
 
-            return new BoneRotation()
+            return new BonePose()
             {
                 boneID = from.boneID,
                 rotation = Quaternion.Lerp(from.rotation, to.rotation, t),

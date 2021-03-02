@@ -17,12 +17,12 @@ namespace HandPosing.TrackingData
         /// <summary>
         /// Collection of received fingers, in local coordinates
         /// </summary>
-        public abstract BoneRotation[] Fingers { get; }
+        public abstract BonePose[] Fingers { get; }
 
         /// <summary>
         /// Hand start pose, in global coordinates
         /// </summary>
-        public abstract BoneRotation Hand { get; }
+        public abstract BonePose Hand { get; }
 
         /// <summary>
         /// Detected scale of the hand.

@@ -268,8 +268,8 @@ namespace HandPosing
 
         private void SetLivePose(SkeletonDataProvider skeletonData)
         {
-            BoneRotation[] fingers = skeletonData.Fingers;
-            BoneRotation hand = skeletonData.Hand;
+            BonePose[] fingers = skeletonData.Fingers;
+            BonePose hand = skeletonData.Hand;
 
             for (int i = 0; i < fingers.Length; ++i)
             {
@@ -303,7 +303,7 @@ namespace HandPosing
         /// </summary>
         /// <param name="bones">The target bone rotations.</param>
         /// <param name="weight">Interpolation factor for the bones. 0 for staying with the current values, 1 for fully overriding with the new ones.</param>
-        public void LerpBones(List<BoneRotation> bones, float weight)
+        public void LerpBones(List<BonePose> bones, float weight)
         {
             if (weight > 0f)
             {
@@ -373,7 +373,7 @@ namespace HandPosing
                 {
                     BoneMap boneMap = bone.Value;
                     Quaternion rotation = boneMap.TrackedRotation;
-                    pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
+                    pose.Bones.Add(new BonePose() { boneID = boneMap.id, rotation = rotation });
                 }
             }
             return pose;

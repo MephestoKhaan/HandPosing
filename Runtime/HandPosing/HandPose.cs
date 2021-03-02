@@ -27,17 +27,17 @@ namespace HandPosing
         public Handeness handeness;
 
         [SerializeField]
-        private List<BoneRotation> _bones;
+        private List<BonePose> _bones;
         /// <summary>
         /// Collection of bones and their rotations in this hand.
         /// </summary>
-        public List<BoneRotation> Bones
+        public List<BonePose> Bones
         {
             get
             {
                 if (_bones == null)
                 {
-                    _bones = new List<BoneRotation>();
+                    _bones = new List<BonePose>();
                 }
                 return _bones;
             }
@@ -97,7 +97,7 @@ namespace HandPosing
             result.Bones.Clear();
             for (int i = 0; i < from.Bones.Count; i++)
             {
-                BoneRotation? bone = BoneRotation.Lerp(from.Bones[i], to.Bones[i], t);
+                BonePose? bone = BonePose.Lerp(from.Bones[i], to.Bones[i], t);
                 if(bone.HasValue)
                 {
                     result.Bones.Add(bone.Value);

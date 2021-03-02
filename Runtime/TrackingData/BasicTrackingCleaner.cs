@@ -3,11 +3,11 @@ namespace HandPosing.TrackingData
 {
     public class BasicTrackingCleaner : SkeletonDataDecorator
     {
-        public override BoneRotation[] Fingers => _cleanFingers;
-        public override BoneRotation Hand => _cleanHand;
+        public override BonePose[] Fingers => _cleanFingers;
+        public override BonePose Hand => _cleanHand;
 
-        private BoneRotation[] _cleanFingers;
-        private BoneRotation _cleanHand;
+        private BonePose[] _cleanFingers;
+        private BonePose _cleanHand;
 
         private void OnEnable()
         {
@@ -23,7 +23,7 @@ namespace HandPosing.TrackingData
 
         private void Initialize()
         {
-            _cleanFingers = (BoneRotation[])wrapee.Fingers.Clone();
+            _cleanFingers = (BonePose[])wrapee.Fingers.Clone();
             _cleanHand = wrapee.Hand;
         }
 
@@ -31,7 +31,7 @@ namespace HandPosing.TrackingData
         {
             for(int i = 0; i < wrapee.Fingers.Length; i++)
             {
-                BoneRotation rawBone = wrapee.Fingers[i];
+                BonePose rawBone = wrapee.Fingers[i];
                 if (wrapee.IsFingerHighConfidence(rawBone.boneID))
                 {
                     _cleanFingers[i] = rawBone;
