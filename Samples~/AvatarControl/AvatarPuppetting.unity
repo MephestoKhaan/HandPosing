@@ -675,7 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   posesCollection: {fileID: 0}
-  ghostProvider: {fileID: 11400000, guid: d15b3a4fe9255654c88b098d586356ff, type: 2}
+  ghostProvider: {fileID: 11400000, guid: 0c489ee65d68038419e1482bbb7aff24, type: 2}
   StorePoses: 
   LoadPoses: 
   snapPoints: []
@@ -1410,13 +1410,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351404502631140348}
-  m_LocalRotation: {x: -0.7295072, y: 0.10361023, z: 0.67568684, w: 0.023051377}
+  m_LocalRotation: {x: -0.66784114, y: 0.10522504, z: 0.73669654, w: 0.013933418}
   m_LocalPosition: {x: -0.1, y: 0.035, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 351404502630913668}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: -170, y: 85, z: 7}
+  m_LocalEulerAnglesHint: {x: -170, y: 95, z: 7}
 --- !u!4 &351404502630877410
 Transform:
   m_ObjectHideFlags: 0
@@ -1805,13 +1805,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1442438993461799483}
-  m_LocalRotation: {x: 0.023051241, y: 0.67568684, z: -0.10361025, w: 0.7295072}
+  m_LocalRotation: {x: 0.013933288, y: 0.73669654, z: -0.105225034, w: 0.66784114}
   m_LocalPosition: {x: 0.0971632, y: -0.035, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1442438993461508861}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 10, y: 85, z: -7}
+  m_LocalEulerAnglesHint: {x: 10, y: 95, z: -7}
 --- !u!4 &1442438993461508861
 Transform:
   m_ObjectHideFlags: 0
