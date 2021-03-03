@@ -32,62 +32,46 @@ namespace HandPosing
                 return Quaternion.Euler(rotationOffset);
             }
         }
+
+        /// <summary>
+        /// Get the raw rotation of the bone, as taken from the tracking data
+        /// </summary>
+        public Quaternion TrackedRotation
+        {
+            get
+            {
+                return Quaternion.Inverse(RotationOffset) * transform.localRotation;
+            }
+        }
     }
 
     /// <summary>
     /// A special mapping for the base of the hand, indicating the position and rotation difference
-    /// between the hand-tracking system and its representation.
+    /// between the hand-tracking system and its controller representation.
     /// </summary>
     [System.Serializable]
     public class HandMap
     {
-        /// <summary>
-        /// The unique identifier for the base of the hand. Tipically the wrist.
-        /// </summary>
-        public BoneId id;
-        /// <summary>
-        /// The base transform for the hand representation.
-        /// </summary>
-        public Transform transform;
-        /// <summary>
-        /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
-        /// </summary>
-        public Vector3 rotationOffset;
         /// <summary>        
         /// The position difference at the base of the hand between the hand-tracking system and the representation.
         /// </summary>
-        public Vector3 positionOffset;
-
+        public Vector3 positionOffset = new Vector3(0f,-0.02f,-0.08f);
         /// <summary>
-        /// Get the rotationOffset as a quaternion.
+        /// The rotation difference at the base of the hand between the hand-tracking system and the representation.
         /// </summary>
-        public Quaternion RotationOffset
-        {
-            get
-            {
-                return Quaternion.Euler(rotationOffset);
-            }
-        }
+        public Vector3 rotationOffset = new Vector3(90f,90f,0f);
 
         /// <summary>
         /// Get the position/rotation offset as a more compact Pose.
         /// </summary>
-        public Pose Offset
+        public Pose AsPose
         {
             get
             {
-                return new Pose(positionOffset, RotationOffset);
+                return new Pose(positionOffset, Quaternion.Euler(rotationOffset));
             }
         }
 
-        /// <summary>
-        /// Set the position/rotation of the hand to the default value.
-        /// </summary>
-        public void Apply()
-        {
-            this.transform.localPosition = this.positionOffset;
-            this.transform.localRotation = RotationOffset;
-        }
     }
 
     /// <summary>

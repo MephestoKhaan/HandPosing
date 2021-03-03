@@ -22,6 +22,7 @@ namespace HandPosing.Interaction
         /// </summary>
         [SerializeField]
         private Collider[] grabVolumes = null;
+
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.
@@ -30,32 +31,53 @@ namespace HandPosing.Interaction
         [Tooltip("Not mandatory callbacks indicating when the hand tracking has updated.")]
         private AnchorsUpdateNotifier updateNotifier;
 
-        
         private Pose _grabbedObjectOffset;
 
         private bool _usingUpdateNotifier;
         private bool _grabVolumeEnabled = true;
-        private float _prevFlex;
+        private float _flex;
         private Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
         private bool _nearGrab = false;
+
+
+        #region grab fail
+        private Grabbable _lastGrabCandidate = null;
+        private float? _timeWithoutCandidates = null;
+        private float? _timeSinceLastGrab = null;
+        private float? _timeSinceLastRelease = null;
+        private float? _timeSinceGrabAttempt = null;
+        private float? _timeSinceLastFail = null;
+
+        private const float FAIL_SUSTAIN_TIME = 0.08f;
+        private const float GRAB_ATTEMPT_DURATION = 2.0f;
+        private const float ACTUAL_GRAB_BUFFER_TIME = 1.5f;
+        #endregion
 
         /// <summary>
         /// Current grabbed object.
         /// </summary>
         public Grabbable GrabbedObject { get; private set; } = null;
 
+        public Action<bool> OnIgnoreTriggers { get; set; }
+
         #region IGrabNotifier
         public Action<GameObject> OnGrabStarted { get; set; }
         public Action<GameObject, float> OnGrabAttemp { get; set; }
         public Action<GameObject> OnGrabEnded { get; set; }
+        public Action<GameObject> OnGrabAttemptFail { get; set; }
+
+        public Action<GameObject, float> OnGrabTimedEnded;
 
         public abstract Vector2 GrabFlexThresold { get; }
+        public abstract Vector2 AttempFlexThresold { get; }
+        public abstract float ReleasedFlexThresold { get; }
+
         public abstract float CurrentFlex();
 
         public Snappable FindClosestSnappable()
         {
             var closestGrabbable = FindClosestGrabbable();
-            return closestGrabbable.Item1?.GetComponent<Snappable>();
+            return closestGrabbable?.GetComponent<Snappable>();
         }
         #endregion
 
@@ -112,6 +134,7 @@ namespace HandPosing.Interaction
             {
                 updateNotifier.OnAnchorsFirstUpdate -= UpdateAnchors;
             }
+
             foreach (var grabbable in new List<Grabbable>(_grabCandidates.Keys))
             {
                 ForceUntouch(grabbable);
@@ -159,7 +182,7 @@ namespace HandPosing.Interaction
 
         protected virtual void Update()
         {
-            if(!_usingUpdateNotifier)
+            if (!_usingUpdateNotifier)
             {
                 UpdateAnchors();
             }
@@ -175,10 +198,16 @@ namespace HandPosing.Interaction
 
         private void UpdateGrabStates()
         {
-            float prevFlex = _prevFlex;
-            _prevFlex = CurrentFlex();
-            CheckForGrabOrRelease(prevFlex, _prevFlex);
-            MoveGrabbedObject(transform.position, transform.rotation);
+            float prevFlex = _flex;
+            _flex = CurrentFlex();
+
+            if (IsGrabAttemp(_flex))
+            {
+                _timeSinceGrabAttempt = Time.timeSinceLevelLoad;
+            }
+
+            CheckForGrabOrRelease(prevFlex, _flex);
+            MoveGrabbedObject(this.transform.position, this.transform.rotation);
         }
 
         /// <summary>
@@ -187,10 +216,14 @@ namespace HandPosing.Interaction
         /// </summary>
         /// <param name="prevFlex">Last grabbing gesture strength, normalised.</param>
         /// <param name="currentFlex">Current gragginb gesture strength, normalised.</param>
-        private void CheckForGrabOrRelease(float prevFlex, float currentFlex)
+        protected void CheckForGrabOrRelease(float prevFlex, float currentFlex)
         {
-            if (prevFlex < GrabFlexThresold.y
-                && currentFlex >= GrabFlexThresold.y)
+            if (CheckGrabFailed(currentFlex))
+            {
+                GrabFailed();
+            }
+            else if (prevFlex < GrabFlexThresold.y
+                 && currentFlex >= GrabFlexThresold.y)
             {
                 _nearGrab = false;
                 GrabBegin();
@@ -201,7 +234,8 @@ namespace HandPosing.Interaction
                 GrabEnd(true);
             }
 
-            if (GrabbedObject == null && currentFlex > 0)
+            if (GrabbedObject == null
+                && currentFlex > 0)
             {
                 _nearGrab = true;
                 NearGrab(currentFlex / GrabFlexThresold.y);
@@ -213,12 +247,62 @@ namespace HandPosing.Interaction
             }
         }
 
+        private bool IsGrabAttemp(float flex)
+        {
+            Vector2 attemptThresold = AttempFlexThresold;
+            return (flex > attemptThresold.x
+                && flex < attemptThresold.y);
+        }
+
+
+        private bool CheckGrabFailed(float currentFlex)
+        {
+            if (GrabbedObject != null)
+            {
+                return false;
+            }
+
+            bool justReleasedAfterAttempt = _timeSinceGrabAttempt.HasValue
+                && Time.timeSinceLevelLoad - _timeSinceGrabAttempt.Value > FAIL_SUSTAIN_TIME
+                && currentFlex <= ReleasedFlexThresold;
+
+            if (justReleasedAfterAttempt)
+            {
+                _timeSinceGrabAttempt = null;
+                bool areGrabbablesNearby = _grabCandidates.Count > 0
+                    || (_timeWithoutCandidates.HasValue
+                        && Time.timeSinceLevelLoad - _timeWithoutCandidates.Value < GRAB_ATTEMPT_DURATION);
+                bool grabbedRecently = _timeSinceLastRelease.HasValue
+                    && Time.timeSinceLevelLoad - _timeSinceLastRelease.Value < ACTUAL_GRAB_BUFFER_TIME;
+
+                return areGrabbablesNearby
+                    && !grabbedRecently;
+            }
+            return false;
+        }
+
+        protected virtual void GrabFailed()
+        {
+            bool sentFailedEventRecently = _timeSinceLastFail.HasValue
+                && Time.timeSinceLevelLoad - _timeSinceLastFail.Value < GRAB_ATTEMPT_DURATION;
+
+            if (!sentFailedEventRecently)
+            {
+                Grabbable failedGrabbable = _lastGrabCandidate;
+                if (failedGrabbable == null)
+                {
+                    failedGrabbable = FindClosestGrabbable();
+                }
+                OnGrabAttemptFail?.Invoke(failedGrabbable?.gameObject);
+                _timeSinceLastFail = Time.timeSinceLevelLoad;
+            }
+        }
 
         /// <summary>
         /// Triggers how close the grabber is to start grabbing a nearby object, informing the snapping system.
         /// </summary>
         /// <param name="factor">Current normalised value for the grab attemp, 1 indicates a grab.</param>
-        private void NearGrab(float factor)
+        protected void NearGrab(float factor)
         {
             if (factor == 0f)
             {
@@ -226,10 +310,10 @@ namespace HandPosing.Interaction
                 return;
             }
 
-            (Grabbable, Collider) closestGrabbable = FindClosestGrabbable();
-            if (closestGrabbable.Item1 != null)
+            Grabbable closestGrabbable = FindClosestGrabbable();
+            if (closestGrabbable != null)
             {
-                OnGrabAttemp?.Invoke(closestGrabbable.Item1.gameObject, factor);
+                OnGrabAttemp?.Invoke(closestGrabbable.gameObject, factor);
             }
             else
             {
@@ -237,19 +321,19 @@ namespace HandPosing.Interaction
             }
         }
 
+
         /// <summary>
         /// Search for a nearby object and grab it.
         /// </summary>
         protected virtual void GrabBegin()
         {
-            Grabbable closestGrabbable;
-            Collider closestGrabbableCollider;
-            (closestGrabbable, closestGrabbableCollider) = FindClosestGrabbable();
+            Grabbable closestGrabbable = FindClosestGrabbable();
 
             GrabVolumeEnable(false);
             if (closestGrabbable != null)
             {
-                Grab(closestGrabbable, closestGrabbableCollider);
+                _timeSinceLastRelease = Time.timeSinceLevelLoad;
+                Grab(closestGrabbable);
             }
         }
 
@@ -257,17 +341,17 @@ namespace HandPosing.Interaction
         /// Attach a given grabbable to the hand, storing the offset to the hand so it can be kept while holding.
         /// </summary>
         /// <param name="closestGrabbable">The object to be grabbed.</param>
-        /// <param name="closestGrabbableCollider">The collider of the grabbable, not used.</param>
-        protected virtual void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
+        protected virtual void Grab(Grabbable closestGrabbable)
         {
+            _timeSinceLastGrab = Time.timeSinceLevelLoad;
             GrabbedObject = closestGrabbable;
-            GrabbedObject.GrabBegin(this, closestGrabbableCollider);
-
+            GrabbedObject?.GrabBegin(this);
             OnGrabStarted?.Invoke(GrabbedObject?.gameObject);
 
+            Transform grabedTransform = closestGrabbable.transform;
             _grabbedObjectOffset = new Pose();
-            _grabbedObjectOffset.position = Quaternion.Inverse(transform.rotation) * (GrabbedObject.transform.position - transform.position);
-            _grabbedObjectOffset.rotation = Quaternion.Inverse(transform.rotation) * GrabbedObject.transform.rotation;
+            _grabbedObjectOffset.position = Quaternion.Inverse(this.transform.rotation) * (grabedTransform.position - this.transform.position);
+            _grabbedObjectOffset.rotation = Quaternion.Inverse(this.transform.rotation) * grabedTransform.rotation;
         }
 
         /// <summary>
@@ -301,7 +385,7 @@ namespace HandPosing.Interaction
                 ReleaseGrabbedObject(linearVelocity, angularVelocity);
             }
 
-            if(canGrab)
+            if (canGrab)
             {
                 GrabVolumeEnable(true);
             }
@@ -314,8 +398,10 @@ namespace HandPosing.Interaction
         /// <param name="angularVelocity">Angular velocity of the throw.</param>
         protected void ReleaseGrabbedObject(Vector3 linearVelocity, Vector3 angularVelocity)
         {
+            _timeSinceLastRelease = Time.timeSinceLevelLoad;
             GrabbedObject.GrabEnd(this, linearVelocity, angularVelocity);
             OnGrabEnded?.Invoke(GrabbedObject?.gameObject);
+            OnGrabTimedEnded?.Invoke(GrabbedObject?.gameObject, (_timeSinceLastRelease - _timeSinceLastGrab)??0f);
             GrabbedObject = null;
         }
 
@@ -334,11 +420,10 @@ namespace HandPosing.Interaction
         #region grabbable detection
 
 
-        private (Grabbable, Collider) FindClosestGrabbable()
+        protected Grabbable FindClosestGrabbable()
         {
             float closestMagSq = float.MaxValue;
             Grabbable closestGrabbable = null;
-            Collider closestGrabbableCollider = null;
 
             foreach (Grabbable grabbable in _grabCandidates.Keys)
             {
@@ -347,10 +432,9 @@ namespace HandPosing.Interaction
                 {
                     closestMagSq = distance;
                     closestGrabbable = grabbable;
-                    closestGrabbableCollider = collider;
                 }
             }
-            return (closestGrabbable, closestGrabbableCollider);
+            return closestGrabbable;
         }
 
         private Collider FindClosestCollider(Grabbable grabbable, out float score)
@@ -390,6 +474,7 @@ namespace HandPosing.Interaction
                 Collider grabVolume = grabVolumes[i];
                 grabVolume.enabled = _grabVolumeEnabled;
             }
+            OnIgnoreTriggers?.Invoke(!_grabVolumeEnabled);
 
             if (!_grabVolumeEnabled)
             {
@@ -397,7 +482,7 @@ namespace HandPosing.Interaction
             }
         }
 
-        private void OnTriggerEnter(Collider otherCollider)
+        public void OnTriggerEnter(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)
@@ -405,23 +490,27 @@ namespace HandPosing.Interaction
                 return;
             }
 
-            int refCount = 0;
-            _grabCandidates.TryGetValue(grabbable, out refCount);
+            _grabCandidates.TryGetValue(grabbable, out int refCount);
             _grabCandidates[grabbable] = refCount + 1;
+
+            _timeWithoutCandidates = null;
+            _lastGrabCandidate = null;
         }
 
-        private void OnTriggerExit(Collider otherCollider)
+        public void OnTriggerExit(Collider otherCollider)
         {
             Grabbable grabbable = otherCollider.GetComponent<Grabbable>() ?? otherCollider.GetComponentInParent<Grabbable>();
             if (grabbable == null)
             {
                 return;
             }
+
             bool found = _grabCandidates.TryGetValue(grabbable, out int refCount);
             if (!found)
             {
                 return;
             }
+
             if (refCount > 1)
             {
                 _grabCandidates[grabbable] = refCount - 1;
@@ -429,9 +518,14 @@ namespace HandPosing.Interaction
             else
             {
                 _grabCandidates.Remove(grabbable);
+
+                if (_grabCandidates.Count == 0)
+                {
+                    _lastGrabCandidate = grabbable;
+                    _timeWithoutCandidates = Time.timeSinceLevelLoad;
+                }
             }
         }
         #endregion
-
     }
 }

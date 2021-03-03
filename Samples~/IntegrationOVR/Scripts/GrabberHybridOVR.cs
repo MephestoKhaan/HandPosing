@@ -1,6 +1,6 @@
 ﻿using HandPosing.Interaction;
-using System;
 using UnityEngine;
+using HandPosing.OVRIntegration.GrabEngine;
 
 namespace HandPosing.OVRIntegration
 {
@@ -11,26 +11,8 @@ namespace HandPosing.OVRIntegration
     /// </summary>
     public class GrabberHybridOVR : BaseGrabber
     {
-        [Header("OVR dependencies")]
         [SerializeField]
-        private OVRHand trackedHand;
-        /// <summary>
-        /// Release (X) and Grab (Y) values for the controller trigger.
-        /// </summary>
-        [SerializeField]
-        [Tooltip("Release (X) and Grab (Y) values for the controller trigger.")]
-        private Vector2 grabThresoldController = new Vector2(0.35f, 0.85f);
-        /// <summary>
-        /// Release (X) and Grab (Y) values for the pinching gesture.
-        /// </summary>
-        [SerializeField]
-        [Tooltip("Release (X) and Grab (Y) values for the pinching gesture.")]
-        private Vector2 grabThresoldHand = new Vector2(0f,0.95f);
-
-        [SerializeField]
-        private Handeness handeness;
-
-        private OVRInput.Controller touch;
+        private Component[] flexInterfaces;
 
         private Vector3 _prevPosition;
         private Quaternion _prevRotation;
@@ -38,31 +20,29 @@ namespace HandPosing.OVRIntegration
         private Vector3 _velocity;
         private Vector3 _angularVelocity;
 
+        private static readonly FlexInterface FLEX_NULL = new NoopFlex();
+
+        public FlexInterface Flex
+        {
+            get
+            {
+                for (int i = 0; i < flexInterfaces.Length; i++)
+                {
+                    FlexInterface flex = flexInterfaces[i] as FlexInterface;
+                    if (flex.IsValid)
+                    {
+                        return flex;
+                    }
+                }
+                return FLEX_NULL;
+            }
+        }
+
         private const float VELOCITY_DAMPING = 20f;
 
-
-        protected override void Reset()
+        protected override void Grab(Grabbable closestGrabbable)
         {
-            base.Reset();
-            if(name.ToLower().Contains("right"))
-            {
-                handeness = Handeness.Right;
-            }
-            else
-            {
-                handeness = Handeness.Left;
-            }
-        }
-
-        protected override void Awake()
-        {
-            touch = handeness == Handeness.Right ? OVRInput.Controller.RTouch : OVRInput.Controller.LTouch;
-            base.Awake();
-        }
-
-        protected override void Grab(Grabbable closestGrabbable, Collider closestGrabbableCollider)
-        {
-            base.Grab(closestGrabbable, closestGrabbableCollider);
+            base.Grab(closestGrabbable);
 
             if (GrabbedObject != null)
             {
@@ -75,49 +55,33 @@ namespace HandPosing.OVRIntegration
         {
             if (GrabbedObject != null)
             {
-                Vector3 instantVelocity = (GrabbedObject.transform.position - _prevPosition) / Time.deltaTime;
-
-                Quaternion deltaRotation = GrabbedObject.transform.rotation * Quaternion.Inverse(_prevRotation);
-                float theta = 2.0f * Mathf.Acos(Mathf.Clamp(deltaRotation.w, -1.0f, 1.0f));
-                if (theta > Mathf.PI)
-                {
-                    theta -= 2.0f * Mathf.PI;
-                }
-                Vector3 angularVelocity = new Vector3(deltaRotation.x, deltaRotation.y, deltaRotation.z).normalized * theta / Time.deltaTime;
-
-                _velocity = Vector3.Lerp(instantVelocity, _velocity, Time.deltaTime * VELOCITY_DAMPING);
-                _angularVelocity = Vector3.Lerp(angularVelocity, _angularVelocity, Time.deltaTime * VELOCITY_DAMPING);
-
-                _prevPosition = GrabbedObject.transform.position;
-                _prevRotation = GrabbedObject.transform.rotation;
+                UpdateVelocity(GrabbedObject.transform);
             }
         }
-        public override float CurrentFlex()
+
+        private void UpdateVelocity(Transform relativeTo)
         {
-            if (IsUsingHands)
+            Vector3 instantVelocity = (relativeTo.position - _prevPosition) / Time.deltaTime;
+            Quaternion deltaRotation = relativeTo.rotation * Quaternion.Inverse(_prevRotation);
+            float theta = 2.0f * Mathf.Acos(Mathf.Clamp(deltaRotation.w, -1.0f, 1.0f));
+            if (theta > Mathf.PI)
             {
-                return Math.Max(trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Index),
-                     trackedHand.GetFingerPinchStrength(OVRHand.HandFinger.Middle));
+                theta -= 2.0f * Mathf.PI;
             }
-            else
-            {
-                return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, touch);
-            }
+            Vector3 angularVelocity = new Vector3(deltaRotation.x, deltaRotation.y, deltaRotation.z).normalized * theta / Time.deltaTime;
+
+            _velocity = Vector3.Lerp(instantVelocity, _velocity, Time.deltaTime * VELOCITY_DAMPING);
+            _angularVelocity = Vector3.Lerp(angularVelocity, _angularVelocity, Time.deltaTime * VELOCITY_DAMPING);
+
+            _prevPosition = relativeTo.position;
+            _prevRotation = relativeTo.rotation;
         }
 
-        public override Vector2 GrabFlexThresold
-        {
-            get
-            {
-                return IsUsingHands ? grabThresoldHand : grabThresoldController;
-            }
-        }
+        public override float CurrentFlex() => Flex.GrabStrength??0f;
+        public override Vector2 GrabFlexThresold => Flex.GrabThresold;
+        public override Vector2 AttempFlexThresold => Flex.FailGrabThresold;
+        public override float ReleasedFlexThresold => Flex.AlmostGrabRelease;
 
-        private bool IsUsingHands => trackedHand && trackedHand.IsTracked;
-
-        protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose)
-        {
-            return (_velocity, _angularVelocity);
-        }
+        protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose) => (_velocity, _angularVelocity);
     }
 }

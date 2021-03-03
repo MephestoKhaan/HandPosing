@@ -10,14 +10,15 @@ namespace HandPosing.OVRIntegration
     /// Oculus Avatar hands are generated at runtime and only support controllers by default,
     /// with this script the pose can be overriden at runtime in first-person avatars.
     /// </summary>
+    [DefaultExecutionOrder(20)]
     public class AvatarHandPuppetOVR : MonoBehaviour
     {
         [SerializeField]
         private OvrAvatar avatar;
         [SerializeField]
-        private Transform anchor;
-        [SerializeField]
         private Transform handRoot;
+        [SerializeField]
+        private Transform handAnchor;
         [SerializeField]
         private Handeness handeness;
 
@@ -96,8 +97,8 @@ namespace HandPosing.OVRIntegration
                 avatarTransforms = new ovrAvatarTransform[joints.Count];
             }
 
-            Pose localRoot = anchor.RelativeOffset(handRoot);
-            avatarTransforms[0] = OvrAvatar.CreateOvrAvatarTransform(localRoot.position, localRoot.rotation);
+            Pose anchorRelative = handAnchor.RelativeOffset(this.transform);
+            avatarTransforms[0] = OvrAvatar.CreateOvrAvatarTransform(anchorRelative.position, anchorRelative.rotation);
 
             for (int i = 1; i < joints.Count; ++i)
             {

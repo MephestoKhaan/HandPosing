@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace HandPosing
+namespace HandPosing.TrackingData
 {
     /// <summary>
     /// Abstract class to translate the hand-tracking data from specific systems to the one used by the HandPosing system.
@@ -16,13 +15,31 @@ namespace HandPosing
         public abstract bool IsTracking { get; }
 
         /// <summary>
-        /// Collection of received bones.
+        /// Collection of received fingers, in local coordinates
         /// </summary>
-        public abstract List<HandBone> Bones { get; }
+        public abstract BonePose[] Fingers { get; }
+
+        /// <summary>
+        /// Hand start pose, in global coordinates
+        /// </summary>
+        public abstract BonePose Hand { get; }
 
         /// <summary>
         /// Detected scale of the hand.
         /// </summary>
         public virtual float? HandScale { get => 1f; }
+
+        public virtual bool IsHandHighConfidence()
+        {
+            return true;
+        }
+
+        public virtual bool IsFingerHighConfidence(BoneId bone)
+        {
+            return true;
+        }
+
+        public System.Action OnInitialized;
+        public System.Action<float> OnUpdated;
     }
 }

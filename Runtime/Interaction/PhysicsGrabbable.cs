@@ -34,7 +34,7 @@ namespace HandPosing.Interaction
         [Tooltip("Allow multiple grabbers to held the object.")]
         private bool multiGrab;
 
-        private Dictionary<BaseGrabber, Joint> _joints = new Dictionary<BaseGrabber, Joint>();
+        private Dictionary<GameObject, Joint> _joints = new Dictionary<GameObject, Joint>();
 
         protected override bool MultiGrab => multiGrab;
 
@@ -65,10 +65,9 @@ namespace HandPosing.Interaction
         /// If a custom joint was provided, duplicate it and mimic its values, if not it will use a fixe joint.
         /// </summary>
         /// <param name="hand">The grabber hand</param>
-        /// <param name="grabPoint">The collider selected for the grab.</param>
-        public override void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        public override void GrabBegin(BaseGrabber hand)
         {
-            base.GrabBegin(hand, grabPoint);
+            base.GrabBegin(hand);
 
             if (immovable)
             {
@@ -90,8 +89,8 @@ namespace HandPosing.Interaction
             joint.anchor = joint.transform.InverseTransformPoint(hand.transform.position);
             joint.connectedAnchor = Vector3.zero;
 
-            RemoveJoint(hand);
-            _joints.Add(hand, joint);
+            RemoveJoint(hand.gameObject);
+            _joints.Add(hand.gameObject, joint);
 
             _body.isKinematic = false;
         }
@@ -104,7 +103,7 @@ namespace HandPosing.Interaction
         /// <param name="angularVelocity">Angular velocity of the throw.</param>
         public override void GrabEnd(BaseGrabber hand, Vector3 linearVelocity, Vector3 angularVelocity)
         {
-            RemoveJoint(hand);
+            RemoveJoint(hand.gameObject);
             base.GrabEnd(hand, linearVelocity, angularVelocity);
         }
 
@@ -116,7 +115,7 @@ namespace HandPosing.Interaction
         public override void MoveTo(Vector3 desiredPos, Quaternion desiredRot) { }
 
 
-        private void RemoveJoint(BaseGrabber hand)
+        private void RemoveJoint(GameObject hand)
         {
             if (_joints.TryGetValue(hand, out Joint joint))
             {

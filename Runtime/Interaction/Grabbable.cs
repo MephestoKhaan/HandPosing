@@ -33,6 +33,21 @@ namespace HandPosing.Interaction
         private HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
         protected Rigidbody _body;
 
+        public Rigidbody Body
+        {
+            get => _body;
+        }
+
+        /// <summary>
+        /// Event called when the object is grabbed
+        /// </summary>
+        public Action<BaseGrabber> OnGrabbed;
+        /// <summary>
+        /// Event called when the object is released
+        /// </summary>
+        public Action<BaseGrabber> OnReleased;
+
+
         /// <summary>
         /// True if the object is being held by a Grabber.
         /// </summary>
@@ -99,8 +114,7 @@ namespace HandPosing.Interaction
         /// When the object is grabbed, record the grabber and disable physics.
         /// </summary>
         /// <param name="hand">Grabber hand.</param>
-        /// <param name="grabPoint">Collider being held.</param>
-        public virtual void GrabBegin(BaseGrabber hand, Collider grabPoint)
+        public virtual void GrabBegin(BaseGrabber hand)
         {
             if(!MultiGrab)
             {
@@ -116,6 +130,8 @@ namespace HandPosing.Interaction
                 _grabbedBy.Add(hand);
             }
             _body.isKinematic = true;
+
+            OnGrabbed?.Invoke(hand);
         }
 
         /// <summary>
@@ -136,6 +152,8 @@ namespace HandPosing.Interaction
                 _body.velocity = linearVelocity;
                 _body.angularVelocity = angularVelocity;
             }
+
+            OnReleased?.Invoke(hand);
         }
 
         /// <summary>

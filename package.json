@@ -1,44 +1,44 @@
 {
-	"name": "com.mefistofiles.handposing",
-	"version": "1.2.5",
-	"displayName": "HandPosing",
-	"description": "A tool for generating Hand-Poses using HandTracking",
-	"unity": "2019.4",
-	"unityRelease": "12f1",
-	"keywords": [
-		"unity",
-		"posing",
-		"hand tracking"
-	],
-	"homepage": "https://github.com/MephestoKhaan/HandPosing",
-	"bugs": {
-		"url": "https://github.com/MephestoKhaan/HandPosing/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/MephestoKhaan/HandPosing.git"
-	},
-	"license": "MIT",
-	"author": {
-		"name": "Luca Mefisto",
-		"email": "luca.m.conesa@gmail.com",
-		"url": "http://mefistofiles.com/"
-	},
-	"samples": [
-		{
-			"displayName": "Integration Oculus (OVR)",
-			"description": "Scripts and prefabs for using with Oculus Quest.",
-			"path": "Samples~/IntegrationOVR"
-		},
-		{
-			"displayName": "Poses Gallery (Requires IntegrationOVR)",
-			"description": "Samples covering all current types of poses and grabbers.",
-			"path": "Samples~/PosesGallery"
-		},
-		{
-			"displayName": "Oculus Avatars control(Requires IntegrationOVR)",
-			"description": "Control an Oculus Avatar Hands.",
-			"path": "Samples~/AvatarControl"
-		}
-	]
+  "name": "com.mefistofiles.handposing",
+  "version": "1.3.0",
+  "displayName": "HandPosing",
+  "description": "A tool for generating Hand-Poses using HandTracking",
+  "unity": "2019.4",
+  "unityRelease": "18f1",
+  "keywords": [
+    "unity",
+    "posing",
+    "hand tracking"
+  ],
+  "homepage": "https://github.com/MephestoKhaan/HandPosing",
+  "bugs": {
+    "url": "https://github.com/MephestoKhaan/HandPosing/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MephestoKhaan/HandPosing.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Luca Mefisto",
+    "email": "luca.m.conesa@gmail.com",
+    "url": "http://mefistofiles.com/"
+  },
+  "samples": [
+    {
+      "displayName": "Integration Oculus (OVR)",
+      "description": "Scripts and prefabs for using with Oculus Quest.",
+      "path": "Samples~/IntegrationOVR"
+    },
+    {
+      "displayName": "Poses Gallery (Requires IntegrationOVR)",
+      "description": "Samples covering all current types of poses and grabbers.",
+      "path": "Samples~/PosesGallery"
+    },
+    {
+      "displayName": "Oculus Avatars control(Requires IntegrationOVR)",
+      "description": "Control an Oculus Avatar Hands.",
+      "path": "Samples~/AvatarControl"
+    }
+  ]
 }

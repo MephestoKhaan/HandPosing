@@ -21,6 +21,11 @@ namespace HandPosing.Interaction
         /// <param name="float">The normalised value indicating how close to grab the user is. e.g. if the user grabs with a pinch 0.5 would indicate the pinch gesture is half-way in.</param>
         Action<GameObject, float> OnGrabAttemp { get; set; }
         /// <summary>
+        /// Event triggered when a grabbed GameObjec if user tried to make a grab attempt sometime in the past
+        /// </summary>
+        /// <param name="GameObject">The object that failed to be grabbed.</param>
+        Action<GameObject> OnGrabAttemptFail { get; set; }
+        /// <summary>
         /// Event triggered when a grabbed GameObject is released.
         /// </summary>
         /// <param name="GameObject">The ungrabbed object.</param>

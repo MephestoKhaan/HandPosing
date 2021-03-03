@@ -12,45 +12,6 @@ namespace HandPosing
     }
 
     /// <summary>
-    /// Data indicating the rotation of a bone from a hand.
-    /// </summary>
-    [System.Serializable]
-    public struct BoneRotation
-    {
-        /// <summary>
-        /// The unique identifier of the bone.
-        /// </summary>
-        public BoneId boneID;
-        /// <summary>
-        /// The rotation of the bone in the hand.
-        /// </summary>
-        public Quaternion rotation;
-
-        /// <summary>
-        /// Gets the interpolated value between two rotations of the same bone (same indentifier).
-        /// </summary>
-        /// <param name="from">Base rotation to interpolate from.</param>
-        /// <param name="to">Target rotation to interpolate to.</param>
-        /// <param name="t">Interpolation factor, 0 for base, 1 for target rotation</param>
-        /// <returns>A new BoneRotation between base and target, null if bone is invalid.</returns>
-        public static BoneRotation? Lerp(BoneRotation from, BoneRotation to, float t)
-        {
-            if(from.boneID != to.boneID)
-            {
-                Debug.LogError("Bones must have same id for interpolation");
-                return null;
-            }
-
-            return new BoneRotation()
-            {
-                boneID = from.boneID,
-                rotation = Quaternion.Lerp(from.rotation, to.rotation, t)
-            };
-
-        }
-    }
-
-    /// <summary>
     /// Data for the pose of a hand in space.
     /// </summary>
     [System.Serializable]
@@ -66,17 +27,17 @@ namespace HandPosing
         public Handeness handeness;
 
         [SerializeField]
-        private List<BoneRotation> _bones;
+        private List<BonePose> _bones;
         /// <summary>
         /// Collection of bones and their rotations in this hand.
         /// </summary>
-        public List<BoneRotation> Bones
+        public List<BonePose> Bones
         {
             get
             {
                 if (_bones == null)
                 {
-                    _bones = new List<BoneRotation>();
+                    _bones = new List<BonePose>();
                 }
                 return _bones;
             }
@@ -136,7 +97,7 @@ namespace HandPosing
             result.Bones.Clear();
             for (int i = 0; i < from.Bones.Count; i++)
             {
-                BoneRotation? bone = BoneRotation.Lerp(from.Bones[i], to.Bones[i], t);
+                BonePose? bone = BonePose.Lerp(from.Bones[i], to.Bones[i], t);
                 if(bone.HasValue)
                 {
                     result.Bones.Add(bone.Value);

@@ -1,3 +1,4 @@
+using HandPosing.TrackingData;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -22,6 +23,9 @@ namespace HandPosing
         [SerializeField]
         [Tooltip("The hand-tracking data provider")]
         private SkeletonDataProvider skeleton;
+
+
+
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.
@@ -29,12 +33,6 @@ namespace HandPosing
         [SerializeField]
         [Tooltip("Callbacks indicating when the hand tracking has updated. Not mandatory.")]
         private AnchorsUpdateNotifier updateNotifier;
-        /// <summary>
-        /// The parent anchor of the hand.
-        /// </summary>
-        [SerializeField]
-        [Tooltip("The parent anchor of the hand.")]
-        private Transform handAnchor;
         /// <summary>
         /// Transform for the grip point of the hand. Tipically at the centre of the hand.
         /// It is important that the grip point is well alligned with the palm.
@@ -56,12 +54,19 @@ namespace HandPosing
         private bool autoAdjustScale;
 
         /// <summary>
-        /// Offset of the hand when using hand-tracking.
-        /// Note that the default position is for when using controllers.
+        /// Transform for the tracked controller so it moves this hand
         /// </summary>
         [SerializeField]
-        [Tooltip("Offset of the hand (from the anchor) when using hand-tracking instead of controllers.")]
-        private HandMap trackedHandOffset;
+        [Tooltip("The transform for the tracked controller")]
+        private Transform controllerAnchor;
+        /// <summary>
+        /// Offset of the hand when using controllers.
+        /// Note that the default position is for when using hand-tracking.
+        /// </summary>
+        [SerializeField]
+        [Tooltip("Offset of the hand (from the anchor) when using controllers instead of hand-tracking.")]
+        private HandMap controllerOffset;
+
         /// <summary>
         /// Bones of the hand and their relative rotations compared to hand-tracking.
         /// </summary>
@@ -97,11 +102,11 @@ namespace HandPosing
         {
             get
             {
-                return this.handAnchor.localScale.x;
+                return this.transform.localScale.x;
             }
             private set
             {
-                this.handAnchor.localScale = Vector3.one * value;
+                this.transform.localScale = Vector3.one * value;
             }
         }
 
@@ -128,15 +133,16 @@ namespace HandPosing
         }
 
         /// <summary>
-        /// Relative pose of the representated grip from the hand anchor.
+        /// Relative pose of the representated grip from the tracked hand.
         /// </summary>
-        public Pose GripOffset
+        public Pose TrackedGripOffset
         {
             get
             {
-                return this.handAnchor.RelativeOffset(this.gripPoint);
+                return PoseUtils.RelativeOffset(Grip.GetPose(), _trackedPose);
             }
         }
+
 
         /// <summary>
         /// World rotation of the tracked 
@@ -149,9 +155,9 @@ namespace HandPosing
                 {
                     CacheGripOffsets();
                 }
-                Pose offset = _trackingHands ? _pupettedGripOffset : _originalGripOffset;
+                Pose offset = _originalGripOffset;
                 offset.position = offset.position * Scale;
-                return this.handAnchor.GlobalPose(offset);
+                return this.transform.GlobalPose(offset);
             }
         }
 
@@ -177,30 +183,22 @@ namespace HandPosing
             }
         }
 
-        private HandMap _originalHandOffset;
         private Pose _originalGripOffset;
-        private Pose _pupettedGripOffset;
+        private Pose _trackedPose;
         private bool _offsetInitialised = false;
         private bool _usingUpdateNotifier;
         private bool _trackingHands;
 
         private void Awake()
         {
-            if (skeleton == null)
+            if (updateNotifier != null)
             {
-                this.enabled = false;
+                updateNotifier.OnAnchorsEveryUpdate += UpdateHandPose;
+                _usingUpdateNotifier = true;
             }
             else
             {
-                if (updateNotifier != null)
-                {
-                    updateNotifier.OnAnchorsEveryUpdate += UpdateHandPose;
-                    _usingUpdateNotifier = true;
-                }
-                else
-                {
-                    _usingUpdateNotifier = false;
-                }
+                _usingUpdateNotifier = false;
             }
             CacheGripOffsets();
         }
@@ -216,22 +214,10 @@ namespace HandPosing
             return bonesCollection;
         }
 
-
         private void CacheGripOffsets()
         {
-            _originalHandOffset = HandOffsetMapping();
-            _originalGripOffset = this.handAnchor.RelativeOffset(this.gripPoint);
-            _pupettedGripOffset = OffsetedGripPose();
+            _originalGripOffset = this.transform.RelativeOffset(this.gripPoint);
             _offsetInitialised = true;
-        }
-
-        private Pose OffsetedGripPose()
-        {
-            Pose trackingOffset = new Pose(Vector3.zero, Quaternion.Euler(0f, 180f, 0f));
-            Pose gripOffset = this.transform.RelativeOffset(this.gripPoint);
-            Pose hand = PoseUtils.Multiply(trackedHandOffset.Offset, trackingOffset);
-            Pose translateGrip = PoseUtils.Multiply(hand, gripOffset);
-            return translateGrip;
         }
 
         private void Update()
@@ -262,10 +248,10 @@ namespace HandPosing
             if (!_trackingHands)
             {
                 _trackingHands = true;
-                Scale = autoAdjustScale? (skeleton.HandScale ?? 1f) : 1f;
+                Scale = autoAdjustScale ? (skeleton.HandScale ?? 1f) : 1f;
                 OnUsingHands?.Invoke();
             }
-            SetLivePose(skeleton.Bones);
+            SetLivePose(skeleton);
         }
 
         private void DisableHandTracked()
@@ -275,67 +261,49 @@ namespace HandPosing
                 _trackingHands = false;
                 Scale = 1f;
                 OnUsingControllers?.Invoke();
-                _originalHandOffset.Apply();
+                
             }
+            SetRootPose(controllerAnchor.GetPose(),true);
         }
 
-        #region bone restoring
-        private HandMap HandOffsetMapping()
+        private void SetLivePose(SkeletonDataProvider skeletonData)
         {
-            return new HandMap()
-            {
-                id = trackedHandOffset.id,
-                transform = trackedHandOffset.transform,
-                positionOffset = trackedHandOffset.transform.localPosition,
-                rotationOffset = trackedHandOffset.transform.localRotation.eulerAngles
-            };
-        }
-        #endregion
+            BonePose[] fingers = skeletonData.Fingers;
+            BonePose hand = skeletonData.Hand;
 
-        private void SetLivePose(List<HandBone> Bones)
-        {
-            for (int i = 0; i < Bones.Count; ++i)
+            for (int i = 0; i < fingers.Length; ++i)
             {
-                BoneId boneId = Bones[i].Id;
+                BoneId boneId = fingers[i].boneID;
                 if (BonesCache.ContainsKey(boneId))
                 {
                     Transform boneTransform = BonesCache[boneId].transform;
-                    boneTransform.localRotation = BonesCache[boneId].RotationOffset
-                        * Bones[i].Transform.localRotation;
-                }
-                else if (trackedHandOffset.id == boneId)
-                {
-                    Transform handTransform = trackedHandOffset.transform;
-                    handTransform.localPosition = trackedHandOffset.positionOffset
-                         + trackedHandOffset.RotationOffset * Bones[i].Transform.localPosition;
-                    handTransform.localRotation = trackedHandOffset.RotationOffset
-                         * Bones[i].Transform.localRotation;
+                    Quaternion desiredRot = BonesCache[boneId].RotationOffset * fingers[i].rotation;
+                    boneTransform.localRotation = desiredRot;
                 }
             }
+
+            Pose rootPose = new Pose(hand.position, hand.rotation);
+            SetRootPose(rootPose, false);
+        }
+
+        private void SetRootPose(Pose rootPose, bool applyOffset)
+        {
+            if (applyOffset)
+            {
+                rootPose = PoseUtils.Multiply(rootPose, controllerOffset.AsPose);
+            }
+            _trackedPose = rootPose;
+            this.transform.SetPose(rootPose, Space.World);
         }
 
         #region pose lerping
-
-        /// <summary>
-        /// Moves the hand and its bones towards a given pose and bones using interpolation.
-        /// The target pose is specified in local units from a reference transform.
-        /// </summary>
-        /// <param name="pose">The target position/rotation of the hand and its bones to move to</param>
-        /// <param name="relativeTo">The relative transform from which the pose is given. Typically an object that is going to be grabbed.</param>
-        /// <param name="bonesWeight">Interpolation factor for the bones. 0 for staying with the current values, 1 for fully overriding with the new ones.</param>
-        /// <param name="positionWeight">Interpolation factor of the bone position/rotation. 0 for staying at the current pose, 1 for fully overriding with the provided one.</param>
-        public void LerpToPose(HandPose pose, Transform relativeTo, float bonesWeight = 1f, float positionWeight = 1f)
-        {
-            LerpBones(pose.Bones, bonesWeight);
-            LerpGripOffset(pose, positionWeight, relativeTo);
-        }
 
         /// <summary>
         /// Rotates the bones of the hand towards the given ones using interpolation.
         /// </summary>
         /// <param name="bones">The target bone rotations.</param>
         /// <param name="weight">Interpolation factor for the bones. 0 for staying with the current values, 1 for fully overriding with the new ones.</param>
-        public void LerpBones(List<BoneRotation> bones, float weight)
+        public void LerpBones(List<BonePose> bones, float weight)
         {
             if (weight > 0f)
             {
@@ -345,7 +313,8 @@ namespace HandPosing
                     if (BonesCache.ContainsKey(boneId))
                     {
                         Transform boneTransform = BonesCache[boneId].transform;
-                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, bone.rotation, weight);
+                        Quaternion targetRot = BonesCache[boneId].RotationOffset * bone.rotation;
+                        boneTransform.localRotation = Quaternion.Lerp(boneTransform.localRotation, targetRot, weight);
                     }
                 }
             }
@@ -369,15 +338,17 @@ namespace HandPosing
         /// </summary>
         /// <param name="pose">The relative target position for the grip point of the hand</param>
         /// <param name="weight">Interpolation factor, 0 for not changing the hand, 1 for fully alligning the grip point with the given pose.</param>
-        /// <param name="relativeTo">The reference transform in which the pose is provided. If null, the Hand Anchor coordinates are used</param>
-        public void LerpGripOffset(Pose pose, float weight, Transform relativeTo = null)
+        /// <param name="relativeTo">The reference transform in which the pose is provided.</param>
+        public void LerpGripOffset(Pose pose, float weight, Transform relativeTo)
         {
-            Pose gripOffset = this.gripPoint.RelativeOffset(this.transform);
-            Pose basic = TrackedGripPose;
-            Pose target = (relativeTo ?? this.handAnchor).GlobalPose(pose);
-            Pose result = PoseUtils.Lerp(basic, target, weight);
-            result = PoseUtils.Multiply(result, gripOffset);
-            this.transform.SetPose(result);
+            Pose fromGrip = this.gripPoint.GetPose();
+            Pose toGrip = (relativeTo ?? this.transform).GlobalPose(pose);
+            Pose targetGrip = PoseUtils.Lerp(fromGrip, toGrip, weight);
+
+            Pose inverseGrip = this.gripPoint.RelativeOffset(this.transform);
+            Pose targetPose = PoseUtils.Multiply(targetGrip, inverseGrip);
+            this.transform.SetPose(targetPose);
+
         }
         #endregion
 
@@ -401,12 +372,13 @@ namespace HandPosing
                 foreach (var bone in BonesCache)
                 {
                     BoneMap boneMap = bone.Value;
-                    Quaternion rotation = boneMap.transform.localRotation;
-                    pose.Bones.Add(new BoneRotation() { boneID = boneMap.id, rotation = rotation });
+                    Quaternion rotation = boneMap.TrackedRotation;
+                    pose.Bones.Add(new BonePose() { boneID = boneMap.id, rotation = rotation });
                 }
             }
             return pose;
         }
+
         #endregion
     }
 }

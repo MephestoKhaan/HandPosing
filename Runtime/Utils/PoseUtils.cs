@@ -73,6 +73,14 @@ namespace HandPosing
             return result;
         }
 
+        public static Pose Inverse(this Pose a)
+        {
+            var result = new Pose();
+            result.position = -a.position;
+            result.rotation = Quaternion.Inverse(a.rotation);
+            return result;
+        }
+
         /// <summary>
         /// Get the position/rotation difference between two transforms.
         /// </summary>
