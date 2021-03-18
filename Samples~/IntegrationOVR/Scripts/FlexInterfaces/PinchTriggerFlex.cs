@@ -3,7 +3,9 @@ using UnityEngine;
 namespace HandPosing.OVRIntegration.GrabEngine
 {
     /// <summary>
-    /// Stock flex detector used in snap-to-pose.
+    /// This flex interface compares if the user is pinching with the Index or the Middle Finger.
+    /// It can track the pinches in high and low confidence if specified, and tipically returns a fairly safe value since 
+    /// it relies on OVR methods for calculating the pinching.
     /// </summary>
     public class PinchTriggerFlex : MonoBehaviour, FlexInterface
     {
@@ -27,9 +29,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
             OVRHand.HandFinger.Index,
             OVRHand.HandFinger.Middle
         };
-
-
-        public FlexType InterfaceFlexType => FlexType.PinchTriggerFlex;
 
         public bool IsValid
         {
@@ -57,15 +56,9 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => grabThresold;
         }
 
-        public Vector2 FailGrabThreshold
+        public Vector2 GrabAttemptThreshold
         {
-            get
-            {
-                Vector2 failThresold = GrabThreshold;
-                failThresold.x *= ALMOST_PINCH_LOWER_PERCENT;
-                failThresold.y *= ALMOST_PINCH_UPPER_PERCENT;
-                return failThresold;
-            }
+            get => GrabThreshold * new Vector2(ALMOST_PINCH_LOWER_PERCENT, ALMOST_PINCH_UPPER_PERCENT);
         }
 
         public float AlmostGrabRelease
@@ -73,6 +66,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => GrabThreshold.x;
         }
 
+        /// <summary>
+        /// In order to calculate the strength first we check if the hand and the thumb are being tracked.
+        /// Then we find the max value between the pinching fingers and that will be the one returned.
+        /// </summary>
+        /// <returns>A normalised value indicating the max pinch of the middle and index fingers</returns>
         private float CalculateStrength()
         {
             float maxPinch = 0f;

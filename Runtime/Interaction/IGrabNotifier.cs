@@ -34,7 +34,7 @@ namespace HandPosing.Interaction
         /// <summary>
         /// Min - Max value for the grab thresold. X indicates the release point, Y the grab point. Typically [0.33,0.9] or even [0,1]
         /// </summary>
-        Vector2 GrabFlexThresold { get; }
+        Vector2 GrabFlexThreshold { get; }
         /// <summary>
         /// Current normalised value of the grabbing gesture. 1 for a fully realised gesture, 0 for no gesture detected.
         /// </summary>

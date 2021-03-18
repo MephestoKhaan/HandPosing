@@ -8,6 +8,7 @@ namespace HandPosing.Interaction
     /// Sample implementation for a Grabber (without dependencies) that works with the snapping system.
     /// Inherit from this class to be able to reuse the provided Grabber-Grabbable classes or
     /// completely implement (or adapt!) your own by implementing the much smaller IGrabNotifier.
+    /// This grabbed does not only takes care of detecting a grab but also if the user intended to grab and it failed.
     /// </summary>
     public abstract class BaseGrabber : MonoBehaviour, IGrabNotifier
     {
@@ -31,21 +32,56 @@ namespace HandPosing.Interaction
         [Tooltip("Not mandatory callbacks indicating when the hand tracking has updated.")]
         private AnchorsUpdateNotifier updateNotifier;
 
+        /// <summary>
+        /// Offset from the grip of the hand to the grabbed object.
+        /// </summary>
         private Pose _grabbedObjectOffset;
 
+        /// <summary>
+        /// True if the updates are being driven externally by an updateNotifier, instead of the standard Unity lifecycle
+        /// </summary>
         private bool _usingUpdateNotifier;
+        
         private bool _grabVolumeEnabled = true;
+        /// <summary>
+        /// Current grab strength
+        /// </summary>
         private float _flex;
+        /// <summary>
+        /// Grabbables in contact with the hand volume
+        /// </summary>
         private Dictionary<Grabbable, int> _grabCandidates = new Dictionary<Grabbable, int>();
+        /// <summary>
+        /// True is the hand is not yet grabbing but in the hysteresis range
+        /// </summary>
         private bool _nearGrab = false;
 
 
         #region grab fail
+        /// <summary>
+        /// Last grabbable that stopped beign in contact with the hand
+        /// </summary>
         private Grabbable _lastGrabCandidate = null;
+
+        /// <summary>
+        /// How long has passed since the last grab candidate stopped touching the hand
+        /// </summary>
         private float? _timeSinceWithoutCandidates = null;
+        /// <summary>
+        /// How long has passed since we started a grab
+        /// </summary>
         private float? _timeSinceLastGrab = null;
+        /// <summary>
+        /// How long has passed since we released
+        /// </summary>
         private float? _timeSinceLastRelease = null;
+        /// <summary>
+        /// How long has passed since we attempted to grab, check GrabAttempt()
+        /// </summary>
         private float? _timeSinceGrabAttempt = null;
+        /// <summary>
+        /// How long has passed since a grab failed. CheckGrabFailed and GrabFailed() 
+        /// </summary>
         private float? _timeSinceLastFail = null;
 
         private const float FAIL_SUSTAIN_TIME = 0.08f;
@@ -57,7 +93,9 @@ namespace HandPosing.Interaction
         /// Current grabbed object.
         /// </summary>
         public Grabbable GrabbedObject { get; private set; } = null;
-
+        /// <summary>
+        /// Callback that indicates that the detection trigger has been enabled/disabled
+        /// </summary>
         public Action<bool> OnIgnoreTriggers { get; set; }
 
         #region IGrabNotifier
@@ -66,11 +104,7 @@ namespace HandPosing.Interaction
         public Action<GameObject> OnGrabEnded { get; set; }
         public Action<GameObject> OnGrabAttemptFail { get; set; }
 
-        public Action<GameObject, float> OnGrabTimedEnded;
-
-        public abstract Vector2 GrabFlexThresold { get; }
-        public abstract Vector2 FailedFlexThresold { get; }
-        public abstract float ReleasedFlexThresold { get; }
+        public abstract Vector2 GrabFlexThreshold { get; }
 
         public abstract float CurrentFlex();
 
@@ -80,6 +114,19 @@ namespace HandPosing.Interaction
             return closestGrabbable?.GetComponent<Snappable>();
         }
         #endregion
+
+        /// <summary>
+        /// Callback indicating that a grab finished and how long it was held. 
+        /// </summary>
+        public Action<GameObject, float> OnGrabTimedEnded;
+        /// <summary>
+        /// Range for detecting that grab failed. Typically narrower than GrabFlexThreshold.
+        /// </summary>
+        public abstract Vector2 GrabAttemptThreshold { get; }
+        /// <summary>
+        /// Indicates the minimum value for a grab Typically a bit higher than the minimum GrabFlexThreshold
+        /// </summary>
+        public abstract float ReleasedFlexThreshold { get; }
 
         /// <summary>
         /// Relative velocities of the hand for throwing.
@@ -196,6 +243,9 @@ namespace HandPosing.Interaction
             UpdateGrabStates();
         }
 
+        /// <summary>
+        /// Checks the current grab strength and updates the internal state to reflect it
+        /// </summary>
         private void UpdateGrabStates()
         {
             float prevFlex = _flex;
@@ -222,14 +272,14 @@ namespace HandPosing.Interaction
             {
                 GrabFailed();
             }
-            else if (prevFlex < GrabFlexThresold.y
-                 && currentFlex >= GrabFlexThresold.y)
+            else if (prevFlex < GrabFlexThreshold.y
+                 && currentFlex >= GrabFlexThreshold.y)
             {
                 _nearGrab = false;
                 GrabBegin();
             }
-            else if (prevFlex > GrabFlexThresold.x
-                && currentFlex <= GrabFlexThresold.x)
+            else if (prevFlex > GrabFlexThreshold.x
+                && currentFlex <= GrabFlexThreshold.x)
             {
                 GrabEnd(true);
             }
@@ -238,7 +288,7 @@ namespace HandPosing.Interaction
                 && currentFlex > 0)
             {
                 _nearGrab = true;
-                NearGrab(currentFlex / GrabFlexThresold.y);
+                NearGrab(currentFlex / GrabFlexThreshold.y);
             }
             else if (_nearGrab)
             {
@@ -247,14 +297,28 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Calculates if a flex value is within the grab-attempt range.
+        /// This range can be narrower than the actual grab threshold
+        /// </summary>
+        /// <param name="flex">Raw grab strength to check</param>
+        /// <returns>True if the flex is attempting to grab</returns>
         private bool IsGrabAttemp(float flex)
         {
-            Vector2 attemptThresold = FailedFlexThresold;
+            Vector2 attemptThresold = GrabAttemptThreshold;
             return (flex > attemptThresold.x
                 && flex < attemptThresold.y);
         }
 
-
+        /// <summary>
+        /// To calculate if a grab failed:
+        /// - check nothing is grabbed
+        /// - the user stopped trying to grab in the last few frames
+        /// - there is, or there was, a grabbable candidate nearby recently
+        /// - we have not grabbed recently anything
+        /// </summary>
+        /// <param name="currentFlex">The current raw grab strength</param>
+        /// <returns>True if all conditions above are true</returns>
         private bool CheckGrabFailed(float currentFlex)
         {
             if (GrabbedObject != null)
@@ -264,7 +328,7 @@ namespace HandPosing.Interaction
 
             bool justReleasedAfterAttempt = _timeSinceGrabAttempt.HasValue
                 && Time.timeSinceLevelLoad - _timeSinceGrabAttempt.Value > FAIL_SUSTAIN_TIME
-                && currentFlex <= ReleasedFlexThresold;
+                && currentFlex <= ReleasedFlexThreshold;
 
             if (justReleasedAfterAttempt)
             {
@@ -281,6 +345,10 @@ namespace HandPosing.Interaction
             return false;
         }
 
+        /// <summary>
+        /// When a grab attempt fails, set the state accordingly
+        /// and trigger the relevant callbacks like OnGrabAttemptFail
+        /// </summary>
         protected virtual void GrabFailed()
         {
             bool sentFailedEventRecently = _timeSinceLastFail.HasValue

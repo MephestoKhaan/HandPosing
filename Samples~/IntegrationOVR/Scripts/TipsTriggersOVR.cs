@@ -5,12 +5,15 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration
 {
+    /// <summary>
+    /// Component that prepares the OVRHand to have detection capsules in the tips of the fingers.
+    /// This is not mandatory but can be interesting to add when using the Pinch grab to maximise accuracy.
+    /// </summary>
     [RequireComponent(typeof(OVRSkeleton))]
     public class TipsTriggersOVR : MonoBehaviour
     {
         [SerializeField]
         private GrabberHybridOVR grabber;
-
 
         [SerializeField]
         private bool disableRest;
@@ -36,7 +39,6 @@ namespace HandPosing.OVRIntegration
         {
             grabber.OnGrabStarted += ObjectGrabbed;
             grabber.OnGrabEnded += ObjectReleased;
-
             grabber.OnIgnoreTriggers += IgnoreTriggers;
         }
 
@@ -44,21 +46,29 @@ namespace HandPosing.OVRIntegration
         {
             grabber.OnGrabStarted -= ObjectGrabbed;
             grabber.OnGrabEnded -= ObjectReleased;
-
             grabber.OnIgnoreTriggers -= IgnoreTriggers;
         }
 
+        /// <summary>
+        /// The Start method kickstart the initialisation of the capsules, but it needs to wait
+        /// for OVRSkeleton
+        /// </summary>
+        /// <returns>Wait operation</returns>
         private IEnumerator Start()
         {
             while (!_skeleton.IsInitialized)
             {
                 yield return null;
             }
-
             _allCapsules = new List<OVRBoneCapsule>(_skeleton.Capsules);
             SetUpCapsuleTriggerLogic();
         }
 
+        /// <summary>
+        /// Prepares the capsules received from the OVRSkeleton capsules for triggering.
+        /// It will select the selected tips as triggers instead of collisions, 
+        /// if disableRest is enabled it will disable all collisions for the rest of capsules.
+        /// </summary>
         private void SetUpCapsuleTriggerLogic()
         {
             if (_allCapsules.Count == 0)
@@ -86,12 +96,15 @@ namespace HandPosing.OVRIntegration
                     midCapsule.CapsuleCollider.enabled = false;
                 }
             }
-               
-
-
         }
 
 
+        /// <summary>
+        /// When grabbing an object, since it can be physically grabbed with a joint. Disable the collisions
+        /// of the hand colliders with the object.
+        /// Not this is for colliders and not the tips-triggers.
+        /// </summary>
+        /// <param name="obj">grabbed object</param>
         private void ObjectGrabbed(GameObject obj)
         {
             if (obj == null)
@@ -104,6 +117,11 @@ namespace HandPosing.OVRIntegration
             }
         }
 
+        /// <summary>
+        /// As oposed to ObjectGrabbed, when releasing re-enable the collisions wit the object.
+        /// Not this is for colliders and not the tips-triggers.
+        /// </summary>
+        /// <param name="obj">The released object</param>
         private void ObjectReleased(GameObject obj)
         {
             if (obj == null)
@@ -115,7 +133,6 @@ namespace HandPosing.OVRIntegration
                 IgnoreCollisions(collider, false);
             }
         }
-
 
         private void IgnoreCollisions(Collider collider, bool ignoreCollision)
         {
@@ -132,8 +149,10 @@ namespace HandPosing.OVRIntegration
             }
         }
 
-
-
+        /// <summary>
+        /// When the grabber disables its own detection triggers, this disables also the ones on the skeleton.
+        /// </summary>
+        /// <param name="ignore">True to disable the detection triggers, false otherwise</param>
         private void IgnoreTriggers(bool ignore)
         {
             if (_allCapsules == null)
@@ -149,8 +168,9 @@ namespace HandPosing.OVRIntegration
             }
         }
 
-
-
+        /// <summary>
+        /// Internal component to be attached to sub-triggers so we can relay notifications to the grabber.
+        /// </summary>
         private class TriggerRelay : MonoBehaviour
         {
             public GrabberHybridOVR Grabber { get; set; }

@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace HandPosing.OVRIntegration.GrabEngine
 {
+    /// <summary>
+    /// This Flex interface serves as the Union between SphereGrabFlex and PinchTriggerFlex.
+    /// It will return a grab if any of them is in their own respective valid ranges, but also
+    /// populate its internal state to know if the current used value was from the sphereFlex or the pinchFlex.
+    /// That way the output value can be check against the right threshold ranges in the current frame.
+    /// </summary>
     public class SphereGrabPinchFlex : MonoBehaviour, FlexInterface
     {
         [SerializeField]
@@ -12,14 +18,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private PinchTriggerFlex pinchFlex;
 
         private bool _lastWasSphereFlex;
-
-        public FlexType InterfaceFlexType
-        {
-            get
-            {
-                return FlexType.SpherePinchGrab;
-            }
-        }
 
         public bool IsValid
         {
@@ -53,17 +51,17 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
-        public Vector2 FailGrabThreshold
+        public Vector2 GrabAttemptThreshold
         {
             get
             {
                 if (_lastWasSphereFlex)
                 {
-                    return sphereFlex.FailGrabThreshold;
+                    return sphereFlex.GrabAttemptThreshold;
                 }
                 else
                 {
-                    return pinchFlex.FailGrabThreshold;
+                    return pinchFlex.GrabAttemptThreshold;
                 }
             }
         }
@@ -89,6 +87,12 @@ namespace HandPosing.OVRIntegration.GrabEngine
             pinchFlex = this.GetComponent<PinchTriggerFlex>();
         }
 
+        /// <summary>
+        /// Calculates the stronger grab between the pinch and sphere flexes.
+        /// In order to compare the values it remaps them using their grab strenghts.
+        /// It also stores which was the best flex interface on this frame so the relevant thresholds can be compared after this method.
+        /// </summary>
+        /// <returns>The strongest grab value</returns>
         public float? CalculateGrabStrength()
         {
             _lastWasSphereFlex = false;
@@ -114,6 +118,13 @@ namespace HandPosing.OVRIntegration.GrabEngine
             return rawPinchStrength;
         }
 
+        /// <summary>
+        /// Remaps a Flex value from a FlexInterface to the 0-1 range considering the respective GrabThreshold. 
+        /// This is relevant so we can compare which one of different FlexInterfaces is grabbing strongher.
+        /// </summary>
+        /// <param name="flex">The FlexInterface to extract and remap the grabStrength from</param>
+        /// <param name="rawStrenght">Outputs the unmapped grabStrength of the flex interface</param>
+        /// <returns>A normalised value indicating the local strength for the grab</returns>
         private static float? RemapedFlex(FlexInterface flex, out float rawStrenght)
         {
             float? strenght = flex.GrabStrength;

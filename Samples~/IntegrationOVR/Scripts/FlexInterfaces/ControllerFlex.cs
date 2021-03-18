@@ -2,12 +2,13 @@
 
 namespace HandPosing.OVRIntegration.GrabEngine
 {
-
+    /// <summary>
+    /// This Flex Interface is used to detect grabbing when using an Oculus Controller
+    /// </summary>
     public class ControllerFlex : MonoBehaviour, FlexInterface
     {
         [SerializeField]
         private OVRInput.Controller controller;
-
 
         [SerializeField]
         [Tooltip("Grab threshold, hand controller")]
@@ -15,8 +16,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
         private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
-
-        public FlexType InterfaceFlexType => FlexType.Controller;
 
         public bool IsValid => true;
 
@@ -33,7 +32,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => grabThresold;
         }
 
-        public Vector2 FailGrabThreshold
+        public Vector2 GrabAttemptThreshold
         {
             get => GrabThreshold * new Vector2(ALMOST_PINCH_LOWER_PERCENT, ALMOST_PINCH_UPPER_PERCENT);
         }

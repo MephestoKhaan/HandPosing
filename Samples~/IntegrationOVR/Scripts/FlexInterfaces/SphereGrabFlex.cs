@@ -37,15 +37,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [Tooltip("Grab threshold, hand sphere grab")]
         private Vector2 grabThresoldHand = new Vector2(0.25f, 0.75f);
 
-
-        public FlexType InterfaceFlexType
-        {
-            get
-            {
-                return FlexType.SphereGrab;
-            }
-        }
-
         private float? _lastGrabStrength;
 
         private float[] _fingerPoseStrength = new float[FINGER_COUNT];
@@ -99,7 +90,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => grabThresoldHand;
         }
 
-        public Vector2 FailGrabThreshold
+        public Vector2 GrabAttemptThreshold
         {
             get => GrabThreshold * new Vector2(ALMOST_GRAB_LOWER_PERCENT, ALMOST_GRAB_UPPER_PERCENT);
         }
@@ -148,6 +139,9 @@ namespace HandPosing.OVRIntegration.GrabEngine
             return flexHand.IsDataHighConfidence || trackLowConfidenceHands;
         }
 
+        /// <summary>
+        /// Updates the position of the finger tips, for later comparison with the Hand Centre
+        /// </summary>
         private void UpdateFingerTips()
         {
             for (int i = 0; i < FINGER_COUNT; ++i)
@@ -168,12 +162,19 @@ namespace HandPosing.OVRIntegration.GrabEngine
             return (flexHand.GetFingerConfidence(finger) == OVRHand.TrackingConfidence.High || trackLowConfidenceFingers);
         }
 
+        /// <summary>
+        /// Updates the position of the Hand Centre. It is important to visualise that the offset is correct when editing it.
+        /// </summary>
         private void UpdateVolumeCenter()
         {
             OVRBone baseBone = skeleton.Bones[(int)OVRSkeleton.BoneId.Hand_Start];
             _poseVolumeCenter = baseBone.Transform.position + baseBone.Transform.TransformDirection(poseVolumeOffset);
         }
 
+        /// <summary>
+        /// To calculate the pinch strength we must check not only the confidence of each finger but also the thumb.
+        /// After that we ony update the values if the tracking was good enough (controllable in the inspector)
+        /// </summary>
         private void CalculatePinchStrength()
         {
             bool canTrackThumb = CanTrackFinger(OVRHand.HandFinger.Thumb);
@@ -190,6 +191,9 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
+        /// <summary>
+        /// To calculate the sphere grab strenght we check that the finger tips are close enough to the palm centre with some hysteresis specified vy the radious.
+        /// </summary>
         private void CalculatePoseStrength()
         {
             float outsidePoseVolumeRadius = poseVolumeRadius + fingerTipRadius;
@@ -217,9 +221,15 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
+        /// <summary>
+        /// Once all positions and distances are calculated, proceeds to update the final value.
+        /// For each finger the grab value is the max between the pinch and the palm distance
+        /// Then, taking in count that fingers can be ignored, finds the minimal value (all fingers must be grabbing).
+        /// It also populates the grab strength collection with all the relevant values.
+        /// </summary>
+        /// <returns>The safest grab value for the hand</returns>
         private float StorePerFingerGrabAndGetFinalValue()
         {
-            // start with pose strength at first
             for (int i = 0; i < _fingerGrabStrength.Length; ++i)
             {
                 _fingerGrabStrength[i] = _fingerPoseStrength[i];

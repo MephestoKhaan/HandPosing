@@ -12,6 +12,7 @@ namespace HandPosing.OVRIntegration
     public class GrabberHybridOVR : BaseGrabber
     {
         [SerializeField]
+        [Tooltip("Provide the grabbing interfaces in priority order, if the first one is not valid it will fallback to the next one")]
         private Component[] flexInterfaces;
 
         private Vector3 _prevPosition;
@@ -78,9 +79,9 @@ namespace HandPosing.OVRIntegration
         }
 
         public override float CurrentFlex() => Flex.GrabStrength??0f;
-        public override Vector2 GrabFlexThresold => Flex.GrabThreshold;
-        public override Vector2 FailedFlexThresold => Flex.FailGrabThreshold;
-        public override float ReleasedFlexThresold => Flex.AlmostGrabRelease;
+        public override Vector2 GrabFlexThreshold => Flex.GrabThreshold;
+        public override Vector2 GrabAttemptThreshold => Flex.GrabAttemptThreshold;
+        public override float ReleasedFlexThreshold => Flex.AlmostGrabRelease;
 
         protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose) => (_velocity, _angularVelocity);
     }

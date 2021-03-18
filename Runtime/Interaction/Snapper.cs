@@ -75,8 +75,8 @@ namespace HandPosing.Interaction
             {
                 if (IsSnapping)
                 {
-                    float boundedFlex = _grabNotifier.GrabFlexThresold.x
-                        + _grabNotifier.CurrentFlex() * (1f - _grabNotifier.GrabFlexThresold.x);
+                    float boundedFlex = _grabNotifier.GrabFlexThreshold.x
+                        + _grabNotifier.CurrentFlex() * (1f - _grabNotifier.GrabFlexThreshold.x);
                     return boundedFlex <= _grabSnap.SlideThresold;
                 }
                 return false;
