@@ -83,8 +83,8 @@
     display: none;
     position: absolute;
     left: 0; top: 0;
-    border: 1px solid #6F8A60;
-    background-color: #F6F8F5;
+    border: 1px solid #90A5CE;
+    background-color: #F9FAFC;
     z-index: 10001;
     padding-top: 4px;
     padding-bottom: 4px;
@@ -128,7 +128,7 @@ a.SelectItem:active {
 
 a.SelectItem:hover {
     color: #FFFFFF;
-    background-color: #232B1E;
+    background-color: #3D578C;
     outline-style: none;
     text-decoration: none;
     cursor: pointer;
@@ -147,7 +147,7 @@ iframe#MSearchResults {
     position: absolute;
     left: 0; top: 0;
     border: 1px solid #000;
-    background-color: #E5EAE2;
+    background-color: #EEF1F7;
     z-index:10000;
 }
 
@@ -183,7 +183,7 @@ body.SRPage {
 
 .SRSymbol {
     font-weight: bold; 
-    color: #293323;
+    color: #425E97;
     font-family: Arial, Verdana, sans-serif;
     text-decoration: none;
     outline: none;
@@ -191,7 +191,7 @@ body.SRPage {
 
 a.SRScope {
     display: block;
-    color: #293323; 
+    color: #425E97; 
     font-family: Arial, Verdana, sans-serif;
     text-decoration: none;
     outline: none;
@@ -204,12 +204,14 @@ a.SRScope:focus, a.SRScope:active {
 
 span.SRScope {
     padding-left: 4px;
+    font-family: Arial, Verdana, sans-serif;
 }
 
 .SRPage .SRStatus {
     padding: 2px 5px;
     font-size: 8pt;
     font-style: italic;
+    font-family: Arial, Verdana, sans-serif;
 }
 
 .SRResult {
@@ -224,7 +226,7 @@ div.searchresults {
 /*---------------- External search page results */
 
 .searchresult {
-    background-color: #E8EDE5;
+    background-color: #F0F3F8;
 }
 
 .pages b {

@@ -1,6 +1,8 @@
 var searchData=
 [
-  ['inspectorbuttonattribute_293',['InspectorButtonAttribute',['../class_inspector_button_attribute.html#a31bc9f51cd36c1c49539f1fe51288cd4',1,'InspectorButtonAttribute']]],
-  ['invertedpose_294',['InvertedPose',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface.html#a3567e92419875714c1c23d608c95223d',1,'HandPosing.SnapSurfaces.BoxSurface.InvertedPose()'],['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface.html#ad31d746c6c1948ea849e4ebdfc3f43ab',1,'HandPosing.SnapSurfaces.CylinderSurface.InvertedPose()'],['../class_hand_posing_1_1_snap_surfaces_1_1_snap_surface.html#a44ec2f877a9ad1356070f43811321bb5',1,'HandPosing.SnapSurfaces.SnapSurface.InvertedPose()'],['../class_hand_posing_1_1_snap_surfaces_1_1_sphere_surface.html#a97bfa722ebb51d827f0048ab71cdce3d',1,'HandPosing.SnapSurfaces.SphereSurface.InvertedPose()']]],
-  ['isnull_295',['IsNull',['../struct_hand_posing_1_1_scored_hand_pose.html#a2362351eea7731ba09c80e230f1502a4',1,'HandPosing::ScoredHandPose']]]
+  ['lerp_264',['Lerp',['../struct_hand_posing_1_1_bone_pose.html#a7c379f19278237c8b29df35ea442bf63',1,'HandPosing.BonePose.Lerp()'],['../struct_hand_posing_1_1_hand_pose.html#acad68ae6673e562041241dd8f0238f42',1,'HandPosing.HandPose.Lerp()'],['../struct_hand_posing_1_1_scored_hand_pose.html#a4851ef29d3dd81940b8241a0b1e85068',1,'HandPosing.ScoredHandPose.Lerp()']]],
+  ['lerpbones_265',['LerpBones',['../class_hand_posing_1_1_hand_puppet.html#ac64b2a26d94060b3863c6448947ac338',1,'HandPosing::HandPuppet']]],
+  ['lerpgripoffset_266',['LerpGripOffset',['../class_hand_posing_1_1_hand_puppet.html#ac245498d1b4ea704550c376f72048dfa',1,'HandPosing.HandPuppet.LerpGripOffset(HandPose pose, float weight, Transform relativeTo)'],['../class_hand_posing_1_1_hand_puppet.html#af0029e56e9c677e77bda3e4eb17bf59c',1,'HandPosing.HandPuppet.LerpGripOffset(Pose pose, float weight, Transform relativeTo)']]],
+  ['loaddata_267',['LoadData',['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#a2848c943889fc235c828b4ad900c0dd8',1,'HandPosing::SnapRecording::SnapPoint']]],
+  ['loadghost_268',['LoadGhost',['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#a6aae2a157ce823c001592ad55b7ef12b',1,'HandPosing::SnapRecording::SnapPoint']]]
 ];

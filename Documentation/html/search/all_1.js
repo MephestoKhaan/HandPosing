@@ -1,11 +1,15 @@
 var searchData=
 [
-  ['addsnappoint_1',['AddSnapPoint',['../class_hand_posing_1_1_interaction_1_1_snappable.html#abb0791455f34024057b8d7c3a2ac595e',1,'HandPosing::Interaction::Snappable']]],
-  ['adjustpose_2',['AdjustPose',['../struct_hand_posing_1_1_hand_pose.html#a2ffbf4c017b6607cbad5e1164f13bbc8',1,'HandPosing::HandPose']]],
-  ['anchorsupdatenotifier_3',['AnchorsUpdateNotifier',['../class_hand_posing_1_1_anchors_update_notifier.html',1,'HandPosing']]],
-  ['anchorsupdatenotifier_2ecs_4',['AnchorsUpdateNotifier.cs',['../_anchors_update_notifier_8cs.html',1,'']]],
-  ['angle_5',['Angle',['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface.html#ac15b383b9742beeab410196ed98a1876',1,'HandPosing.SnapSurfaces.CylinderSurface.Angle()'],['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface_data.html#af9da42b01dc9482d3cbfe46a49a23706',1,'HandPosing.SnapSurfaces.CylinderSurfaceData.angle()']]],
-  ['any_6',['Any',['../namespace_hand_posing.html#ac97d0359b0d62542caa887d10096cf8caed36a1ef76a59ee3f15180e0441188ad',1,'HandPosing']]],
-  ['apply_7',['Apply',['../class_hand_posing_1_1_hand_map.html#aaba21071a79880ca352bc315b3b2f6df',1,'HandPosing::HandMap']]],
-  ['awake_8',['Awake',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a01a620b7300a3ab06225940ba2c89e06',1,'HandPosing.Interaction.BaseGrabber.Awake()'],['../class_hand_posing_1_1_interaction_1_1_grabbable.html#afebbc3267a75e4b85ffa45f4de3eab5a',1,'HandPosing.Interaction.Grabbable.Awake()']]]
+  ['basegrabber_8',['BaseGrabber',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html',1,'HandPosing::Interaction']]],
+  ['basesnappoint_9',['BaseSnapPoint',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html',1,'HandPosing::SnapRecording']]],
+  ['basictrackingcleaner_10',['BasicTrackingCleaner',['../class_hand_posing_1_1_tracking_data_1_1_basic_tracking_cleaner.html',1,'HandPosing::TrackingData']]],
+  ['bonecollection_11',['BoneCollection',['../class_hand_posing_1_1_bone_collection.html',1,'HandPosing']]],
+  ['boneid_12',['boneID',['../struct_hand_posing_1_1_bone_pose.html#a2b96aab93c024767b587424071730418',1,'HandPosing::BonePose']]],
+  ['boneid_13',['BoneId',['../namespace_hand_posing.html#ac4fd26a64b30ab0017531c6e0d5b2d4a',1,'HandPosing']]],
+  ['bonemap_14',['BoneMap',['../class_hand_posing_1_1_bone_map.html',1,'HandPosing']]],
+  ['bonepose_15',['BonePose',['../struct_hand_posing_1_1_bone_pose.html',1,'HandPosing']]],
+  ['bones_16',['Bones',['../struct_hand_posing_1_1_hand_pose.html#ad378288e89b4d63691e8ec0d33707a65',1,'HandPosing.HandPose.Bones()'],['../class_hand_posing_1_1_hand_puppet.html#a3626180fcd91b688157d80249ed6fcfd',1,'HandPosing.HandPuppet.Bones()']]],
+  ['boxeditor_17',['BoxEditor',['../class_hand_posing_1_1_snap_surfaces_1_1_editor_1_1_box_editor.html',1,'HandPosing::SnapSurfaces::Editor']]],
+  ['boxsurface_18',['BoxSurface',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface.html',1,'HandPosing::SnapSurfaces']]],
+  ['boxsurfacedata_19',['BoxSurfaceData',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface_data.html',1,'HandPosing::SnapSurfaces']]]
 ];

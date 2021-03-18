@@ -1,7 +1,8 @@
 var searchData=
 [
-  ['nearestinsurface_127',['NearestInSurface',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html#af442d35a77921d164061f8d57a187b79',1,'HandPosing.SnapRecording.BaseSnapPoint.NearestInSurface()'],['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#ab3bea1617482867e2d753930c4597fab',1,'HandPosing.SnapRecording.SnapPoint.NearestInSurface()'],['../class_hand_posing_1_1_snap_recording_1_1_snap_point_interpolator.html#a4551995d6d53d27f2eaa3c246597e338',1,'HandPosing.SnapRecording.SnapPointInterpolator.NearestInSurface()']]],
-  ['nearestpointinsurface_128',['NearestPointInSurface',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface.html#a02a21a18c99a97eb10e5108406329cc2',1,'HandPosing.SnapSurfaces.BoxSurface.NearestPointInSurface()'],['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface.html#abecb80077ccfbda5eb417432afc77f2e',1,'HandPosing.SnapSurfaces.CylinderSurface.NearestPointInSurface()'],['../class_hand_posing_1_1_snap_surfaces_1_1_snap_surface.html#a33b96ea465b868a44375b0aab1f0e51c',1,'HandPosing.SnapSurfaces.SnapSurface.NearestPointInSurface()'],['../class_hand_posing_1_1_snap_surfaces_1_1_sphere_surface.html#a0df9679771cdb286b885cae8fd9e6e1f',1,'HandPosing.SnapSurfaces.SphereSurface.NearestPointInSurface()']]],
-  ['none_129',['None',['../namespace_hand_posing.html#ac97d0359b0d62542caa887d10096cf8ca6adf97f83acf6453d4a6a4b1070f3754',1,'HandPosing']]],
-  ['null_130',['Null',['../struct_hand_posing_1_1_scored_hand_pose.html#addde6435b9dc88381e7f8f79ebd26fd2',1,'HandPosing::ScoredHandPose']]]
+  ['physicsgrabbable_123',['PhysicsGrabbable',['../class_hand_posing_1_1_interaction_1_1_physics_grabbable.html',1,'HandPosing::Interaction']]],
+  ['pinchtriggerflex_124',['PinchTriggerFlex',['../class_hand_posing_1_1_o_v_r_integration_1_1_grab_engine_1_1_pinch_trigger_flex.html',1,'HandPosing::OVRIntegration::GrabEngine']]],
+  ['pose_125',['Pose',['../struct_hand_posing_1_1_scored_hand_pose.html#a26615372b60ff84c1fbfb82c4e5b836a',1,'HandPosing::ScoredHandPose']]],
+  ['position_126',['position',['../struct_hand_posing_1_1_bone_pose.html#a6c6c8caaa12bea08fe876b9d85a2f4d2',1,'HandPosing::BonePose']]],
+  ['positionoffset_127',['positionOffset',['../class_hand_posing_1_1_hand_map.html#a6ba5d75517f02f4bd6f2a8f7d6e38bd5',1,'HandPosing::HandMap']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['id_340',['id',['../class_hand_posing_1_1_bone_map.html#a64beedabe105faad699440fb0732f193',1,'HandPosing.BoneMap.id()'],['../class_hand_posing_1_1_hand_map.html#ad8518e477a8db083e98e14341c9195d3',1,'HandPosing.HandMap.id()']]],
-  ['immovable_341',['immovable',['../class_hand_posing_1_1_interaction_1_1_grabbable.html#ad777b987e3d79bcd56ca9cc70631213a',1,'HandPosing::Interaction::Grabbable']]]
+  ['position_305',['position',['../struct_hand_posing_1_1_bone_pose.html#a6c6c8caaa12bea08fe876b9d85a2f4d2',1,'HandPosing::BonePose']]],
+  ['positionoffset_306',['positionOffset',['../class_hand_posing_1_1_hand_map.html#a6ba5d75517f02f4bd6f2a8f7d6e38bd5',1,'HandPosing::HandMap']]]
 ];

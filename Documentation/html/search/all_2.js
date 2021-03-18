@@ -1,18 +1,17 @@
 var searchData=
 [
-  ['backward_9',['Backward',['../namespace_hand_posing.html#ac97d0359b0d62542caa887d10096cf8cab3263eb38f8903efc271cc7a760da510',1,'HandPosing']]],
-  ['basegrabber_10',['BaseGrabber',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html',1,'HandPosing::Interaction']]],
-  ['basegrabber_2ecs_11',['BaseGrabber.cs',['../_base_grabber_8cs.html',1,'']]],
-  ['basesnappoint_12',['BaseSnapPoint',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html',1,'HandPosing::SnapRecording']]],
-  ['basesnappoint_2ecs_13',['BaseSnapPoint.cs',['../_base_snap_point_8cs.html',1,'']]],
-  ['bonecollection_14',['BoneCollection',['../class_hand_posing_1_1_bone_collection.html',1,'HandPosing']]],
-  ['boneid_15',['boneID',['../struct_hand_posing_1_1_bone_rotation.html#aba675d48154295a7c0c7fec9c1e1d3ee',1,'HandPosing.BoneRotation.boneID()'],['../namespace_hand_posing.html#ac4fd26a64b30ab0017531c6e0d5b2d4a',1,'HandPosing.BoneId()']]],
-  ['bonemap_16',['BoneMap',['../class_hand_posing_1_1_bone_map.html',1,'HandPosing']]],
-  ['bonemap_2ecs_17',['BoneMap.cs',['../_bone_map_8cs.html',1,'']]],
-  ['bonerotation_18',['BoneRotation',['../struct_hand_posing_1_1_bone_rotation.html',1,'HandPosing']]],
-  ['bones_19',['Bones',['../struct_hand_posing_1_1_hand_pose.html#acfda87903265e65ea51b6a0a4df34d80',1,'HandPosing.HandPose.Bones()'],['../class_hand_posing_1_1_hand_puppet.html#a3626180fcd91b688157d80249ed6fcfd',1,'HandPosing.HandPuppet.Bones()'],['../class_hand_posing_1_1_skeleton_data_provider.html#a73abd25ac064eaf2461482355e235be9',1,'HandPosing.SkeletonDataProvider.Bones()']]],
-  ['boxsurface_20',['BoxSurface',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface.html',1,'HandPosing::SnapSurfaces']]],
-  ['boxsurface_2ecs_21',['BoxSurface.cs',['../_box_surface_8cs.html',1,'']]],
-  ['boxsurfacedata_22',['BoxSurfaceData',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface_data.html',1,'HandPosing::SnapSurfaces']]],
-  ['buttonwidth_23',['ButtonWidth',['../class_inspector_button_attribute.html#a64707aafad92af9aedbf715b63427536',1,'InspectorButtonAttribute']]]
+  ['calculatebestpose_20',['CalculateBestPose',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html#a931122b054a709b56e6c94aa718a220e',1,'HandPosing.SnapRecording.BaseSnapPoint.CalculateBestPose()'],['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#a5d0f037f181206a33baac46d9b2ef81b',1,'HandPosing.SnapRecording.SnapPoint.CalculateBestPose()'],['../class_hand_posing_1_1_snap_recording_1_1_snap_point_interpolator.html#a1ace245c656f31d684dd0aa43ef97812',1,'HandPosing.SnapRecording.SnapPointInterpolator.CalculateBestPose()']]],
+  ['calculategrabstrength_21',['CalculateGrabStrength',['../class_hand_posing_1_1_o_v_r_integration_1_1_grab_engine_1_1_sphere_grab_pinch_flex.html#a473ccbc41bfa3ee5fe3a8fe324654a4b',1,'HandPosing::OVRIntegration::GrabEngine::SphereGrabPinchFlex']]],
+  ['centre_22',['Centre',['../class_hand_posing_1_1_snap_surfaces_1_1_sphere_surface.html#a8a5ec38cb542fcfea243dfd84199ab20',1,'HandPosing::SnapSurfaces::SphereSurface']]],
+  ['checkforgraborrelease_23',['CheckForGrabOrRelease',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a2f08dae6e9255ca7f357ad94c8455023',1,'HandPosing::Interaction::BaseGrabber']]],
+  ['clearallgrabs_24',['ClearAllGrabs',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#adfda90d803bbed36f90c4b252b7f5fb9',1,'HandPosing::Interaction::BaseGrabber']]],
+  ['clearsnappoints_25',['ClearSnapPoints',['../class_hand_posing_1_1_interaction_1_1_snappable.html#a0cf6f9a7e8d68387043c3eeb8ab086f1',1,'HandPosing::Interaction::Snappable']]],
+  ['controllerflex_26',['ControllerFlex',['../class_hand_posing_1_1_o_v_r_integration_1_1_grab_engine_1_1_controller_flex.html',1,'HandPosing::OVRIntegration::GrabEngine']]],
+  ['create_27',['Create',['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#a176b9ad8f74cfb4ac2cf343c455d7e67',1,'HandPosing::SnapRecording::SnapPoint']]],
+  ['createjointholder_28',['CreateJointHolder',['../class_hand_posing_1_1_interaction_1_1_physics_grabbable.html#a1bc716a692ecd122a1e0796fc5bcbf8b',1,'HandPosing::Interaction::PhysicsGrabbable']]],
+  ['createmirror_29',['CreateMirror',['../class_hand_posing_1_1_snap_recording_1_1_snap_point.html#a452dc335edddc18d77e18a30c857024c',1,'HandPosing::SnapRecording::SnapPoint']]],
+  ['currentflex_30',['CurrentFlex',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a902f5b401cc5fa143cb002a2ed92e65b',1,'HandPosing.Interaction.BaseGrabber.CurrentFlex()'],['../interface_hand_posing_1_1_interaction_1_1_i_grab_notifier.html#a0c92f9176340754580fa02ef3800469d',1,'HandPosing.Interaction.IGrabNotifier.CurrentFlex()'],['../class_hand_posing_1_1_o_v_r_integration_1_1_grabber_hybrid_o_v_r.html#ac7d1ddb8588988bab1abd08cb079c1d6',1,'HandPosing.OVRIntegration.GrabberHybridOVR.CurrentFlex()']]],
+  ['cylindereditor_31',['CylinderEditor',['../class_hand_posing_1_1_snap_surfaces_1_1_editor_1_1_cylinder_editor.html',1,'HandPosing::SnapSurfaces::Editor']]],
+  ['cylindersurface_32',['CylinderSurface',['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface.html',1,'HandPosing::SnapSurfaces']]],
+  ['cylindersurfacedata_33',['CylinderSurfaceData',['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface_data.html',1,'HandPosing::SnapSurfaces']]]
 ];

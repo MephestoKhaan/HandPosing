@@ -1,18 +1,16 @@
 var searchData=
 [
-  ['offhandgrabbed_131',['OffhandGrabbed',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a20df2a242140049f2a55575b77dfe1a3',1,'HandPosing::Interaction::BaseGrabber']]],
-  ['offset_132',['Offset',['../class_hand_posing_1_1_hand_map.html#a0a4402a463d4a0e2259605c886d6537b',1,'HandPosing::HandMap']]],
-  ['onafterdeserialize_133',['OnAfterDeserialize',['../class_hand_posing_1_1_bone_collection.html#a3336a9892f5550fe7632b6eca0af42ce',1,'HandPosing::BoneCollection']]],
-  ['onanchorseveryupdate_134',['OnAnchorsEveryUpdate',['../class_hand_posing_1_1_anchors_update_notifier.html#a23fb5ef6edfc1b62d7dc7f58c1b6d8a5',1,'HandPosing::AnchorsUpdateNotifier']]],
-  ['onanchorsfirstupdate_135',['OnAnchorsFirstUpdate',['../class_hand_posing_1_1_anchors_update_notifier.html#a8b0a8b06a9c787ac7d75244d47125368',1,'HandPosing::AnchorsUpdateNotifier']]],
-  ['onbeforeserialize_136',['OnBeforeSerialize',['../class_hand_posing_1_1_bone_collection.html#ac371fe2b495cbdbb92f46a77e11fc000',1,'HandPosing::BoneCollection']]],
-  ['ondestroy_137',['OnDestroy',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a9aa41109ab915de01d12eb17d41bca5f',1,'HandPosing::Interaction::BaseGrabber']]],
-  ['ondirtybones_138',['OnDirtyBones',['../class_hand_posing_1_1_snap_recording_1_1_hand_ghost.html#a0bd639eb25610488e7900ea3f905c20b',1,'HandPosing::SnapRecording::HandGhost']]],
-  ['ondisable_139',['OnDisable',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a8f4ed6fc407e372e4f2308a7b302beb6',1,'HandPosing::Interaction::BaseGrabber']]],
-  ['onenable_140',['OnEnable',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#ac76488a2f0ea4bb5e25f2c0b3c038edb',1,'HandPosing::Interaction::BaseGrabber']]],
-  ['ongrabattemp_141',['OnGrabAttemp',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a81e86207e97e77221d05fc1e5b672ced',1,'HandPosing.Interaction.BaseGrabber.OnGrabAttemp()'],['../interface_hand_posing_1_1_interaction_1_1_i_grab_notifier.html#aa3af85f63c6399304a2d4fb1c179d320',1,'HandPosing.Interaction.IGrabNotifier.OnGrabAttemp()']]],
-  ['ongrabended_142',['OnGrabEnded',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#afbe8056a454414185ac6a9f370b4f387',1,'HandPosing.Interaction.BaseGrabber.OnGrabEnded()'],['../interface_hand_posing_1_1_interaction_1_1_i_grab_notifier.html#a97a649259112e604051ce27f1001ccfa',1,'HandPosing.Interaction.IGrabNotifier.OnGrabEnded()']]],
-  ['ongrabstarted_143',['OnGrabStarted',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a3c74075a3ae3551213e037f8a69d586c',1,'HandPosing.Interaction.BaseGrabber.OnGrabStarted()'],['../interface_hand_posing_1_1_interaction_1_1_i_grab_notifier.html#a896ef1b6569da9f6848e29a9048a846c',1,'HandPosing.Interaction.IGrabNotifier.OnGrabStarted()']]],
-  ['onposebeforeupdate_144',['OnPoseBeforeUpdate',['../class_hand_posing_1_1_hand_puppet.html#a763ad1e6e414ec78895223a2e98e6ba8',1,'HandPosing::HandPuppet']]],
-  ['onposeupdated_145',['OnPoseUpdated',['../class_hand_posing_1_1_hand_puppet.html#a15e142e9d0a8a6c145c88dddd113f92d',1,'HandPosing::HandPuppet']]]
+  ['radious_128',['Radious',['../class_hand_posing_1_1_snap_surfaces_1_1_cylinder_surface.html#a3196cc7bf2a7ff3b208699fcf991fd90',1,'HandPosing.SnapSurfaces.CylinderSurface.Radious()'],['../class_hand_posing_1_1_snap_surfaces_1_1_sphere_surface.html#aaeaa6826cf1a9aff8648efa9e3836e99',1,'HandPosing.SnapSurfaces.SphereSurface.Radious()']]],
+  ['readpose_129',['ReadPose',['../class_hand_posing_1_1_snap_recording_1_1_hand_ghost.html#aa1bc03da93b49371caa5e59732efefe9',1,'HandPosing::SnapRecording::HandGhost']]],
+  ['record_130',['Record',['../class_hand_posing_1_1_snap_recording_1_1_hand_pose_recorder.html#a07f6a18134944a29ce5c1469e6a4d925',1,'HandPosing::SnapRecording::HandPoseRecorder']]],
+  ['recordpose_131',['RecordPose',['../class_hand_posing_1_1_snap_recording_1_1_hand_pose_recorder.html#af1c3a5111d4adc519c10b43225c2e25f',1,'HandPosing::SnapRecording::HandPoseRecorder']]],
+  ['relativegrip_132',['relativeGrip',['../struct_hand_posing_1_1_hand_pose.html#aa2fad7bd4c04783ee073ea9fb6441be8',1,'HandPosing::HandPose']]],
+  ['relativeto_133',['RelativeTo',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html#a1e979e300a6b481cec3391416213288a',1,'HandPosing::SnapRecording::BaseSnapPoint']]],
+  ['relativeto_134',['relativeTo',['../class_hand_posing_1_1_snap_recording_1_1_base_snap_point.html#aab90da0a01c333954278206bcbfd39b6',1,'HandPosing.SnapRecording.BaseSnapPoint.relativeTo()'],['../class_hand_posing_1_1_snap_surfaces_1_1_snap_surface.html#ab0d9ba1530e10ec36f1492d12014e2c4',1,'HandPosing.SnapSurfaces.SnapSurface.relativeTo()']]],
+  ['releasedflexthreshold_135',['ReleasedFlexThreshold',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#acfb7b1272dc0982b4551453a0c576c6e',1,'HandPosing::Interaction::BaseGrabber']]],
+  ['releasegrabbedobject_136',['ReleaseGrabbedObject',['../class_hand_posing_1_1_interaction_1_1_base_grabber.html#a75324ed0e2da0c259ad33d6b861e4566',1,'HandPosing::Interaction::BaseGrabber']]],
+  ['rotation_137',['rotation',['../struct_hand_posing_1_1_bone_pose.html#acb6915f3b08a1080759b0d0638343eb2',1,'HandPosing::BonePose']]],
+  ['rotation_138',['Rotation',['../class_hand_posing_1_1_snap_surfaces_1_1_box_surface.html#ab58bbf2a5b68cd687191b4261e90c9e3',1,'HandPosing.SnapSurfaces.BoxSurface.Rotation()'],['../class_hand_posing_1_1_snap_surfaces_1_1_sphere_surface.html#a1d8f1e81b56b8faa6e15a7f533f3e395',1,'HandPosing.SnapSurfaces.SphereSurface.Rotation()']]],
+  ['rotationoffset_139',['rotationOffset',['../class_hand_posing_1_1_bone_map.html#ad76cec0bf05cf08e857cee72847583c0',1,'HandPosing.BoneMap.rotationOffset()'],['../class_hand_posing_1_1_hand_map.html#a7637c938d37ecabb3608a85613c63bcf',1,'HandPosing.HandMap.rotationOffset()']]],
+  ['rotationoffset_140',['RotationOffset',['../class_hand_posing_1_1_bone_map.html#a96356ca42fba19eeb54dfae32cc9ffbc',1,'HandPosing::BoneMap']]]
 ];
