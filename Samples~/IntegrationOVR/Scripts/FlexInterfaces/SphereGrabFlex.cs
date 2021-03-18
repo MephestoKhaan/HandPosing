@@ -53,7 +53,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private float[] _pinchStrength = new float[FINGER_COUNT];
         private Vector3[] _fingerTipCenter = new Vector3[FINGER_COUNT];
         private Vector3 _poseVolumeCenter = Vector3.zero;
-        private bool[] _cachedIgnoreFingers;
+        private bool[] _isFingerIgnored;
 
         private const float ALMOST_GRAB_LOWER_PERCENT = 1.7f;
         private const float ALMOST_GRAB_UPPER_PERCENT = 0.9f;
@@ -84,7 +84,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get
             {
                 return flexHand
-                    && flexHand.IsTracked;
+                    && flexHand.IsDataValid;
             }
         }
 
@@ -94,39 +94,33 @@ namespace HandPosing.OVRIntegration.GrabEngine
             get => CalculateGrabStrength();
         }
 
-        public Vector2 GrabThresold
+        public Vector2 GrabThreshold
         {
             get => grabThresoldHand;
         }
 
-        public Vector2 FailGrabThresold
+        public Vector2 FailGrabThreshold
         {
-            get
-            {
-                Vector2 failThresold = GrabThresold;
-                failThresold.x *= ALMOST_GRAB_LOWER_PERCENT;
-                failThresold.y *= ALMOST_GRAB_UPPER_PERCENT;
-                return failThresold;
-            }
+            get => GrabThreshold * new Vector2(ALMOST_GRAB_LOWER_PERCENT, ALMOST_GRAB_UPPER_PERCENT);
         }
 
         public float AlmostGrabRelease
         {
-            get => GrabThresold.x * ALMOST_GRAB_RELEASE_PERCENT;
+            get => GrabThreshold.x * ALMOST_GRAB_RELEASE_PERCENT;
         }
 
         private bool IsFinderIgnored(int fingerIndex)
         {
-            if(_cachedIgnoreFingers == null)
+            if (_isFingerIgnored == null)
             {
-                _cachedIgnoreFingers = new bool[FINGER_COUNT];
+                _isFingerIgnored = new bool[FINGER_COUNT];
                 for (int i = 0; i < FINGER_COUNT; ++i)
                 {
-                    _cachedIgnoreFingers[i] = fingersToIgnore.Contains(HAND_FINGERS[i]);
+                    _isFingerIgnored[i] = fingersToIgnore.Contains(HAND_FINGERS[i]);
                 }
             }
 
-            return _cachedIgnoreFingers[fingerIndex];
+            return _isFingerIgnored[fingerIndex];
         }
 
         private float? CalculateGrabStrength()
@@ -146,40 +140,19 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 _lastGrabStrength = StorePerFingerGrabAndGetFinalValue();
             }
 
-
-
             return _lastGrabStrength;
         }
 
         private bool CanTrackHand()
         {
-            if (flexHand == null
-                || !flexHand.IsDataValid
-                || (!flexHand.IsDataHighConfidence && !trackLowConfidenceHands))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        private bool CanTrackFinger(int fingerIndex)
-        {
-            OVRHand.HandFinger finger = HAND_FINGERS[fingerIndex];
-
-            if (flexHand == null
-                || !flexHand.IsDataValid
-                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
-            {
-                return false;
-            }
-            return true;
+            return flexHand.IsDataHighConfidence || trackLowConfidenceHands;
         }
 
         private void UpdateFingerTips()
         {
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
-                if (!CanTrackFinger(i))
+                if (!CanTrackFinger(HAND_FINGERS[i]))
                 {
                     continue;
                 }
@@ -188,7 +161,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 OVRBone fingerTip = skeleton.Bones[(int)tipId];
                 _fingerTipCenter[i] = fingerTip.Transform.position;
             }
+        }
 
+        private bool CanTrackFinger(OVRHand.HandFinger finger)
+        {
+            return (flexHand.GetFingerConfidence(finger) == OVRHand.TrackingConfidence.High || trackLowConfidenceFingers);
         }
 
         private void UpdateVolumeCenter()
@@ -199,9 +176,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         private void CalculatePinchStrength()
         {
+            bool canTrackThumb = CanTrackFinger(OVRHand.HandFinger.Thumb);
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
-                if (!CanTrackFinger(i))
+                if (!canTrackThumb
+                    || !CanTrackFinger(HAND_FINGERS[i]))
                 {
                     continue;
                 }
@@ -247,7 +226,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
 
             // Calculate finger grab strength while taking pinch into account
-            float minGrabStrength = float.MaxValue;
+            float? minGrabStrength = null;
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
                 var grabStrength = Mathf.Max(_pinchStrength[i], _fingerGrabStrength[i]);
@@ -257,13 +236,14 @@ namespace HandPosing.OVRIntegration.GrabEngine
                 {
                     continue;
                 }
-                if (minGrabStrength > grabStrength)
+                if (!minGrabStrength.HasValue 
+                    || minGrabStrength > grabStrength)
                 {
                     minGrabStrength = grabStrength;
                 }
             }
 
-            return minGrabStrength;
+            return minGrabStrength ?? 0f;
         }
     }
 }

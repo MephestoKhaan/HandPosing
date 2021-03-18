@@ -78,8 +78,8 @@ namespace HandPosing.OVRIntegration
         }
 
         public override float CurrentFlex() => Flex.GrabStrength??0f;
-        public override Vector2 GrabFlexThresold => Flex.GrabThresold;
-        public override Vector2 AttempFlexThresold => Flex.FailGrabThresold;
+        public override Vector2 GrabFlexThresold => Flex.GrabThreshold;
+        public override Vector2 FailedFlexThresold => Flex.FailGrabThreshold;
         public override float ReleasedFlexThresold => Flex.AlmostGrabRelease;
 
         protected override (Vector3, Vector3) HandRelativeVelocity(Pose offsetPose) => (_velocity, _angularVelocity);

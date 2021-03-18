@@ -38,32 +38,32 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
-        public Vector2 GrabThresold
+        public Vector2 GrabThreshold
         {
             get
             {
                 if (_lastWasSphereFlex)
                 {
-                    return sphereFlex.GrabThresold;
+                    return sphereFlex.GrabThreshold;
                 }
                 else
                 {
-                    return pinchFlex.GrabThresold;
+                    return pinchFlex.GrabThreshold;
                 }
             }
         }
 
-        public Vector2 FailGrabThresold
+        public Vector2 FailGrabThreshold
         {
             get
             {
                 if (_lastWasSphereFlex)
                 {
-                    return sphereFlex.FailGrabThresold;
+                    return sphereFlex.FailGrabThreshold;
                 }
                 else
                 {
-                    return pinchFlex.FailGrabThresold;
+                    return pinchFlex.FailGrabThreshold;
                 }
             }
         }
@@ -83,6 +83,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
+        private void Reset()
+        {
+            sphereFlex = this.GetComponent<SphereGrabFlex>();
+            pinchFlex = this.GetComponent<PinchTriggerFlex>();
+        }
 
         public float? CalculateGrabStrength()
         {
@@ -117,7 +122,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             {
                 return null;
             }
-            Vector2 range = flex.GrabThresold;
+            Vector2 range = flex.GrabThreshold;
             return RemapClamped(strenght.Value, range.x, range.y, 0f, 1f);
         }
 

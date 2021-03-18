@@ -1,49 +1,46 @@
-﻿using HandPosing.OVRIntegration.GrabEngine;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ControllerFlex : MonoBehaviour, FlexInterface
+namespace HandPosing.OVRIntegration.GrabEngine
 {
-    [SerializeField]
-    private OVRInput.Controller controller;
 
-
-    [SerializeField]
-    [Tooltip("Grab threshold, hand controller")]
-    private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
-
-    private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
-    private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
-
-    public FlexType InterfaceFlexType => FlexType.Controller;
-
-    public bool IsValid => true;
-
-    public float? GrabStrength
+    public class ControllerFlex : MonoBehaviour, FlexInterface
     {
-        get
+        [SerializeField]
+        private OVRInput.Controller controller;
+
+
+        [SerializeField]
+        [Tooltip("Grab threshold, hand controller")]
+        private Vector2 grabThresold = new Vector2(0.35f, 0.95f);
+
+        private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
+        private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
+
+        public FlexType InterfaceFlexType => FlexType.Controller;
+
+        public bool IsValid => true;
+
+        public float? GrabStrength
         {
-            return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller);
+            get
+            {
+                return OVRInput.Get(OVRInput.Axis1D.PrimaryHandTrigger, controller);
+            }
         }
-    }
 
-    public Vector2 GrabThresold
-    {
-        get => grabThresold;
-    }
-
-    public Vector2 FailGrabThresold
-    {
-        get
+        public Vector2 GrabThreshold
         {
-            Vector2 failThresold = GrabThresold;
-            failThresold.x *= ALMOST_PINCH_LOWER_PERCENT;
-            failThresold.y *= ALMOST_PINCH_UPPER_PERCENT;
-            return failThresold;
+            get => grabThresold;
         }
-    }
 
-    public float AlmostGrabRelease
-    {
-        get => GrabThresold.x;
+        public Vector2 FailGrabThreshold
+        {
+            get => GrabThreshold * new Vector2(ALMOST_PINCH_LOWER_PERCENT, ALMOST_PINCH_UPPER_PERCENT);
+        }
+
+        public float AlmostGrabRelease
+        {
+            get => GrabThreshold.x;
+        }
     }
 }

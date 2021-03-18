@@ -17,11 +17,10 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [Tooltip("Grab threshold, hand pinch")]
         private Vector2 grabThresold = new Vector2(0.01f, 0.9f);
 
-
         private const float ALMOST_PINCH_LOWER_PERCENT = 1.2f;
         private const float ALMOST_PINCH_UPPER_PERCENT = 0.75f;
-
         private const int FINGER_COUNT = 2;
+
         private float[] _pinchStrength = new float[FINGER_COUNT];
         private static readonly OVRHand.HandFinger[] PINCHING_FINGERS = new OVRHand.HandFinger[FINGER_COUNT]
         {
@@ -31,7 +30,6 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
 
         public FlexType InterfaceFlexType => FlexType.PinchTriggerFlex;
-
 
         public bool IsValid
         {
@@ -54,16 +52,16 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
         }
 
-        public Vector2 GrabThresold
+        public Vector2 GrabThreshold
         {
             get => grabThresold;
         }
 
-        public Vector2 FailGrabThresold
+        public Vector2 FailGrabThreshold
         {
             get
             {
-                Vector2 failThresold = GrabThresold;
+                Vector2 failThresold = GrabThreshold;
                 failThresold.x *= ALMOST_PINCH_LOWER_PERCENT;
                 failThresold.y *= ALMOST_PINCH_UPPER_PERCENT;
                 return failThresold;
@@ -72,16 +70,20 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         public float AlmostGrabRelease
         {
-            get => GrabThresold.x;
+            get => GrabThreshold.x;
         }
 
         private float CalculateStrength()
         {
             float maxPinch = 0f;
-            for(int i = 0; i < FINGER_COUNT; i++)
+            bool isHandTracked = IsHandTracked();
+            bool isThumbTracked = isHandTracked && IsFingerTracked(OVRHand.HandFinger.Thumb);
+
+            for (int i = 0; i < FINGER_COUNT; i++)
             {
                 float rawPinch = flexHand.GetFingerPinchStrength(PINCHING_FINGERS[i]); 
-                if (CanTrackFinger(i))
+                if (isThumbTracked
+                    && IsFingerTracked(PINCHING_FINGERS[i]))
                 {
                     _pinchStrength[i] = rawPinch;
                 }
@@ -95,20 +97,14 @@ namespace HandPosing.OVRIntegration.GrabEngine
             return maxPinch;
         }
 
-        private bool CanTrackFinger(int fingerIndex)
+        private bool IsHandTracked()
         {
-            OVRHand.HandFinger finger = PINCHING_FINGERS[fingerIndex];
+            return flexHand.IsTracked && (flexHand.HandConfidence == OVRHand.TrackingConfidence.High || trackLowConfidenceFingers);
+        }
 
-
-            if (flexHand == null
-                || !flexHand.IsTracked
-                || (flexHand.HandConfidence != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers)
-                || (flexHand.GetFingerConfidence(finger) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers)
-                || (flexHand.GetFingerConfidence(OVRHand.HandFinger.Thumb) != OVRHand.TrackingConfidence.High && !trackLowConfidenceFingers))
-            {
-                return false;
-            }
-            return true;
+        private bool IsFingerTracked(OVRHand.HandFinger finger)
+        {
+            return flexHand.GetFingerConfidence(finger) == OVRHand.TrackingConfidence.High || trackLowConfidenceFingers;
         }
     }
 }

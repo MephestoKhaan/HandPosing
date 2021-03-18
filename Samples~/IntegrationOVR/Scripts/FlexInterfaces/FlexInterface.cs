@@ -30,11 +30,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
         /// <summary>
         /// Return strenght values to start (Y) or stop (X) grabbing.
         /// </summary>
-        Vector2 GrabThresold { get; }
+        Vector2 GrabThreshold { get; }
         /// <summary>
         /// Return strenght values to indicate a grabbing attempt, can be narrower than GrabThresold.
         /// </summary>
-        Vector2 FailGrabThresold { get; }
+        Vector2 FailGrabThreshold { get; }
 
         float AlmostGrabRelease { get; }
     }

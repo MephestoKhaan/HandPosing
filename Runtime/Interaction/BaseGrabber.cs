@@ -42,7 +42,7 @@ namespace HandPosing.Interaction
 
         #region grab fail
         private Grabbable _lastGrabCandidate = null;
-        private float? _timeWithoutCandidates = null;
+        private float? _timeSinceWithoutCandidates = null;
         private float? _timeSinceLastGrab = null;
         private float? _timeSinceLastRelease = null;
         private float? _timeSinceGrabAttempt = null;
@@ -69,7 +69,7 @@ namespace HandPosing.Interaction
         public Action<GameObject, float> OnGrabTimedEnded;
 
         public abstract Vector2 GrabFlexThresold { get; }
-        public abstract Vector2 AttempFlexThresold { get; }
+        public abstract Vector2 FailedFlexThresold { get; }
         public abstract float ReleasedFlexThresold { get; }
 
         public abstract float CurrentFlex();
@@ -249,7 +249,7 @@ namespace HandPosing.Interaction
 
         private bool IsGrabAttemp(float flex)
         {
-            Vector2 attemptThresold = AttempFlexThresold;
+            Vector2 attemptThresold = FailedFlexThresold;
             return (flex > attemptThresold.x
                 && flex < attemptThresold.y);
         }
@@ -270,8 +270,8 @@ namespace HandPosing.Interaction
             {
                 _timeSinceGrabAttempt = null;
                 bool areGrabbablesNearby = _grabCandidates.Count > 0
-                    || (_timeWithoutCandidates.HasValue
-                        && Time.timeSinceLevelLoad - _timeWithoutCandidates.Value < GRAB_ATTEMPT_DURATION);
+                    || (_timeSinceWithoutCandidates.HasValue
+                        && Time.timeSinceLevelLoad - _timeSinceWithoutCandidates.Value < GRAB_ATTEMPT_DURATION);
                 bool grabbedRecently = _timeSinceLastRelease.HasValue
                     && Time.timeSinceLevelLoad - _timeSinceLastRelease.Value < ACTUAL_GRAB_BUFFER_TIME;
 
@@ -328,7 +328,6 @@ namespace HandPosing.Interaction
         protected virtual void GrabBegin()
         {
             Grabbable closestGrabbable = FindClosestGrabbable();
-
             GrabVolumeEnable(false);
             if (closestGrabbable != null)
             {
@@ -493,7 +492,7 @@ namespace HandPosing.Interaction
             _grabCandidates.TryGetValue(grabbable, out int refCount);
             _grabCandidates[grabbable] = refCount + 1;
 
-            _timeWithoutCandidates = null;
+            _timeSinceWithoutCandidates = null;
             _lastGrabCandidate = null;
         }
 
@@ -522,7 +521,7 @@ namespace HandPosing.Interaction
                 if (_grabCandidates.Count == 0)
                 {
                     _lastGrabCandidate = grabbable;
-                    _timeWithoutCandidates = Time.timeSinceLevelLoad;
+                    _timeSinceWithoutCandidates = Time.timeSinceLevelLoad;
                 }
             }
         }
