@@ -569,7 +569,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 351404503957238949}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -170, y: 85, z: 7}
+  m_LocalEulerAnglesHint: {x: -170, y: 95, z: 7}
 --- !u!1 &351404503956941817
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,7 +934,7 @@ MonoBehaviour:
   puppetHand: {fileID: 1387190361880471772}
   grabber: {fileID: 4635681503502107842}
   recordKey: 32
-  Record: 
+  record: 
 --- !u!114 &6419182328721095271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -983,7 +983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: 1
-  grabThresold: {x: 0.35, y: 0.55}
+  grabThresold: {x: 0.35, y: 0.95}
 --- !u!114 &1054686202
 MonoBehaviour:
   m_ObjectHideFlags: 0
