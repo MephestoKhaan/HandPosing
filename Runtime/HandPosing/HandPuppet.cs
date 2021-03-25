@@ -24,8 +24,6 @@ namespace HandPosing
         [Tooltip("The hand-tracking data provider")]
         private SkeletonDataProvider skeleton;
 
-
-
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.

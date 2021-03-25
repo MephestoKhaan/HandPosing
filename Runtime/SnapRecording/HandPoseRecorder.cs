@@ -33,7 +33,7 @@ namespace HandPosing.SnapRecording
         /// Create an Inspector button for manually triggering the pose recorer.
         /// </summary>
         [InspectorButton("RecordPose")]
-        public string Record;
+        public string record;
 
 
         private IGrabNotifier _grabNotifier;
