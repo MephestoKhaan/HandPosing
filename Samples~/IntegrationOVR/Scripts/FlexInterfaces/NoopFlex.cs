@@ -6,7 +6,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
     /// No op flex detector used in snap-to-pose, used to turn off grab
     /// detection so that poses can be recorded.
     /// </summary>
-    public class NoopFlex : MonoBehaviour, FlexInterface
+    public class NoopFlex : FlexInterface
     {
         public bool IsValid => true;
         public float? GrabStrength => null;
