@@ -26,6 +26,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [Range(0.0f, 0.1f)]
         private float poseVolumeRadius = 0.07f;
         [SerializeField]
+        [Tooltip("This will differ based on handedness. The right can be (0.07f,-0.03f, 0.0f), while the left can be the inverse (-0.07f, 0.03f, 0.0f).")]
         private Vector3 poseVolumeOffset = new Vector3(0.07f, -0.03f, 0.0f);
         [SerializeField]
         private bool trackLowConfidenceHands = false;
@@ -70,15 +71,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
         };
 
 
-        public bool IsValid
-        {
-            get
-            {
-                return flexHand
-                    && flexHand.IsDataValid;
-            }
-        }
-
+        public bool IsValid => flexHand && flexHand.IsDataValid;
 
         public float? GrabStrength
         {
@@ -178,16 +171,17 @@ namespace HandPosing.OVRIntegration.GrabEngine
         private void CalculatePinchStrength()
         {
             bool canTrackThumb = CanTrackFinger(OVRHand.HandFinger.Thumb);
+            if(!canTrackThumb)
+            {
+                return;
+            }
             for (int i = 0; i < FINGER_COUNT; ++i)
             {
-                if (!canTrackThumb
-                    || !CanTrackFinger(HAND_FINGERS[i]))
+                if (CanTrackFinger(HAND_FINGERS[i]))
                 {
-                    continue;
+                    var fingerId = HAND_FINGERS[i];
+                    _pinchStrength[i] = flexHand.GetFingerPinchStrength(fingerId);
                 }
-
-                var fingerId = HAND_FINGERS[i];
-                _pinchStrength[i] = flexHand.GetFingerPinchStrength(fingerId);
             }
         }
 

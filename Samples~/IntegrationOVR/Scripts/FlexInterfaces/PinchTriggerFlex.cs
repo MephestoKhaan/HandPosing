@@ -30,14 +30,7 @@ namespace HandPosing.OVRIntegration.GrabEngine
             OVRHand.HandFinger.Middle
         };
 
-        public bool IsValid
-        {
-            get
-            {
-                return flexHand
-                    && flexHand.IsDataValid;
-            }
-        }
+        public bool IsValid => flexHand && flexHand.IsDataValid;
 
         public float? GrabStrength
         {

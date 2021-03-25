@@ -123,18 +123,18 @@ namespace HandPosing.OVRIntegration.GrabEngine
         /// This is relevant so we can compare which one of different FlexInterfaces is grabbing strongher.
         /// </summary>
         /// <param name="flex">The FlexInterface to extract and remap the grabStrength from</param>
-        /// <param name="rawStrenght">Outputs the unmapped grabStrength of the flex interface</param>
+        /// <param name="rawStrength">Outputs the unmapped grabStrength of the flex interface</param>
         /// <returns>A normalised value indicating the local strength for the grab</returns>
-        private static float? RemapedFlex(FlexInterface flex, out float rawStrenght)
+        private static float? RemapedFlex(FlexInterface flex, out float rawStrength)
         {
-            float? strenght = flex.GrabStrength;
-            rawStrenght = strenght ?? -1f;
-            if (!strenght.HasValue)
+            float? strength = flex.GrabStrength;
+            rawStrength = strength ?? -1f;
+            if (!strength.HasValue)
             {
                 return null;
             }
             Vector2 range = flex.GrabThreshold;
-            return RemapClamped(strenght.Value, range.x, range.y, 0f, 1f);
+            return RemapClamped(strength.Value, range.x, range.y, 0f, 1f);
         }
 
         private static float RemapClamped(float value, float low1, float high1, float low2 = 0f, float high2 = 1f)
