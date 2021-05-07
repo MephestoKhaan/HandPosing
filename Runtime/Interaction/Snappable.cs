@@ -144,7 +144,7 @@ namespace HandPosing.Interaction
 
         /// <summary>
         /// Stores the Snappable SnapPoints to a SerializedObject (the empty object must be
-        /// provided in the inspector). First it translates the SnapPoints to a serializable
+        /// provided in the inspector or one will be auto-generated). First it translates the SnapPoints to a serializable
         /// form (SnapPointData).
         /// 
         /// This method is called from a button in the Inspector.
