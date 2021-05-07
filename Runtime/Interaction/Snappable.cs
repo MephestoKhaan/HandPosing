@@ -1,5 +1,6 @@
 ﻿using HandPosing.SnapRecording;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace HandPosing.Interaction
@@ -155,7 +156,25 @@ namespace HandPosing.Interaction
             {
                 savedPoses.Add(snap.SaveData());
             }
-            this.posesCollection.StorePoses(savedPoses);
+            if(this.posesCollection == null)
+            {
+                GenerateAsset();
+            }
+            this.posesCollection?.StorePoses(savedPoses);
+        }
+
+        private void GenerateAsset()
+        {
+#if UNITY_EDITOR
+            this.posesCollection = ScriptableObject.CreateInstance<SnapPointsCollection>();
+            string parentDir = "Assets/SnapPointsCollection";
+            if (!System.IO.Directory.Exists(parentDir))
+            {
+                System.IO.Directory.CreateDirectory(parentDir);
+            }
+            AssetDatabase.CreateAsset(this.posesCollection, $"{parentDir}/{this.name}_PoseCollection.asset");
+            AssetDatabase.SaveAssets();
+#endif
         }
 
         private void RemoveSnaps()
