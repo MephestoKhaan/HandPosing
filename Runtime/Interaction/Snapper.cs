@@ -101,7 +101,7 @@ namespace HandPosing.Interaction
         {
             puppet.OnPoseBeforeUpdate += BeforePuppetUpdate;
 
-            _grabNotifier.OnGrabAttemp += GrabAttemp;
+            _grabNotifier.OnGrabAttempt += GrabAttemp;
             _grabNotifier.OnGrabStarted += GrabStarted;
             _grabNotifier.OnGrabEnded += GrabEnded;
 
@@ -117,7 +117,7 @@ namespace HandPosing.Interaction
         {
             puppet.OnPoseBeforeUpdate -= BeforePuppetUpdate;
 
-            _grabNotifier.OnGrabAttemp -= GrabAttemp;
+            _grabNotifier.OnGrabAttempt -= GrabAttemp;
             _grabNotifier.OnGrabStarted -= GrabStarted;
             _grabNotifier.OnGrabEnded -= GrabEnded;
 

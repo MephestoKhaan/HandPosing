@@ -100,7 +100,7 @@ namespace HandPosing.Interaction
 
         #region IGrabNotifier
         public Action<GameObject> OnGrabStarted { get; set; }
-        public Action<GameObject, float> OnGrabAttemp { get; set; }
+        public Action<GameObject, float> OnGrabAttempt { get; set; }
         public Action<GameObject> OnGrabEnded { get; set; }
         public Action<GameObject> OnGrabAttemptFail { get; set; }
 
@@ -374,18 +374,18 @@ namespace HandPosing.Interaction
         {
             if (factor == 0f)
             {
-                OnGrabAttemp?.Invoke(null, 0f);
+                OnGrabAttempt?.Invoke(null, 0f);
                 return;
             }
 
             Grabbable closestGrabbable = FindClosestGrabbable();
             if (closestGrabbable != null)
             {
-                OnGrabAttemp?.Invoke(closestGrabbable.gameObject, factor);
+                OnGrabAttempt?.Invoke(closestGrabbable.gameObject, factor);
             }
             else
             {
-                OnGrabAttemp?.Invoke(null, 0f);
+                OnGrabAttempt?.Invoke(null, 0f);
             }
         }
 
