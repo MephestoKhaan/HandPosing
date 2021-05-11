@@ -1,5 +1,4 @@
-﻿using HandPosing.SnapSurfaces;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace HandPosing.SnapRecording
 {
@@ -12,6 +11,13 @@ namespace HandPosing.SnapRecording
     [System.Serializable]
     public abstract class BaseSnapPoint : MonoBehaviour
     {
+        public enum SnapType
+        {
+            MoveHand,
+            MoveHandReturn,
+            MoveObject
+        }
+
         /// <summary>
         /// The transform of the object this snap point refers to.
         /// Typically the parent.
@@ -25,6 +31,15 @@ namespace HandPosing.SnapRecording
         [SerializeField]
         [Tooltip("If true, the hand can be overriden to reach the object, and once it is grabbed it will move back")]
         protected bool snapsBack;
+
+        /// <summary>
+        /// How the snap will occur.
+        /// For example the hand can artificially move to perfectly wrap the object, or the object can move to align with the hand.
+        /// </summary>
+        [Tooltip("How the snap will occur, for example the hand can artificially move to perfectly wrap the object, or the object can move to align with the hand")]
+        [SerializeField]
+        protected SnapType snapMode;
+
         /// <summary>
         /// Indicates how firmly the grab strength must be so the hand can slide. 
         /// Normalised, a value of 1 will always slide, a value of 0.5 will start sliding only 
@@ -45,6 +60,10 @@ namespace HandPosing.SnapRecording
         /// General getter indicating if the hand can reach for the object and then move back to the user-tracked position.
         /// </summary>
         public bool SnapsBack { get => snapsBack; }
+        /// <summary>
+        /// General getter indicating how the hand and object will align for the grab
+        /// </summary>
+        public SnapType SnapMode { get => snapMode; }
         /// <summary>
         /// General getter indicatig how firmly to held the object so the hand does not slide throught the surface.
         /// </summary>

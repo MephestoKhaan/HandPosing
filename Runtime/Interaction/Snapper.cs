@@ -39,16 +39,18 @@ namespace HandPosing.Interaction
         private float snapbackTime = 0.33f;
 
         private IGrabNotifier _grabNotifier;
-        private BaseSnapPoint _grabSnap;
-        private ScoredHandPose _grabPose;
 
-        private float _bonesOverrideFactor;
-        private float _offsetOverrideFactor;
+        private SnappingAddress _snapData;
+
+        private float _fingersSnapFactor;
+        private float _allignmentFactor;
 
         private float _grabStartTime;
         private bool _isGrabbing;
         private Pose _trackOffset;
         private Pose? _prevOffset;
+
+        private Pose _grabbableStartPoint;
 
         private Coroutine _lastUpdateRoutine;
 
@@ -60,7 +62,7 @@ namespace HandPosing.Interaction
             get
             {
                 return _isGrabbing
-                    && _grabSnap != null;
+                    && _snapData != null;
             }
         }
 
@@ -77,7 +79,7 @@ namespace HandPosing.Interaction
                 {
                     float boundedFlex = _grabNotifier.GrabFlexThreshold.x
                         + _grabNotifier.CurrentFlex() * (1f - _grabNotifier.GrabFlexThreshold.x);
-                    return boundedFlex <= _grabSnap.SlideThresold;
+                    return boundedFlex <= _snapData.point.SlideThresold;
                 }
                 return false;
             }
@@ -153,14 +155,14 @@ namespace HandPosing.Interaction
         /// <param name="grabbable">The grabbed object.</param>
         private void GrabStarted(GameObject grabbable)
         {
-            var ghostPose = SnapForGrabbable(grabbable);
-            if (ghostPose.HasValue)
+            SnappingAddress address = SnapForGrabbable(grabbable);
+            if (address != null)
             {
-                _grabSnap = ghostPose.Value.Item1;
-                _grabPose = ghostPose.Value.Item2;
-                _offsetOverrideFactor = _bonesOverrideFactor = 1f;
+                _snapData = address;
 
-                this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
+                _allignmentFactor = _fingersSnapFactor = 1f;
+                this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
+
                 _trackOffset = this.puppet.TrackedGripOffset;
                 _grabStartTime = Time.timeSinceLevelLoad;
                 _isGrabbing = true;
@@ -175,8 +177,8 @@ namespace HandPosing.Interaction
         private void GrabEnded(GameObject grabbable)
         {
             this.puppet.LerpGripOffset(Pose.identity, 0f, this.transform);
+            _snapData = null;
             _isGrabbing = false;
-            _grabSnap = null;
         }
 
         /// <summary>
@@ -190,17 +192,22 @@ namespace HandPosing.Interaction
         /// <param name="amount">How much the user is performing the grabbing pose (normalised)</param>
         private void GrabAttemp(GameObject grabbable, float amount)
         {
-            var ghostPose = SnapForGrabbable(grabbable);
-            if (ghostPose.HasValue)
+            SnappingAddress address = SnapForGrabbable(grabbable);
+            if (address != null)
             {
-                _grabSnap = ghostPose.Value.Item1;
-                _grabPose = ghostPose.Value.Item2;
-                _offsetOverrideFactor = _bonesOverrideFactor = amount;
+                if (_snapData == null
+                    || _snapData.snappable != address.snappable)
+                {
+                    _grabbableStartPoint = address.snappable.transform.GetPose();
+                }
+
+                _snapData = address;
+                _allignmentFactor = _fingersSnapFactor = amount;
             }
             else
             {
-                _grabSnap = null;
-                _offsetOverrideFactor = _bonesOverrideFactor = 0f;
+                _snapData = null;
+                _allignmentFactor = _fingersSnapFactor = 0f;
             }
         }
 
@@ -212,7 +219,7 @@ namespace HandPosing.Interaction
         /// If the snappable is object is valid, the best SnapPoint to grab it alongside the
         /// Hand-Pose to use when grabbing at that position.
         /// </returns>
-        private (BaseSnapPoint, ScoredHandPose)? SnapForGrabbable(GameObject grabbable)
+        private SnappingAddress SnapForGrabbable(GameObject grabbable)
         {
             if (grabbable == null)
             {
@@ -225,7 +232,7 @@ namespace HandPosing.Interaction
                 BaseSnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
                 if (snapPose != null)
                 {
-                    return (snapPose, bestPose);
+                    return new SnappingAddress(snappable, snapPose, bestPose);
                 }
             }
             return null;
@@ -255,7 +262,7 @@ namespace HandPosing.Interaction
         {
             if (this.puppet.IsTrackingHands)
             {
-                AttachToObjectOffseted();
+                AlignObjectToHand();// AlignHandToObject();
             }
         }
 
@@ -268,7 +275,7 @@ namespace HandPosing.Interaction
         {
             if (!this.puppet.IsTrackingHands)
             {
-                AttachToObjectOffseted();
+                AlignObjectToHand();// AlignHandToObject();
             }
         }
 
@@ -282,7 +289,7 @@ namespace HandPosing.Interaction
             if (IsSnapping)
             {
                 _prevOffset = this.transform.GetPose();
-                this.puppet.LerpGripOffset(_grabPose.Pose, 1f, _grabSnap.RelativeTo);
+                this.puppet.LerpGripOffset(_snapData.pose.Pose, 1f, _snapData.point.RelativeTo);
             }
         }
 
@@ -308,20 +315,20 @@ namespace HandPosing.Interaction
         /// Overrides the hand position and bonesusing the current snap information 
         /// (if the user is holding, or approaching an object).
         /// </summary>
-        private void AttachToObjectOffseted()
+        private void AlignHandToObject()
         {
-            if (_grabSnap != null)
+            if (_snapData != null)
             {
-                this.puppet.LerpBones(_grabPose.Pose.Bones, _bonesOverrideFactor);
+                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
 
                 if (_isGrabbing)
                 {
-                    if (_grabSnap.SnapsBack)
+                    if (_snapData.point.SnapsBack)
                     {
-                        _offsetOverrideFactor = AdjustSnapbackTime(_grabStartTime);
+                        _allignmentFactor = AdjustSnapbackTime(_grabStartTime);
                     }
 
-                    this.puppet.LerpGripOffset(_trackOffset, _offsetOverrideFactor, this.transform);
+                    this.puppet.LerpGripOffset(_trackOffset, _allignmentFactor, this.transform);
 
                     if (IsSliding)
                     {
@@ -330,7 +337,19 @@ namespace HandPosing.Interaction
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_grabPose.Pose, _offsetOverrideFactor, _grabSnap.RelativeTo);
+                    this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
+                }
+            }
+        }
+
+        private void AlignObjectToHand()
+        {
+            if (_snapData != null)
+            {
+                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
+                if (!_isGrabbing)
+                {
+                    _snapData.snappable.LerpGripOffset(Pose.identity, _allignmentFactor, this.puppet.Grip);
                 }
             }
         }
@@ -340,8 +359,8 @@ namespace HandPosing.Interaction
         /// </summary>
         private void SlidePose()
         {
-            HandPose handPose = this.puppet.TrackedPose(_grabSnap.RelativeTo);
-            _grabPose = _grabSnap.CalculateBestPose(handPose, null, _grabPose.Direction);
+            HandPose handPose = this.puppet.TrackedPose(_snapData.point.RelativeTo);
+            _snapData.pose = _snapData.point.CalculateBestPose(handPose, null, _snapData.pose.Direction);
         }
 
         /// <summary>
@@ -349,9 +368,9 @@ namespace HandPosing.Interaction
         /// </summary>
         private void AttachPhysics()
         {
-            Vector3 grabPoint = _grabSnap.NearestInSurface(this.puppet.Grip.position);
+            Vector3 grabPoint = _snapData.point.NearestInSurface(this.puppet.Grip.position);
             Vector3 gripPos = this.transform.InverseTransformPoint(this.puppet.Grip.position);
-            Joint[] joints = _grabSnap.RelativeTo.GetComponents<Joint>();
+            Joint[] joints = _snapData.point.RelativeTo.GetComponents<Joint>();
             foreach (var joint in joints)
             {
                 if (joint.connectedBody?.transform == this.transform)
@@ -373,5 +392,20 @@ namespace HandPosing.Interaction
             return 1f - Mathf.Clamp01((Time.timeSinceLevelLoad - grabStartTime) / snapbackTime);
         }
         #endregion
+    }
+
+
+    public class SnappingAddress
+    {
+        public Snappable snappable;
+        public BaseSnapPoint point;
+        public ScoredHandPose pose;
+
+        public SnappingAddress(Snappable snappable, BaseSnapPoint point, ScoredHandPose pose)
+        {
+            this.snappable = snappable;
+            this.point = point;
+            this.pose = pose;
+        }
     }
 }
