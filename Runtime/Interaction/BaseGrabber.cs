@@ -24,6 +24,13 @@ namespace HandPosing.Interaction
         [SerializeField]
         private Collider[] grabVolumes = null;
 
+        [Header("Distant Grab")]
+        /// <summary>
+        /// Max distance to use the distant grab
+        /// </summary>
+        [SerializeField]
+        private float maxDistanceGrab = 10f;
+
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
         /// Not mandatory.
@@ -87,6 +94,8 @@ namespace HandPosing.Interaction
         private const float FAIL_SUSTAIN_TIME = 0.08f;
         private const float GRAB_ATTEMPT_DURATION = 2.0f;
         private const float ACTUAL_GRAB_BUFFER_TIME = 1.5f;
+
+        private const float RAY_RADIOUS = 0.1f;
         #endregion
 
         /// <summary>
@@ -501,7 +510,22 @@ namespace HandPosing.Interaction
                     closestGrabbable = grabbable;
                 }
             }
+
+            if(closestGrabbable == null)
+            {
+                closestGrabbable = FindDistantGrabbable();
+            }
             return closestGrabbable;
+        }
+
+        private Grabbable FindDistantGrabbable()
+        {
+            if(Physics.SphereCast(gripTransform.position, RAY_RADIOUS, gripTransform.forward, out RaycastHit hit, maxDistanceGrab))
+            {
+                Grabbable grabbable = hit.transform.GetComponentInParent<Grabbable>();
+                return grabbable;
+            }
+            return null;
         }
 
         private Collider FindClosestCollider(Grabbable grabbable, out float score)
