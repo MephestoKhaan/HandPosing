@@ -318,25 +318,6 @@ namespace HandPosing.Interaction
         /// </summary>
         private void AlignSnappable()
         {
-            if(_snapData != null)
-            {
-                if(_snapData.point.SnapMode == SnapType.MoveObject)
-                {
-                    AlignObjectToHand();
-                }
-                else
-                {
-                    AlignHandToObject();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Overrides the hand position and bones using the current snap information 
-        /// (if the user is holding, or approaching an object).
-        /// </summary>
-        private void AlignHandToObject()
-        {
             if (_snapData != null)
             {
                 this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
@@ -347,8 +328,11 @@ namespace HandPosing.Interaction
                     {
                         _allignmentFactor = AdjustSnapbackTime(_grabStartTime);
                     }
-
-                    this.puppet.LerpGripOffset(_trackOffset, _allignmentFactor, this.transform);
+                    if(_snapData.point.SnapMode == SnapType.MoveHandReturn
+                        || _snapData.point.SnapMode == SnapType.MoveHand)
+                    {
+                        this.puppet.LerpGripOffset(_trackOffset, _allignmentFactor, this.transform);
+                    }
 
                     if (IsSliding)
                     {
@@ -357,37 +341,26 @@ namespace HandPosing.Interaction
                 }
                 else
                 {
-                    this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
+                    if(_snapData.point.SnapMode == SnapType.MoveObject)
+                    {
+                        Pose targetPose = PoseUtils.Lerp(_grabbableStartPoint, TargetObjectPose(_snapData), _allignmentFactor);
+                        _snapData.point.RelativeTo.SetPose(targetPose);
+                    }
+                    else
+                    {
+                        this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
+                    }
                 }
             }
         }
 
-        /// <summary>
-        /// Moves an object towards the grip of the hand, while adjusting the fingers
-        /// (if the user is holding, or approaching an object).
-        /// </summary>
-        private void AlignObjectToHand()
-        {
-            if (_snapData != null)
-            {
-                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
-
-                if (!_isGrabbing)
-                {
-                    LerpSnappableObject(_snapData, _grabbableStartPoint, _allignmentFactor);
-                }
-            }
-        }
-
-        private void LerpSnappableObject(SnappingAddress target, Pose originalPose, float factor)
+        private Pose TargetObjectPose(SnappingAddress target)
         {
             Pose gripPose = this.puppet.TrackedGripPose;
             Pose offset = target.pose.Pose.relativeGrip.Inverse();
-            Pose allignedPose = new Pose(
+            return new Pose(
                 gripPose.position + target.point.RelativeTo.rotation * offset.position,
                 gripPose.rotation * offset.rotation);
-            Pose targetPose = PoseUtils.Lerp(originalPose, allignedPose, factor);
-            target.point.RelativeTo.SetPose(targetPose);
         }
 
         /// <summary>

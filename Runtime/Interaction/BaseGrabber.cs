@@ -30,6 +30,11 @@ namespace HandPosing.Interaction
         /// </summary>
         [SerializeField]
         private float maxDistanceGrab = 10f;
+        /// <summary>
+        /// Speed of attraction when distant grabbing
+        /// </summary>
+        [SerializeField]
+        private float attractionSpeed = 10f;
 
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
@@ -48,7 +53,7 @@ namespace HandPosing.Interaction
         /// True if the updates are being driven externally by an updateNotifier, instead of the standard Unity lifecycle
         /// </summary>
         private bool _usingUpdateNotifier;
-        
+
         private bool _grabVolumeEnabled = true;
         /// <summary>
         /// Current grab strength
@@ -69,6 +74,10 @@ namespace HandPosing.Interaction
         /// Last grabbable that stopped beign in contact with the hand
         /// </summary>
         private Grabbable _lastGrabCandidate = null;
+        /// <summary>
+        /// Grabbable being attracted by distant grabber
+        /// </summary>
+        private Grabbable _distantGrabbable = null;
 
         /// <summary>
         /// How long has passed since the last grab candidate stopped touching the hand
@@ -242,6 +251,11 @@ namespace HandPosing.Interaction
             {
                 UpdateAnchors();
             }
+
+            if (_distantGrabbable != null)
+            {
+                AttractDistantObject(_distantGrabbable);
+            }
         }
 
         /// <summary>
@@ -360,6 +374,7 @@ namespace HandPosing.Interaction
         /// </summary>
         protected virtual void GrabFailed()
         {
+            _distantGrabbable = null;
             bool sentFailedEventRecently = _timeSinceLastFail.HasValue
                 && Time.timeSinceLevelLoad - _timeSinceLastFail.Value < GRAB_ATTEMPT_DURATION;
 
@@ -408,8 +423,13 @@ namespace HandPosing.Interaction
             GrabVolumeEnable(false);
             if (closestGrabbable != null)
             {
+                _distantGrabbable = null;
                 _timeSinceLastRelease = Time.timeSinceLevelLoad;
                 Grab(closestGrabbable);
+            }
+            else
+            {
+                _distantGrabbable = FindDistantGrabbable();
             }
         }
 
@@ -431,6 +451,35 @@ namespace HandPosing.Interaction
         }
 
         /// <summary>
+        /// Releases the current grabbed object
+        /// </summary>
+        /// <param name="canGrab">
+        /// If the hand can grab again anything within reach after this release.
+        /// Set False if the grab was ended artifially, not by the user actually ungrasping.</param>
+        protected virtual void GrabEnd(bool canGrab = true)
+        {
+            _distantGrabbable = null;
+            if (GrabbedObject != null)
+            {
+                Vector3 linearVelocity, angularVelocity;
+                (linearVelocity, angularVelocity) = HandRelativeVelocity(_grabbedObjectOffset);
+                ReleaseGrabbedObject(linearVelocity, angularVelocity);
+            }
+
+            if (canGrab)
+            {
+                GrabVolumeEnable(true);
+            }
+        }
+
+        protected virtual void AttractDistantObject(Grabbable grabbable)
+        {
+            Vector3 grabbablePosition = grabbable.transform.position + (this.transform.position - grabbable.transform.position).normalized * attractionSpeed * Time.deltaTime;
+            Quaternion grabbableRotation = grabbable.transform.rotation;
+            grabbable.MoveTo(grabbablePosition, grabbableRotation);
+        }
+
+        /// <summary>
         /// Update the grabbed object position/rotation using the offset recorded when the grab started.
         /// </summary>
         /// <param name="pos">Current position of the grabber.</param>
@@ -447,27 +496,6 @@ namespace HandPosing.Interaction
         }
 
         /// <summary>
-        /// Releases the current grabbed object
-        /// </summary>
-        /// <param name="canGrab">
-        /// If the hand can grab again anything within reach after this release.
-        /// Set False if the grab was ended artifially, not by the user actually ungrasping.</param>
-        protected virtual void GrabEnd(bool canGrab = true)
-        {
-            if (GrabbedObject != null)
-            {
-                Vector3 linearVelocity, angularVelocity;
-                (linearVelocity, angularVelocity) = HandRelativeVelocity(_grabbedObjectOffset);
-                ReleaseGrabbedObject(linearVelocity, angularVelocity);
-            }
-
-            if (canGrab)
-            {
-                GrabVolumeEnable(true);
-            }
-        }
-
-        /// <summary>
         /// Throw the current grabbed object.
         /// </summary>
         /// <param name="linearVelocity">Linear velocity of the throw.</param>
@@ -477,7 +505,7 @@ namespace HandPosing.Interaction
             _timeSinceLastRelease = Time.timeSinceLevelLoad;
             GrabbedObject.GrabEnd(this, linearVelocity, angularVelocity);
             OnGrabEnded?.Invoke(GrabbedObject?.gameObject);
-            OnGrabTimedEnded?.Invoke(GrabbedObject?.gameObject, (_timeSinceLastRelease - _timeSinceLastGrab)??0f);
+            OnGrabTimedEnded?.Invoke(GrabbedObject?.gameObject, (_timeSinceLastRelease - _timeSinceLastGrab) ?? 0f);
             GrabbedObject = null;
         }
 
@@ -511,16 +539,12 @@ namespace HandPosing.Interaction
                 }
             }
 
-            if(closestGrabbable == null)
-            {
-                closestGrabbable = FindDistantGrabbable();
-            }
             return closestGrabbable;
         }
 
         private Grabbable FindDistantGrabbable()
         {
-            if(Physics.SphereCast(gripTransform.position, RAY_RADIOUS, gripTransform.forward, out RaycastHit hit, maxDistanceGrab))
+            if (Physics.SphereCast(gripTransform.position, RAY_RADIOUS, gripTransform.forward, out RaycastHit hit, maxDistanceGrab))
             {
                 Grabbable grabbable = hit.transform.GetComponentInParent<Grabbable>();
                 return grabbable;
@@ -581,6 +605,7 @@ namespace HandPosing.Interaction
                 return;
             }
 
+            _distantGrabbable = null;
             _grabCandidates.TryGetValue(grabbable, out int refCount);
             _grabCandidates[grabbable] = refCount + 1;
 
