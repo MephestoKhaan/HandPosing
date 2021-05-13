@@ -13,23 +13,23 @@ namespace HandPosing.Interaction
         /// Event triggered when a Grab is started at a GameObject.
         /// </summary>
         /// <param name="GameObject">The grabbed object.</param>
-        Action<GameObject> OnGrabStarted { get; set; }
+        event Action<GameObject> OnGrabStarted;
         /// <summary>
         /// Event triggered when a Grab is attempted at a GameObject.
         /// </summary>
         /// <param name="GameObject">The object about to be grabbed.</param>
         /// <param name="float">The normalised value indicating how close to grab the user is. e.g. if the user grabs with a pinch 0.5 would indicate the pinch gesture is half-way in.</param>
-        Action<GameObject, float> OnGrabAttempt { get; set; }
+        event Action<GameObject, float> OnGrabAttempt;
         /// <summary>
         /// Event triggered when a grabbed GameObjec if user tried to make a grab attempt sometime in the past
         /// </summary>
         /// <param name="GameObject">The object that failed to be grabbed.</param>
-        Action<GameObject> OnGrabAttemptFail { get; set; }
+        event Action<GameObject> OnGrabAttemptFail;
         /// <summary>
         /// Event triggered when a grabbed GameObject is released.
         /// </summary>
         /// <param name="GameObject">The ungrabbed object.</param>
-        Action<GameObject> OnGrabEnded { get; set; }
+        event Action<GameObject> OnGrabEnded;
 
         /// <summary>
         /// Min - Max value for the grab thresold. X indicates the release point, Y the grab point. Typically [0.33,0.9] or even [0,1]

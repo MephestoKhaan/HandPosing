@@ -99,10 +99,10 @@ namespace HandPosing.Interaction
         public Action<bool> OnIgnoreTriggers { get; set; }
 
         #region IGrabNotifier
-        public Action<GameObject> OnGrabStarted { get; set; }
-        public Action<GameObject, float> OnGrabAttempt { get; set; }
-        public Action<GameObject> OnGrabEnded { get; set; }
-        public Action<GameObject> OnGrabAttemptFail { get; set; }
+        public event Action<GameObject> OnGrabStarted;
+        public event Action<GameObject, float> OnGrabAttempt;
+        public event Action<GameObject> OnGrabEnded;
+        public event Action<GameObject> OnGrabAttemptFail;
 
         public abstract Vector2 GrabFlexThreshold { get; }
 
