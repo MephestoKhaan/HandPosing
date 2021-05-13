@@ -87,6 +87,16 @@ namespace HandPosing.Interaction
 
         public void LerpGripOffset(Pose pose, float weight, Transform handGrip)
         {
+
+            Pose gripPose = handGrip.GetPose();
+            Pose offset = _snapData.pose.Pose.relativeGrip.Inverse();
+            Pose allignedPose = new Pose(
+                gripPose.position + _snapData.point.RelativeTo.rotation * offset.position,
+                gripPose.rotation * offset.rotation);
+            Pose targetPose = PoseUtils.Lerp(_grabbableStartPoint, allignedPose, _allignmentFactor);
+
+            _snapData.point.RelativeTo.SetPose(targetPose);
+
             Pose fromGrip = this.transform.GlobalPose(pose);
             Pose toGrip = handGrip.GetPose();
             Pose targetGrip = PoseUtils.Lerp(fromGrip, toGrip, weight);

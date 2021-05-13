@@ -158,7 +158,7 @@ namespace HandPosing.Interaction
             SnappingAddress address = SnapForGrabbable(grabbable);
             if (address != null)
             {
-                _snapData = address;
+                //TODO _snapData = address;
 
                 _allignmentFactor = _fingersSnapFactor = 1f;
                 this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
@@ -199,9 +199,9 @@ namespace HandPosing.Interaction
                     || _snapData.snappable != address.snappable)
                 {
                     _grabbableStartPoint = address.snappable.transform.GetPose();
+                    _snapData = address;
                 }
 
-                _snapData = address;
                 _allignmentFactor = _fingersSnapFactor = amount;
             }
             else
@@ -347,9 +347,18 @@ namespace HandPosing.Interaction
             if (_snapData != null)
             {
                 this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
+
                 if (!_isGrabbing)
                 {
-                    _snapData.snappable.LerpGripOffset(Pose.identity, _allignmentFactor, this.puppet.Grip);
+                    Pose gripPose = this.puppet.TrackedGripPose;
+                    Pose offset = _snapData.pose.Pose.relativeGrip.Inverse();
+                    Pose allignedPose = new Pose(
+                        gripPose.position + _snapData.point.RelativeTo.rotation * offset.position,
+                        gripPose.rotation * offset.rotation);
+                    Pose targetPose = PoseUtils.Lerp(_grabbableStartPoint, allignedPose, _allignmentFactor);
+
+                    _snapData.point.RelativeTo.SetPose(targetPose);
+
                 }
             }
         }
