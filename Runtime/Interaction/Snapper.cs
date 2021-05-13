@@ -262,7 +262,7 @@ namespace HandPosing.Interaction
         {
             if (this.puppet.IsTrackingHands)
             {
-                AlignObjectToHand();// AlignHandToObject();
+                AlignSnappable();
             }
         }
 
@@ -275,7 +275,7 @@ namespace HandPosing.Interaction
         {
             if (!this.puppet.IsTrackingHands)
             {
-                AlignObjectToHand();// AlignHandToObject();
+                AlignSnappable();
             }
         }
 
@@ -312,7 +312,27 @@ namespace HandPosing.Interaction
         #region snap methods
 
         /// <summary>
-        /// Overrides the hand position and bonesusing the current snap information 
+        /// Aligns Object and Hand using different techniques based on the SnapMode.
+        /// The hand can move towards an object, or the object towards the hand, and the
+        /// fingers should curl to wrap it.
+        /// </summary>
+        private void AlignSnappable()
+        {
+            if(_snapData != null)
+            {
+                if(_snapData.point.SnapMode == SnapType.MoveObject)
+                {
+                    AlignObjectToHand();
+                }
+                else
+                {
+                    AlignHandToObject();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Overrides the hand position and bones using the current snap information 
         /// (if the user is holding, or approaching an object).
         /// </summary>
         private void AlignHandToObject()
@@ -323,7 +343,7 @@ namespace HandPosing.Interaction
 
                 if (_isGrabbing)
                 {
-                    if (_snapData.point.SnapsBack)
+                    if (_snapData.point.SnapMode == SnapType.MoveHandReturn)
                     {
                         _allignmentFactor = AdjustSnapbackTime(_grabStartTime);
                     }
@@ -342,6 +362,10 @@ namespace HandPosing.Interaction
             }
         }
 
+        /// <summary>
+        /// Moves an object towards the grip of the hand, while adjusting the fingers
+        /// (if the user is holding, or approaching an object).
+        /// </summary>
         private void AlignObjectToHand()
         {
             if (_snapData != null)
@@ -350,17 +374,20 @@ namespace HandPosing.Interaction
 
                 if (!_isGrabbing)
                 {
-                    Pose gripPose = this.puppet.TrackedGripPose;
-                    Pose offset = _snapData.pose.Pose.relativeGrip.Inverse();
-                    Pose allignedPose = new Pose(
-                        gripPose.position + _snapData.point.RelativeTo.rotation * offset.position,
-                        gripPose.rotation * offset.rotation);
-                    Pose targetPose = PoseUtils.Lerp(_grabbableStartPoint, allignedPose, _allignmentFactor);
-
-                    _snapData.point.RelativeTo.SetPose(targetPose);
-
+                    LerpSnappableObject(_snapData, _grabbableStartPoint, _allignmentFactor);
                 }
             }
+        }
+
+        private void LerpSnappableObject(SnappingAddress target, Pose originalPose, float factor)
+        {
+            Pose gripPose = this.puppet.TrackedGripPose;
+            Pose offset = target.pose.Pose.relativeGrip.Inverse();
+            Pose allignedPose = new Pose(
+                gripPose.position + target.point.RelativeTo.rotation * offset.position,
+                gripPose.rotation * offset.rotation);
+            Pose targetPose = PoseUtils.Lerp(originalPose, allignedPose, factor);
+            target.point.RelativeTo.SetPose(targetPose);
         }
 
         /// <summary>

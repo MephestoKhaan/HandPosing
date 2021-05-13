@@ -13,7 +13,7 @@ namespace HandPosing.SnapRecording
         public HandPose pose;
         public SnapSurfaceData surfaceData;
         public float maxDistance;
-        public bool snapsBack;
+        public SnapType snapMode;
         public float slideThresold;
         public float positionRotationWeight;
         public float scale;
@@ -183,7 +183,7 @@ namespace HandPosing.SnapRecording
                 surfaceData = this.surface?.Data,
                 maxDistance = this.maxDistance,
                 positionRotationWeight = this.positionRotationWeight,
-                snapsBack = this.snapsBack,
+                snapMode = this.snapMode,
                 slideThresold = this.slideThresold,
                 scale = this.Scale
             };
@@ -199,8 +199,8 @@ namespace HandPosing.SnapRecording
             SetPose(data.pose, relativeTo);
             this.maxDistance = data.maxDistance;
             this.positionRotationWeight = data.positionRotationWeight;
-            this.snapsBack = data.snapsBack;
             this.slideThresold = data.slideThresold;
+            this.snapMode = data.snapMode;
             this.transform.localScale = Vector3.one * data.scale;
             LoadSurface(data.surfaceData);
         }

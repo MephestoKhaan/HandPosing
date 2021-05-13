@@ -3,6 +3,27 @@
 namespace HandPosing.SnapRecording
 {
     /// <summary>
+    /// Defines the strategy for aligning the object to the hand.
+    /// The hand can go towards the object or vice-versa. 
+    /// </summary>
+    public enum SnapType
+    {
+        /// <summary>
+        /// Move the hand towards the object and stay 
+        /// </summary>
+        MoveHand,
+        /// <summary>
+        /// Move the hand towards the object and return to the original position
+        /// </summary>
+        MoveHandReturn,
+        /// <summary>
+        /// Move the object towards the hand
+        /// </summary>
+        MoveObject
+    }
+
+
+    /// <summary>
     /// A SnapPoint indicates the properties about how a hand can snap to an object.
     /// The most important is the position/rotation and finger rotations for the hand, 
     /// but it can also contain extra information like a valid holding surface (instead of just
@@ -11,26 +32,12 @@ namespace HandPosing.SnapRecording
     [System.Serializable]
     public abstract class BaseSnapPoint : MonoBehaviour
     {
-        public enum SnapType
-        {
-            MoveHand,
-            MoveHandReturn,
-            MoveObject
-        }
-
         /// <summary>
         /// The transform of the object this snap point refers to.
         /// Typically the parent.
         /// </summary>
         [SerializeField]
         protected Transform relativeTo;
-        /// <summary>
-        /// If true, the hand can be overriden to reach the object, and once it is grabbed
-        /// it will move back (now holding it) to the user-tracking position.
-        /// </summary>
-        [SerializeField]
-        [Tooltip("If true, the hand can be overriden to reach the object, and once it is grabbed it will move back")]
-        protected bool snapsBack;
 
         /// <summary>
         /// How the snap will occur.
@@ -56,10 +63,6 @@ namespace HandPosing.SnapRecording
         /// General getter for the transform of the object this snap point refers to
         /// </summary>
         public Transform RelativeTo { get => relativeTo; }
-        /// <summary>
-        /// General getter indicating if the hand can reach for the object and then move back to the user-tracked position.
-        /// </summary>
-        public bool SnapsBack { get => snapsBack; }
         /// <summary>
         /// General getter indicating how the hand and object will align for the grab
         /// </summary>

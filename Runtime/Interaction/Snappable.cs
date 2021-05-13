@@ -84,29 +84,6 @@ namespace HandPosing.Interaction
             return bestSnap;
         }
 
-
-        public void LerpGripOffset(Pose pose, float weight, Transform handGrip)
-        {
-
-            Pose gripPose = handGrip.GetPose();
-            Pose offset = _snapData.pose.Pose.relativeGrip.Inverse();
-            Pose allignedPose = new Pose(
-                gripPose.position + _snapData.point.RelativeTo.rotation * offset.position,
-                gripPose.rotation * offset.rotation);
-            Pose targetPose = PoseUtils.Lerp(_grabbableStartPoint, allignedPose, _allignmentFactor);
-
-            _snapData.point.RelativeTo.SetPose(targetPose);
-
-            Pose fromGrip = this.transform.GlobalPose(pose);
-            Pose toGrip = handGrip.GetPose();
-            Pose targetGrip = PoseUtils.Lerp(fromGrip, toGrip, weight);
-
-            Pose inverseGrip = this.transform.RelativeOffset(handGrip);
-            Pose targetPose = PoseUtils.Multiply(targetGrip, inverseGrip);
-            this.transform.SetPose(targetPose);
-
-        }
-
         /// <summary>
         /// Creates a new SnapPoint at the exact pose of a given hand. 
         /// Mostly used with Hand-Tracking at Play-Mode
