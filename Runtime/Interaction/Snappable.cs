@@ -125,6 +125,27 @@ namespace HandPosing.Interaction
             return record;
         }
 
+        /// <summary>
+        /// Not always the children snap points need to be added to the list (for example when dealing with multiple scale snap points).
+        /// But it can be a common mistake, logging a warning for users.
+        /// </summary>
+        private void WarnMissingSnappables()
+        {
+            List<BaseSnapPoint> childrenSnaps = new List<BaseSnapPoint>(this.GetComponentsInChildren<BaseSnapPoint>());
+            foreach(var childSnap in childrenSnaps)
+            {
+                if(!this.snapPoints.Contains(childSnap))
+                {
+                    Debug.LogWarning($"{childSnap} is not added to the {this.name} SnapPoints list. Is this intended?", this);
+                }
+            }
+        }
+
+        private void OnValidate()
+        {
+            WarnMissingSnappables();
+        }
+
 #if UNITY_EDITOR
         /// <summary>
         /// Load the SnapPoints from a Collection.
@@ -151,6 +172,7 @@ namespace HandPosing.Interaction
         /// </summary>
         private void SaveToAsset()
         {
+            WarnMissingSnappables();
             List<SnapPointData> savedPoses = new List<SnapPointData>();
             foreach (var snap in this.GetComponentsInChildren<SnapPoint>())
             {
@@ -165,7 +187,6 @@ namespace HandPosing.Interaction
 
         private void GenerateAsset()
         {
-#if UNITY_EDITOR
             this.posesCollection = ScriptableObject.CreateInstance<SnapPointsCollection>();
             string parentDir = "Assets/SnapPointsCollection";
             if (!System.IO.Directory.Exists(parentDir))
@@ -174,7 +195,6 @@ namespace HandPosing.Interaction
             }
             AssetDatabase.CreateAsset(this.posesCollection, $"{parentDir}/{this.name}_PoseCollection.asset");
             AssetDatabase.SaveAssets();
-#endif
         }
 
         private void RemoveSnaps()

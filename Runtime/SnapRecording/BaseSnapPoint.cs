@@ -48,6 +48,13 @@ namespace HandPosing.SnapRecording
         protected SnapType snapMode;
 
         /// <summary>
+        /// True if the object be attracted from far away by this point. Do not enable in stationary elements such as levers.
+        /// </summary>
+        [Tooltip("Can the object be attracted from far away by this point? Do not enable in stationary elements such as levers")]
+        [SerializeField]
+        protected bool canBeDistantGrabbed;
+
+        /// <summary>
         /// Indicates how firmly the grab strength must be so the hand can slide. 
         /// Normalised, a value of 1 will always slide, a value of 0.5 will start sliding only 
         /// when the grab is half-released.
@@ -59,18 +66,24 @@ namespace HandPosing.SnapRecording
         [Tooltip("Indicates how firmly the grab strength must be so the hand can slide (0 never slides, 1 always). Use with Physics grabs.")]
         protected float slideThresold = 0f;
 
+
         /// <summary>
-        /// General getter for the transform of the object this snap point refers to
+        /// General getter for the transform of the object this snap point refers to.
         /// </summary>
-        public Transform RelativeTo { get => relativeTo; }
+        public Transform RelativeTo => relativeTo;
+
         /// <summary>
-        /// General getter indicating how the hand and object will align for the grab
+        /// General getter indicating if the object can be distant grabbed by this point.
         /// </summary>
-        public SnapType SnapMode { get => snapMode; }
+        public bool CanBeDistantGrabbed => canBeDistantGrabbed;
+        /// <summary>
+        /// General getter indicating how the hand and object will align for the grab.
+        /// </summary>
+        public SnapType SnapMode => snapMode;
         /// <summary>
         /// General getter indicatig how firmly to held the object so the hand does not slide throught the surface.
         /// </summary>
-        public float SlideThresold { get => slideThresold; }
+        public float SlideThresold => slideThresold;
 
         /// <summary>
         /// Find the best valid hand-pose at this snap point.
@@ -84,7 +97,7 @@ namespace HandPosing.SnapRecording
         /// <param name="scale">The desired scale of the hand to compare.</param>
         /// <returns>The most similar valid HandPose at this SnapPoint</returns>
         public abstract ScoredHandPose CalculateBestPose(HandPose userPose, float? scoreWeight = null, SnapDirection direction = SnapDirection.Any, float scale = 1f);
-        
+
         /// <summary>
         /// Find the closes point at the snap surface.
         /// If there is no surface, the SnapPoint position itself is returned.

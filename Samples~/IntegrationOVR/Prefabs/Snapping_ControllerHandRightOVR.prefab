@@ -1475,6 +1475,11 @@ MonoBehaviour:
   grabVolumes:
   - {fileID: 1442438993020805292}
   - {fileID: 1442438993021150130}
+  minMaxDistanceGrab: {x: 0.3, y: 10}
+  attractionSpeed: 0.5
+  distantDetectionLayer:
+    serializedVersion: 2
+    m_Bits: 0
   updateNotifier: {fileID: 0}
   flexInterfaces:
   - {fileID: 796815803}

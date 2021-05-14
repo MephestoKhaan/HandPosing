@@ -26,15 +26,21 @@ namespace HandPosing.Interaction
 
         [Header("Distant Grab")]
         /// <summary>
-        /// Max distance to use the distant grab
+        /// Min and Max distance to use the distant grab in meters
+        /// Min should be a few cm away from the hand, to avoid too lazy grabs.
         /// </summary>
         [SerializeField]
-        private float maxDistanceGrab = 10f;
+        private Vector2 minMaxDistanceGrab = new Vector2(0.3f,10f);
         /// <summary>
         /// Speed of attraction when distant grabbing
         /// </summary>
         [SerializeField]
-        private float attractionSpeed = 10f;
+        private float attractionSpeed = 0.5f;
+        /// <summary>
+        /// Which layers to query when raycasting for a distant Grabbable
+        /// </summary>
+        [SerializeField]
+        private LayerMask distantIgnoreLayers;
 
         /// <summary>
         /// Callbacks indicating when the hand tracking has updated.
@@ -74,10 +80,9 @@ namespace HandPosing.Interaction
         /// Last grabbable that stopped beign in contact with the hand
         /// </summary>
         private Grabbable _lastGrabCandidate = null;
-        /// <summary>
-        /// Grabbable being attracted by distant grabber
-        /// </summary>
-        private Grabbable _distantGrabbable = null;
+
+        private ObjectSnappingAddress _distantGrabAddress = null;
+        private float? _autoGrabStartTime;
 
         /// <summary>
         /// How long has passed since the last grab candidate stopped touching the hand
@@ -104,7 +109,8 @@ namespace HandPosing.Interaction
         private const float GRAB_ATTEMPT_DURATION = 2.0f;
         private const float ACTUAL_GRAB_BUFFER_TIME = 1.5f;
 
-        private const float RAY_RADIOUS = 0.1f;
+        private const float DISTANT_SEARCH_RADIOUS = 0.05f;
+        private const float AUTO_GRAB_TIME = 0.2f;
         #endregion
 
         /// <summary>
@@ -251,10 +257,20 @@ namespace HandPosing.Interaction
             {
                 UpdateAnchors();
             }
+            UpdateDistantGrab();
+        }
 
-            if (_distantGrabbable != null)
+        private void UpdateDistantGrab()
+        {
+            if (_distantGrabAddress != null
+                && !_autoGrabStartTime.HasValue)
             {
-                AttractDistantObject(_distantGrabbable);
+                _distantGrabAddress.MoveObjectTowardsHand(gripTransform.GetPose(), attractionSpeed * Time.deltaTime);
+                Pose pose = _distantGrabAddress.point.RelativeTo.GlobalPose(_distantGrabAddress.pose.Pose.relativeGrip);
+                if (Vector3.Distance(pose.position, gripTransform.position) <= DISTANT_SEARCH_RADIOUS) 
+                {
+                    _autoGrabStartTime = Time.timeSinceLevelLoad;
+                }
             }
         }
 
@@ -295,6 +311,7 @@ namespace HandPosing.Interaction
             {
                 GrabFailed();
             }
+
             else if (prevFlex < GrabFlexThreshold.y
                  && currentFlex >= GrabFlexThreshold.y)
             {
@@ -307,17 +324,34 @@ namespace HandPosing.Interaction
                 GrabEnd(true);
             }
 
-            if (GrabbedObject == null
-                && currentFlex > 0)
+            if (_autoGrabStartTime.HasValue)
             {
-                _nearGrab = true;
-                NearGrab(currentFlex / GrabFlexThreshold.y);
+                float autoGrabProgress = (Time.timeSinceLevelLoad - _autoGrabStartTime.Value) / AUTO_GRAB_TIME;
+                if (autoGrabProgress < 1f)
+                {
+                    OnGrabAttempt?.Invoke(_distantGrabAddress.snappable.gameObject, autoGrabProgress);
+                }
+                else
+                {
+                    _nearGrab = false;
+                    GrabBegin(_distantGrabAddress.snappable.GetComponent<Grabbable>());
+                }
             }
-            else if (_nearGrab)
+            else
             {
-                _nearGrab = false;
-                NearGrab(0f);
+                if (GrabbedObject == null
+                    && currentFlex > 0)
+                {
+                    _nearGrab = true;
+                    NearGrab(currentFlex / GrabFlexThreshold.y);
+                }
+                else if (_nearGrab)
+                {
+                    _nearGrab = false;
+                    NearGrab(0f);
+                }
             }
+
         }
 
         /// <summary>
@@ -374,7 +408,7 @@ namespace HandPosing.Interaction
         /// </summary>
         protected virtual void GrabFailed()
         {
-            _distantGrabbable = null;
+            CancelDistantGrab();
             bool sentFailedEventRecently = _timeSinceLastFail.HasValue
                 && Time.timeSinceLevelLoad - _timeSinceLastFail.Value < GRAB_ATTEMPT_DURATION;
 
@@ -407,17 +441,8 @@ namespace HandPosing.Interaction
             {
                 OnGrabAttempt?.Invoke(closestGrabbable.gameObject, factor);
             }
-            else 
+            else
             {
-                if(factor >= 1f)
-                {
-                    Grabbable farGrabbable = FindDistantGrabbable();
-                    if(farGrabbable)
-                    {
-                        OnGrabAttempt?.Invoke(farGrabbable.gameObject, -0.7f);
-                        return;
-                    }
-                }
                 OnGrabAttempt?.Invoke(null, 0f);
             }
         }
@@ -426,19 +451,33 @@ namespace HandPosing.Interaction
         /// <summary>
         /// Search for a nearby object and grab it.
         /// </summary>
-        protected virtual void GrabBegin()
+        protected virtual void GrabBegin(Grabbable closestGrabbable = null)
         {
-            Grabbable closestGrabbable = FindClosestGrabbable();
+            closestGrabbable = closestGrabbable ?? FindClosestGrabbable();
             GrabVolumeEnable(false);
             if (closestGrabbable != null)
             {
-                _distantGrabbable = null;
+                CancelDistantGrab();
                 _timeSinceLastRelease = Time.timeSinceLevelLoad;
                 Grab(closestGrabbable);
             }
             else
             {
-                _distantGrabbable = FindDistantGrabbable();
+                BeginDistantGrab();
+            }
+        }
+
+        private void BeginDistantGrab()
+        {
+            Grabbable distantGrabbable = FindDistantGrabbable();
+            if (distantGrabbable != null)
+            {
+                ObjectSnappingAddress snapAddress = this.GetComponent<Snapper>()?.SnapForGrabbable(distantGrabbable.gameObject); //TODO reference to snapper?
+                if (snapAddress != null 
+                    && snapAddress.point.CanBeDistantGrabbed)
+                {
+                    _distantGrabAddress = snapAddress;
+                }
             }
         }
 
@@ -467,7 +506,7 @@ namespace HandPosing.Interaction
         /// Set False if the grab was ended artifially, not by the user actually ungrasping.</param>
         protected virtual void GrabEnd(bool canGrab = true)
         {
-            _distantGrabbable = null;
+            CancelDistantGrab();
             if (GrabbedObject != null)
             {
                 Vector3 linearVelocity, angularVelocity;
@@ -481,12 +520,12 @@ namespace HandPosing.Interaction
             }
         }
 
-        protected virtual void AttractDistantObject(Grabbable grabbable)
+        private void CancelDistantGrab()
         {
-            Vector3 grabbablePosition = grabbable.transform.position + (this.transform.position - grabbable.transform.position).normalized * attractionSpeed * Time.deltaTime;
-            Quaternion grabbableRotation = grabbable.transform.rotation;
-            grabbable.MoveTo(grabbablePosition, grabbableRotation);
+            _distantGrabAddress = null;
+            _autoGrabStartTime = null;
         }
+
 
         /// <summary>
         /// Update the grabbed object position/rotation using the offset recorded when the grab started.
@@ -553,10 +592,16 @@ namespace HandPosing.Interaction
 
         private Grabbable FindDistantGrabbable()
         {
-            if (Physics.SphereCast(gripTransform.position, RAY_RADIOUS, gripTransform.forward, out RaycastHit hit, maxDistanceGrab))
+            Vector3 origin = gripTransform.position + gripTransform.forward * minMaxDistanceGrab.x;
+            float lenght = Mathf.Abs(minMaxDistanceGrab.x - minMaxDistanceGrab.y);
+            if (Physics.SphereCast(origin, DISTANT_SEARCH_RADIOUS, gripTransform.forward, out RaycastHit hit,lenght, ~(distantIgnoreLayers.value), QueryTriggerInteraction.Ignore))
             {
                 Grabbable grabbable = hit.transform.GetComponentInParent<Grabbable>();
-                return grabbable;
+                if(grabbable != null 
+                    && !grabbable.IsGrabbed)
+                {
+                    return grabbable;
+                }
             }
             return null;
         }
@@ -614,7 +659,7 @@ namespace HandPosing.Interaction
                 return;
             }
 
-            _distantGrabbable = null;
+            CancelDistantGrab();
             _grabCandidates.TryGetValue(grabbable, out int refCount);
             _grabCandidates[grabbable] = refCount + 1;
 

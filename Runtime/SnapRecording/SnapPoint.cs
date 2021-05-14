@@ -14,6 +14,7 @@ namespace HandPosing.SnapRecording
         public SnapSurfaceData surfaceData;
         public float maxDistance;
         public SnapType snapMode;
+        public bool canBeDistantGrabbed;
         public float slideThresold;
         public float positionRotationWeight;
         public float scale;
@@ -184,7 +185,9 @@ namespace HandPosing.SnapRecording
                 maxDistance = this.maxDistance,
                 positionRotationWeight = this.positionRotationWeight,
                 snapMode = this.snapMode,
+                canBeDistantGrabbed = this.CanBeDistantGrabbed,
                 slideThresold = this.slideThresold,
+                
                 scale = this.Scale
             };
         }
@@ -201,6 +204,7 @@ namespace HandPosing.SnapRecording
             this.positionRotationWeight = data.positionRotationWeight;
             this.slideThresold = data.slideThresold;
             this.snapMode = data.snapMode;
+            this.canBeDistantGrabbed = data.canBeDistantGrabbed;
             this.transform.localScale = Vector3.one * data.scale;
             LoadSurface(data.surfaceData);
         }

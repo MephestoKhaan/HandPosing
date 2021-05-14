@@ -40,7 +40,7 @@ namespace HandPosing.Interaction
 
         private IGrabNotifier _grabNotifier;
 
-        private SnappingAddress _snapData;
+        private ObjectSnappingAddress _snapData;
 
         private float _fingersSnapFactor;
         private float _allignmentFactor;
@@ -153,11 +153,10 @@ namespace HandPosing.Interaction
         /// <param name="grabbable">The grabbed object.</param>
         private void GrabStarted(GameObject grabbable)
         {
-            SnappingAddress address = SnapForGrabbable(grabbable);
+            ObjectSnappingAddress address = SnapForGrabbable(grabbable);
             if (address != null)
             {
-                //TODO _snapData = address;
-
+                _snapData = address;
                 _allignmentFactor = _fingersSnapFactor = 1f;
                 this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
 
@@ -190,15 +189,10 @@ namespace HandPosing.Interaction
         /// <param name="amount">How much the user is performing the grabbing pose (normalised)</param>
         private void GrabAttemp(GameObject grabbable, float amount)
         {
-            SnappingAddress address = SnapForGrabbable(grabbable);
+            ObjectSnappingAddress address = SnapForGrabbable(grabbable);
             if (address != null)
             {
-                if (_snapData == null
-                    || _snapData.snappable != address.snappable)
-                {
-                    _snapData = address;
-                }
-
+                _snapData = address;
                 _allignmentFactor = _fingersSnapFactor = amount;
             }
             else
@@ -216,20 +210,16 @@ namespace HandPosing.Interaction
         /// If the snappable is object is valid, the best SnapPoint to grab it alongside the
         /// Hand-Pose to use when grabbing at that position.
         /// </returns>
-        private SnappingAddress SnapForGrabbable(GameObject grabbable)
+        public ObjectSnappingAddress SnapForGrabbable(GameObject grabbable)
         {
-            if (grabbable == null)
-            {
-                return null;
-            }
-
-            if (grabbable.TryGetComponent<Snappable>(out Snappable snappable))
+            if (grabbable != null
+                && grabbable.TryGetComponent<Snappable>(out Snappable snappable))
             {
                 HandPose userPose = this.puppet.TrackedPose(snappable.transform);
                 BaseSnapPoint snapPose = snappable.FindBestSnapPose(userPose, out ScoredHandPose bestPose);
                 if (snapPose != null)
                 {
-                    return new SnappingAddress(snappable, snapPose, bestPose);
+                    return new ObjectSnappingAddress(snappable, snapPose, bestPose);
                 }
             }
             return null;
@@ -317,17 +307,9 @@ namespace HandPosing.Interaction
         {
             if (_snapData != null)
             {
-                bool distantAttraction = false;
+                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
                 SnapType snapMode = _snapData.point.SnapMode;
                 float moveFactor = _allignmentFactor;
-                float moveSpeed = 0f;
-                if (moveFactor < 0f)
-                {
-                    snapMode = SnapType.MoveObject;
-                    distantAttraction = true;
-                    moveSpeed = -moveFactor * Time.deltaTime;
-                }
-
                 if (_isGrabbing)
                 {
                     if(snapMode == SnapType.MoveHand
@@ -348,54 +330,14 @@ namespace HandPosing.Interaction
                 {
                     if(snapMode == SnapType.MoveObject)
                     {
-                        if(distantAttraction)
-                        {
-                            MoveObjectTowardsHand(_snapData, moveSpeed);
-                        }
-                        else
-                        {
-                            LerpObjectTowarsHand(_snapData, moveFactor);
-                        }
+                        _snapData.LerpObjectTowarsHand(puppet.TrackedGripPose, moveFactor);
                     }
                     else
                     {
                         this.puppet.LerpGripOffset(_snapData.pose.Pose, moveFactor, _snapData.point.RelativeTo);
                     }
                 }
-
-
-                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
-
             }
-        }
-
-        private void LerpObjectTowarsHand(SnappingAddress to, float t)
-        {
-            Pose targetPose = PoseUtils.Lerp(to.originalPose, AllignedObjectPose(to), t);
-            to.point.RelativeTo.SetPose(targetPose);
-        }
-
-        private void MoveObjectTowardsHand(SnappingAddress to, float speed)
-        {
-            Pose current = to.point.RelativeTo.GetPose();
-            Pose desiredPose = AllignedObjectPose(to);
-
-            Vector3 distance = desiredPose.position - current.position;
-            Pose targetPose = new Pose(
-                current.position + distance.normalized * Mathf.Min(speed, distance.magnitude),
-                Quaternion.RotateTowards(current.rotation,desiredPose.rotation, speed));
-
-            to.point.RelativeTo.SetPose(targetPose);
-        }
-
-
-        private Pose AllignedObjectPose(SnappingAddress target)
-        {
-            Pose gripPose = this.puppet.TrackedGripPose;
-            Pose offset = target.pose.Pose.relativeGrip.Inverse();
-            return new Pose(
-                gripPose.position + target.point.RelativeTo.rotation * offset.position,
-                gripPose.rotation * offset.rotation);
         }
 
         /// <summary>
@@ -439,19 +381,46 @@ namespace HandPosing.Interaction
     }
 
 
-    public class SnappingAddress
+    public class ObjectSnappingAddress
     {
         public Snappable snappable;
         public BaseSnapPoint point;
         public ScoredHandPose pose;
         public Pose originalPose;
 
-        public SnappingAddress(Snappable snappable, BaseSnapPoint point, ScoredHandPose pose)
+        public ObjectSnappingAddress(Snappable snappable, BaseSnapPoint point, ScoredHandPose pose)
         {
             this.snappable = snappable;
             this.point = point;
             this.pose = pose;
             this.originalPose = snappable.transform.GetPose();
+        }
+
+        public void LerpObjectTowarsHand(Pose gripPose, float t)
+        {
+            Pose targetPose = PoseUtils.Lerp(originalPose, AllignedObjectPose(gripPose), t);
+            point.RelativeTo.SetPose(targetPose);
+        }
+
+        public void MoveObjectTowardsHand(Pose gripPose, float step)
+        {
+            Pose current = point.RelativeTo.GetPose();
+            Pose desiredPose = AllignedObjectPose(gripPose);
+
+            Vector3 difference = desiredPose.position - current.position;
+            Pose targetPose = new Pose(
+                current.position + difference.normalized * Mathf.Min(step, difference.magnitude),
+                Quaternion.RotateTowards(current.rotation, desiredPose.rotation, step * Mathf.Rad2Deg * 10f));
+
+            point.RelativeTo.SetPose(targetPose);
+        }
+
+        public Pose AllignedObjectPose(Pose gripPose)
+        {
+            Pose offset = pose.Pose.relativeGrip.Inverse();
+            return new Pose(
+                gripPose.position + point.RelativeTo.rotation * offset.position,
+                gripPose.rotation * offset.rotation);
         }
     }
 }
