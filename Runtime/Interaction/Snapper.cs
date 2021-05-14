@@ -317,18 +317,27 @@ namespace HandPosing.Interaction
         {
             if (_snapData != null)
             {
-                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
+                bool distantAttraction = false;
+                SnapType snapMode = _snapData.point.SnapMode;
+                float moveFactor = _allignmentFactor;
+                float moveSpeed = 0f;
+                if (moveFactor < 0f)
+                {
+                    snapMode = SnapType.MoveObject;
+                    distantAttraction = true;
+                    moveSpeed = -moveFactor * Time.deltaTime;
+                }
 
                 if (_isGrabbing)
                 {
-                    if(_snapData.point.SnapMode == SnapType.MoveHand
-                        || _snapData.point.SnapMode == SnapType.MoveHandReturn)
+                    if(snapMode == SnapType.MoveHand
+                        || snapMode == SnapType.MoveHandReturn)
                     {
-                        if (_snapData.point.SnapMode == SnapType.MoveHandReturn)
+                        if (snapMode == SnapType.MoveHandReturn)
                         {
-                            _allignmentFactor = AdjustSnapbackTime(_grabStartTime);
+                            moveFactor = AdjustSnapbackTime(_grabStartTime);
                         }
-                        this.puppet.LerpGripOffset(_trackOffset, _allignmentFactor, this.transform);
+                        this.puppet.LerpGripOffset(_trackOffset, moveFactor, this.transform);
                     }
                     if (IsSliding)
                     {
@@ -337,15 +346,26 @@ namespace HandPosing.Interaction
                 }
                 else
                 {
-                    if(_snapData.point.SnapMode == SnapType.MoveObject)
+                    if(snapMode == SnapType.MoveObject)
                     {
-                        LerpObjectTowarsHand(_snapData, _allignmentFactor);
+                        if(distantAttraction)
+                        {
+                            MoveObjectTowardsHand(_snapData, moveSpeed);
+                        }
+                        else
+                        {
+                            LerpObjectTowarsHand(_snapData, moveFactor);
+                        }
                     }
                     else
                     {
-                        this.puppet.LerpGripOffset(_snapData.pose.Pose, _allignmentFactor, _snapData.point.RelativeTo);
+                        this.puppet.LerpGripOffset(_snapData.pose.Pose, moveFactor, _snapData.point.RelativeTo);
                     }
                 }
+
+
+                this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
+
             }
         }
 

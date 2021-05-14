@@ -407,8 +407,17 @@ namespace HandPosing.Interaction
             {
                 OnGrabAttempt?.Invoke(closestGrabbable.gameObject, factor);
             }
-            else
+            else 
             {
+                if(factor >= 1f)
+                {
+                    Grabbable farGrabbable = FindDistantGrabbable();
+                    if(farGrabbable)
+                    {
+                        OnGrabAttempt?.Invoke(farGrabbable.gameObject, -0.7f);
+                        return;
+                    }
+                }
                 OnGrabAttempt?.Invoke(null, 0f);
             }
         }
