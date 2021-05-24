@@ -247,10 +247,7 @@ namespace HandPosing.Interaction
         /// </summary>
         private void AfterPuppetUpdate()
         {
-            if (this.puppet.IsTrackingHands)
-            {
-                AlignSnappable();
-            }
+            AlignSnappable(false);
         }
 
         /// <summary>
@@ -262,7 +259,7 @@ namespace HandPosing.Interaction
         {
             if (!this.puppet.IsTrackingHands)
             {
-                AlignSnappable();
+                AlignSnappable(true);
             }
         }
 
@@ -303,11 +300,15 @@ namespace HandPosing.Interaction
         /// The hand can move towards an object, or the object towards the hand, and the
         /// fingers should curl to wrap it.
         /// </summary>
-        private void AlignSnappable()
+        private void AlignSnappable(bool fingersOnly = false)
         {
             if (_snapData != null)
             {
                 this.puppet.LerpBones(_snapData.pose.Pose.Bones, _fingersSnapFactor);
+                if(fingersOnly)
+                {
+                    return;
+                }
                 SnapType snapMode = _snapData.point.SnapMode;
                 float moveFactor = _allignmentFactor;
                 if (_isGrabbing)
