@@ -24,12 +24,6 @@ namespace HandPosing.SnapRecording
         [Tooltip("Must implement IGrabNotifier")]
         private Component grabber;
         /// <summary>
-        /// Key to trigger the recording event.
-        /// It is recommended to be a big key since the recorder might be wearing a headset.
-        /// </summary>
-        [SerializeField]
-        private KeyCode recordKey = KeyCode.Space;
-        /// <summary>
         /// Create an Inspector button for manually triggering the pose recorer.
         /// </summary>
         [InspectorButton("RecordPose")]
@@ -47,14 +41,6 @@ namespace HandPosing.SnapRecording
         private void Awake()
         {
             _grabNotifier = grabber as IGrabNotifier;
-        }
-
-        private void Update()
-        {
-            if(Input.GetKeyDown(recordKey))
-            {
-                RecordPose();
-            }
         }
 
         /// <summary>
