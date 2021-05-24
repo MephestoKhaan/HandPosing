@@ -43,6 +43,27 @@ namespace HandPosing.SnapRecording
             _grabNotifier = grabber as IGrabNotifier;
         }
 
+
+#if UNITY_INPUTSYSTEM
+        private void Start()
+        {
+            UnityEngine.InputSystem.InputAction recordAction = new UnityEngine.InputSystem.InputAction("onRecordPose", binding: "<Keyboard>/space");
+            recordAction.Enable();
+            recordAction.performed += ctx => RecordPose();
+        }
+#else
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Space))
+            {
+                RecordPose();
+            }
+        }
+#endif
+
+
+
+
         /// <summary>
         /// Finds the nearest object that can be snapped to and adds a new snap point to 
         /// it with the user hand representation.
