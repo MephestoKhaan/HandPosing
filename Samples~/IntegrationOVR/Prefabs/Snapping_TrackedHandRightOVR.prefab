@@ -259,8 +259,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 2064097538271242696}
   grabber: {fileID: 7744700711333424663}
-  recordKey: 32
-  Record: 
+  recordKey: space
+  record: 
 --- !u!114 &2064097538271242702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +292,11 @@ MonoBehaviour:
   grabVolumes:
   - {fileID: 2064097536874379337}
   - {fileID: 2064097536875445079}
+  minMaxDistanceGrab: {x: 0.3, y: 10}
+  attractionSpeed: 0.5
+  distantIgnoreLayers:
+    serializedVersion: 2
+    m_Bits: 0
   updateNotifier: {fileID: 0}
   flexInterfaces:
   - {fileID: 621979817853562404}

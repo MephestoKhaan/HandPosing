@@ -895,6 +895,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 410362937497815097}
+        m_TargetAssemblyTypeName: 
         m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
@@ -909,6 +910,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 410362937497815097}
+        m_TargetAssemblyTypeName: 
         m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
@@ -933,7 +935,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1387190361880471772}
   grabber: {fileID: 4635681503502107842}
-  recordKey: 32
+  recordKey: space
   record: 
 --- !u!114 &6419182328721095271
 MonoBehaviour:
@@ -2308,6 +2310,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

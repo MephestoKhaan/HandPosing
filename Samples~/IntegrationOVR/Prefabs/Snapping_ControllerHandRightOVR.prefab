@@ -264,6 +264,7 @@ SkinnedMeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1404,6 +1405,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1537146065954877748}
+        m_TargetAssemblyTypeName: 
         m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
@@ -1418,6 +1420,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1537146065954877748}
+        m_TargetAssemblyTypeName: 
         m_MethodName: set_enabled
         m_Mode: 6
         m_Arguments:
@@ -1442,7 +1445,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   puppetHand: {fileID: 1442438993745604909}
   grabber: {fileID: 7195348242957399794}
-  recordKey: 32
+  recordKey: space
   record: 
 --- !u!114 &1442438993745604907
 MonoBehaviour:
@@ -1477,7 +1480,7 @@ MonoBehaviour:
   - {fileID: 1442438993021150130}
   minMaxDistanceGrab: {x: 0.3, y: 10}
   attractionSpeed: 0.5
-  distantDetectionLayer:
+  distantIgnoreLayers:
     serializedVersion: 2
     m_Bits: 0
   updateNotifier: {fileID: 0}
