@@ -6,8 +6,9 @@ There is a full Unity Project to serve as a game-demo [here](https://github.com/
 ![](https://user-images.githubusercontent.com/4976810/86815186-a97c5280-c082-11ea-9df2-8c45a28f06e7.gif)
 
 ## Requisites 
-- You need to download the **Oculus Integration** from the Asset Store, as this requires OVRSkeleton. I have tested it with Unity 2019.3 and Oculus Integration 17.0 and 18.0.
+- You need to download the **Oculus Integration** from the Asset Store, as this requires OVRSkeleton. I have tested it with Unity 2019.3LTS Unity 2020.3LTS and Oculus Integration up to 25.0.
 - You need to use **Quest + Oculus Link** in the editor to generate poses (but the generated poses will work in a build with either hands or controllers).
+- You can use it with either the old XR system and the new XR Management Plugin
 
 ## Install
 Import this project as a .git package! Go to the *Unity Package Manager*, and in the ✚ icon select `Add Package from Git Url...` then in the box copy the address of this repo: `https://github.com/MephestoKhaan/HandPosing.git`
