@@ -25,9 +25,14 @@ namespace HandPosing.OVRIntegration.GrabEngine
         [SerializeField]
         [Range(0.0f, 0.1f)]
         private float poseVolumeRadius = 0.07f;
+        [Space]
+        [SerializeField]
+        [Tooltip("Set this to automatically calculate the Pose Volume Offset")]
+        private Transform optionalCenterPoint;
         [SerializeField]
         [Tooltip("This will differ based on handedness. The right can be (0.07f,-0.03f, 0.0f), while the left can be the inverse (-0.07f, 0.03f, 0.0f).")]
         private Vector3 poseVolumeOffset = new Vector3(0.07f, -0.03f, 0.0f);
+        [Space]
         [SerializeField]
         private bool trackLowConfidenceHands = false;
         [SerializeField]
@@ -248,6 +253,20 @@ namespace HandPosing.OVRIntegration.GrabEngine
             }
 
             return minGrabStrength ?? 0f;
+        }
+
+        private void OnValidate()
+        {
+            if(optionalCenterPoint != null)
+            {
+                SetVolumeOffset(optionalCenterPoint);
+            }
+        }
+
+        public void SetVolumeOffset(Transform centre)
+        {
+            optionalCenterPoint = centre;
+            poseVolumeOffset = this.transform.InverseTransformPoint(optionalCenterPoint.position);
         }
     }
 }
