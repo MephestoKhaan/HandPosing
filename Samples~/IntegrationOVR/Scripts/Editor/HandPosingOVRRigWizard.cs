@@ -127,9 +127,9 @@ namespace HandPosing.Editor
                 handInstance.transform.SetParent(ovrRig.transform.parent);
             }
 
-            Transform gripPoint = AttachGripPoint(handInstance);
-            HandPuppet puppet = AttachPuppet(handInstance, provider, gripPoint);
-            AttachGrabber(handInstance, provider, gripPoint);
+            provider.gripPoint = AttachGripPoint(handInstance);
+            HandPuppet puppet = AttachPuppet(handInstance, provider);
+            AttachGrabber(handInstance, provider);
             AttachSnapper(handInstance);
 
             if (controllerSupport)
@@ -156,12 +156,12 @@ namespace HandPosing.Editor
             return gripPoint;
         }
 
-        private HandPuppet AttachPuppet(GameObject handInstance, HandTrackingProviders provider, Transform gripPoint)
+        private HandPuppet AttachPuppet(GameObject handInstance, HandTrackingProviders provider)
         {
             HandPuppet puppet = AddMissingComponent<HandPuppet>(handInstance);
             SetPrivateValue(puppet, "skeleton", provider.skeletonDataProvider);
             SetPrivateValue(puppet, "updateNotifier", provider.updateNotifier);
-            SetPrivateValue(puppet, "gripPoint", gripPoint);
+            SetPrivateValue(puppet, "gripPoint", provider.gripPoint);
             SetPrivateValue(puppet, "handeness", provider.handeness);
             SetPrivateValue(puppet, "autoAdjustScale", false);
             SetPrivateValue(puppet, "controllerAnchor", provider.handeness == Handeness.Left ? ovrRig.leftControllerAnchor : ovrRig.rightControllerAnchor);
@@ -179,10 +179,10 @@ namespace HandPosing.Editor
             return puppet;
         }
 
-        private void AttachGrabber(GameObject handInstance, HandTrackingProviders provider, Transform gripPoint)
+        private void AttachGrabber(GameObject handInstance, HandTrackingProviders provider)
         {
             GrabberHybridOVR grabber = AddMissingComponent<GrabberHybridOVR>(handInstance);
-            SetPrivateValue(grabber, "gripTransform", gripPoint);
+            SetPrivateValue(grabber, "gripTransform", provider.gripPoint);
 
             List<FlexInterface> flexInterfaces = AddFlexInterfaces(handInstance, provider);
             Component[] serializableFlexInterfaces = flexInterfaces.Select(fi => (Component)fi).ToArray();
@@ -231,6 +231,7 @@ namespace HandPosing.Editor
             SphereGrabFlex sphereFlex = AddMissingComponent<SphereGrabFlex>(handInstance);
             SetPrivateValue(sphereFlex, "flexHand", provider.ovrHand);
             SetPrivateValue(sphereFlex, "skeleton", provider.ovrSkeleton);
+            sphereFlex.SetVolumeOffset(provider.gripPoint);
             //TODO pose volume offset should be the Grip point?
 
 
@@ -364,6 +365,7 @@ namespace HandPosing.Editor
         private class HandTrackingProviders
         {
             public Handeness handeness;
+            public Transform gripPoint;
 
             public OVRHand ovrHand;
             public OVRSkeleton ovrSkeleton;
