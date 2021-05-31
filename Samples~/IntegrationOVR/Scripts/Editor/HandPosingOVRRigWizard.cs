@@ -54,7 +54,7 @@ namespace HandPosing.Editor
             if (ovrRig == null)
             {
                 GameObject rigPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Oculus/VR/Prefabs/OVRCameraRig.prefab");
-                if(rigPrefab != null)
+                if (rigPrefab != null)
                 {
                     GameObject rigGameObject = GameObject.Instantiate(rigPrefab);
                     rigGameObject.TryGetComponent<OVRCameraRig>(out ovrRig);
@@ -127,7 +127,7 @@ namespace HandPosing.Editor
                 handInstance.transform.SetParent(ovrRig.transform.parent);
             }
 
-            provider.gripPoint = AttachGripPoint(handInstance);
+            AttachGripPoint(handInstance, ref provider);
             HandPuppet puppet = AttachPuppet(handInstance, provider);
             AttachGrabber(handInstance, provider);
             AttachSnapper(handInstance);
@@ -139,20 +139,32 @@ namespace HandPosing.Editor
 
         }
 
-        private Transform AttachGripPoint(GameObject handInstance)
+        private Transform AttachGripPoint(GameObject handInstance, ref HandTrackingProviders provider)
         {
             Transform gripPoint = DeepFindChildContaining(handInstance.transform, "grip");
-            if(gripPoint == null)
+            if (gripPoint == null)
             {
-                Transform marker = DeepFindChildContaining(handInstance.transform, "palm_center_marker");
-                if(marker != null)
+                Transform centre = DeepFindChildContaining(handInstance.transform, "palm_center_marker");
+                if (centre != null)
                 {
                     gripPoint = new GameObject("GripPoint").transform;
                     gripPoint.SetParent(handInstance.transform);
-                    gripPoint.SetPositionAndRotation(marker.position, marker.rotation);
+                    gripPoint.position = centre.position;
+
+                    Transform middleTip = DeepFindChildContaining(handInstance.transform, "middle_finger_tip");
+                    if (middleTip != null)
+                    {
+                        Vector3 palmUp = provider.handeness == Handeness.Left ? Vector3.up : Vector3.down;
+                        gripPoint.rotation = Quaternion.LookRotation((middleTip.position - gripPoint.position).normalized, palmUp);
+                    }
+                    else
+                    {
+                        gripPoint.rotation = centre.rotation;
+                    }
                 }
             }
 
+            provider.gripPoint = gripPoint;
             return gripPoint;
         }
 
@@ -183,6 +195,24 @@ namespace HandPosing.Editor
         {
             GrabberHybridOVR grabber = AddMissingComponent<GrabberHybridOVR>(handInstance);
             SetPrivateValue(grabber, "gripTransform", provider.gripPoint);
+
+            Collider[] colliders = GetPrivateValue<Collider[]>(grabber, "grabVolumes");
+            if (colliders == null
+                || colliders.Length == 0)
+            {
+                GameObject grabVolume = new GameObject("GrabVolume");
+                grabVolume.transform.SetParent(grabber.transform);
+                grabVolume.transform.SetPositionAndRotation(provider.gripPoint.position, provider.gripPoint.rotation);
+                CapsuleCollider capsule = grabVolume.AddComponent<CapsuleCollider>();
+                float capsuleSize = 0.04f;
+                capsule.direction = 0;
+                capsule.center = new Vector3(0f, capsuleSize , 0f);
+                capsule.height = capsuleSize * 3;
+                capsule.radius = capsuleSize;
+                capsule.isTrigger = true;
+                SetPrivateValue(grabber, "grabVolumes", new Collider[] { capsule });
+            }
+
 
             List<FlexInterface> flexInterfaces = AddFlexInterfaces(handInstance, provider);
             Component[] serializableFlexInterfaces = flexInterfaces.Select(fi => (Component)fi).ToArray();
@@ -292,6 +322,7 @@ namespace HandPosing.Editor
             }
         }
 
+
         private static void SetPrivateValue(object instance, string fieldName, object value)
         {
             FieldInfo fieldData = GetPrivateField(instance, fieldName);
@@ -320,12 +351,12 @@ namespace HandPosing.Editor
 
         private Transform DeepFindChildContaining(Transform root, string name)
         {
-            return DeepFindChildContaining(root, null,null, name);
+            return DeepFindChildContaining(root, null, null, name);
         }
 
         private Transform DeepFindChildContaining(Transform root, string ignorePattern, string format, params string[] args)
         {
-            if(root == null)
+            if (root == null)
             {
                 return null;
             }
@@ -336,7 +367,7 @@ namespace HandPosing.Editor
                 string childName = child.name.ToLower();
 
                 bool shouldCheck = string.IsNullOrEmpty(ignorePattern) || !childName.Contains(ignorePattern);
-                if(shouldCheck)
+                if (shouldCheck)
                 {
                     Transform result = null;
                     if (string.IsNullOrEmpty(format))
@@ -351,7 +382,7 @@ namespace HandPosing.Editor
                             result = childName.Contains(fullName) ? child : DeepFindChildContaining(child, ignorePattern, format, args);
                         }
                     }
-                    if(result != null)
+                    if (result != null)
                     {
                         return result;
                     }
