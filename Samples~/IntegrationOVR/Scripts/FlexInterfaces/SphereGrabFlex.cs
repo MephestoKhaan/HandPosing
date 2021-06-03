@@ -265,8 +265,11 @@ namespace HandPosing.OVRIntegration.GrabEngine
 
         public void SetVolumeOffset(Transform centre)
         {
-            optionalCenterPoint = centre;
-            poseVolumeOffset = this.transform.InverseTransformPoint(optionalCenterPoint.position);
+            if(centre != null)
+            {
+                optionalCenterPoint = centre;
+                poseVolumeOffset = this.transform.InverseTransformPoint(optionalCenterPoint.position);
+            }
         }
     }
 }

@@ -14,31 +14,46 @@ namespace HandPosing.Editor
 {
     public class HandPosingOVRRigWizard : ScriptableWizard
     {
+        [Tooltip("The camera rig in the scene to attach the puppets to. If none is present it will try to create a new one.")]
         [SerializeField]
         private OVRCameraRig ovrRig;
 
+        [Tooltip("Set to True if you want to add an Animator to the hand to be used with a Controller. Check HandPosing/HandAnimatorGenerator if you need to create the animations.")]
         [SerializeField]
-        private bool controllerSupport;
+        private bool controllerSupport = true;
+        [Tooltip("Set to True if you want to add a smoothing layer for the Hand-Tracking data")]
+        [SerializeField]
+        private bool addSmoothSkeletonData = true;
+        [Tooltip("Set to True if you want to manually update the fields if the neccesary components are *already present* in the hand (HandPuppet,SkeletonDataProvider, etc) ")]
+        [SerializeField]
+        private bool overridePresentValues = false;
 
-        [Header("Optional")]
+        [Header("Set to the Hands in the scene, or prefab/model if none present already.")]
         [SerializeField]
-        private GameObject leftHandModel;
+        private GameObject leftHand;
         [SerializeField]
-        private GameObject rightHandModel;
+        private GameObject rightHand;
 
         [MenuItem("HandPosing/Add HandPosing to OVRRig")]
         private static void CreateWizard()
         {
-            HandPosingOVRRigWizard wizard = ScriptableWizard.DisplayWizard<HandPosingOVRRigWizard>("Add HandPosing to OVRRig", "Close", "Add HandPosing");
+            HandPosingOVRRigWizard wizard = DisplayWizard<HandPosingOVRRigWizard>("Add HandPosing to OVRRig", "Close", "Add HandPosing");
             wizard.ResetFields();
         }
 
         private void ResetFields()
         {
             ovrRig = GameObject.FindObjectOfType<OVRCameraRig>(false);
-
-            leftHandModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Oculus/VR/Meshes/HandTracking/OculusHand_L.fbx");
-            rightHandModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Oculus/VR/Meshes/HandTracking/OculusHand_R.fbx");
+            HandPuppet leftPuppet = null;
+            HandPuppet rightPuppet = null;
+            HandPuppet[] puppets = GameObject.FindObjectsOfType<HandPuppet>();
+            if(puppets != null && puppets.Length > 0)
+            {
+                leftPuppet = puppets.First(p => GetPrivateValue<Handeness>(p, "handeness") == Handeness.Left);
+                rightPuppet = puppets.First(p => GetPrivateValue<Handeness>(p, "handeness") == Handeness.Right);
+            }
+            leftHand = leftPuppet != null ? leftPuppet.gameObject : AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Oculus/VR/Meshes/HandTracking/OculusHand_L.fbx");
+            rightHand = rightPuppet != null ? rightPuppet.gameObject : AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Oculus/VR/Meshes/HandTracking/OculusHand_R.fbx");
         }
 
         private void OnWizardCreate() { }
@@ -57,7 +72,7 @@ namespace HandPosing.Editor
                 if (rigPrefab != null)
                 {
                     GameObject rigGameObject = GameObject.Instantiate(rigPrefab);
-                    rigGameObject.TryGetComponent<OVRCameraRig>(out ovrRig);
+                    rigGameObject.TryGetComponent(out ovrRig);
                 }
             }
 
@@ -89,43 +104,69 @@ namespace HandPosing.Editor
 
         private HandTrackingProviders AttachTrackers(GameObject hand, Handeness handeness)
         {
-            OVRHand.Hand ovrHandeness = handeness == Handeness.Left ? OVRHand.Hand.HandLeft : OVRHand.Hand.HandRight;
-            OVRHand ovrHand = AddMissingComponent<OVRHand>(hand);
-            SetPrivateValue(ovrHand, "HandType", ovrHandeness);
+            if (!TryAddMissingComponent(hand, out OVRHand ovrHand)
+                || overridePresentValues)
+            {
+                OVRHand.Hand ovrHandeness = handeness == Handeness.Left ? OVRHand.Hand.HandLeft : OVRHand.Hand.HandRight;
+                SetPrivateValue(ovrHand, "HandType", ovrHandeness);
+            }
 
-            OVRSkeleton.SkeletonType skeletonHandeness = handeness == Handeness.Left ? OVRSkeleton.SkeletonType.HandLeft : OVRSkeleton.SkeletonType.HandRight;
-            OVRSkeleton ovrSkeleton = AddMissingComponent<OVRSkeleton>(hand);
-            SetPrivateValue(ovrSkeleton, "_skeletonType", skeletonHandeness);
+            if (!TryAddMissingComponent(hand, out OVRSkeleton ovrSkeleton)
+                || overridePresentValues)
+            {
+                OVRSkeleton.SkeletonType skeletonHandeness = handeness == Handeness.Left ? OVRSkeleton.SkeletonType.HandLeft : OVRSkeleton.SkeletonType.HandRight;
+                SetPrivateValue(ovrSkeleton, "_skeletonType", skeletonHandeness);
+            }
 
-            SkeletonDataProviderOVR skeletonDataProvider = AddMissingComponent<SkeletonDataProviderOVR>(hand);
-            SetPrivateValue(skeletonDataProvider, "ovrHand", ovrHand);
-            SetPrivateValue(skeletonDataProvider, "ovrSkeleton", ovrSkeleton);
+            SkeletonDataProvider skeletonData = null;
+            if (!TryAddMissingComponent(hand, out SkeletonDataProviderOVR skeletonDataProvider)
+                || overridePresentValues)
+            {
+                SetPrivateValue(skeletonDataProvider, "ovrHand", ovrHand);
+                SetPrivateValue(skeletonDataProvider, "ovrSkeleton", ovrSkeleton);
+                skeletonData = skeletonDataProvider;
+            }
 
-            ExtrapolationTrackingCleaner skeletonDataCleaner = AddMissingComponent<ExtrapolationTrackingCleaner>(hand);
-            SetPrivateValue(skeletonDataCleaner, "wrapee", skeletonDataProvider);
+            if (addSmoothSkeletonData)
+            {
+                if (!TryAddMissingComponent(hand, out ExtrapolationTrackingCleaner skeletonDataCleaner)
+                    || overridePresentValues)
+                {
+                    SetPrivateValue(skeletonDataCleaner, "wrapee", skeletonDataProvider);
+                }
+                skeletonData = skeletonDataCleaner;
+            }
 
             return new HandTrackingProviders()
             {
                 handeness = handeness,
                 ovrHand = ovrHand,
                 ovrSkeleton = ovrSkeleton,
-                skeletonDataProvider = skeletonDataCleaner
+                skeletonDataProvider = skeletonData
             };
         }
 
         private void CreatePuppetedHand(HandTrackingProviders provider)
         {
             GameObject handInstance;
-            GameObject handPrefab = provider.handeness == Handeness.Left ? leftHandModel : rightHandModel;
-            if (handPrefab != null)
+            GameObject handModel = provider.handeness == Handeness.Left ? leftHand : rightHand;
+            if (PrefabUtility.IsPartOfPrefabAsset(handModel))
             {
-                handInstance = GameObject.Instantiate(handPrefab, ovrRig.transform.parent);
+                if (handModel != null)
+                {
+                    handInstance = GameObject.Instantiate(handModel, ovrRig.transform.parent);
+                }
+                else
+                {
+                    handInstance = new GameObject($"Puppeted_Hand_{provider.handeness}");
+                    handInstance.transform.SetParent(ovrRig.transform.parent);
+                }
             }
             else
             {
-                handInstance = new GameObject($"Puppeted_Hand_{provider.handeness}");
-                handInstance.transform.SetParent(ovrRig.transform.parent);
+                handInstance = handModel;
             }
+
 
             AttachGripPoint(handInstance, ref provider);
             HandPuppet puppet = AttachPuppet(handInstance, provider);
@@ -141,20 +182,20 @@ namespace HandPosing.Editor
 
         private Transform AttachGripPoint(GameObject handInstance, ref HandTrackingProviders provider)
         {
-            Transform gripPoint = DeepFindChildContaining(handInstance.transform, "grip");
+            Transform gripPoint = DeepFindChildContaining(handInstance.transform, null, "grip");
             if (gripPoint == null)
             {
-                Transform centre = DeepFindChildContaining(handInstance.transform, "palm_center_marker");
+                Transform centre = DeepFindChildContaining(handInstance.transform, null, "palm", "center");
                 if (centre != null)
                 {
                     gripPoint = new GameObject("GripPoint").transform;
                     gripPoint.SetParent(handInstance.transform);
                     gripPoint.position = centre.position;
 
-                    Transform middleTip = DeepFindChildContaining(handInstance.transform, "middle_finger_tip");
+                    Transform middleTip = DeepFindChildContaining(handInstance.transform, null, "middle", "tip");
                     if (middleTip != null)
                     {
-                        Vector3 palmUp = provider.handeness == Handeness.Left ? Vector3.up : Vector3.down;
+                        Vector3 palmUp = provider.handeness == Handeness.Right ? Vector3.up : Vector3.down;
                         gripPoint.rotation = Quaternion.LookRotation((middleTip.position - gripPoint.position).normalized, palmUp);
                     }
                     else
@@ -165,18 +206,32 @@ namespace HandPosing.Editor
             }
 
             provider.gripPoint = gripPoint;
+
+            if (gripPoint == null)
+            {
+                Debug.LogError($"Grip Transform not found under {handInstance.name}. Please add one.", handInstance);
+            }
+
             return gripPoint;
         }
 
         private HandPuppet AttachPuppet(GameObject handInstance, HandTrackingProviders provider)
         {
-            HandPuppet puppet = AddMissingComponent<HandPuppet>(handInstance);
+            bool puppetPresent = TryAddMissingComponent(handInstance, out HandPuppet puppet);
+
             SetPrivateValue(puppet, "skeleton", provider.skeletonDataProvider);
             SetPrivateValue(puppet, "updateNotifier", provider.updateNotifier);
-            SetPrivateValue(puppet, "gripPoint", provider.gripPoint);
-            SetPrivateValue(puppet, "handeness", provider.handeness);
-            SetPrivateValue(puppet, "autoAdjustScale", false);
             SetPrivateValue(puppet, "controllerAnchor", provider.handeness == Handeness.Left ? ovrRig.leftControllerAnchor : ovrRig.rightControllerAnchor);
+            SetPrivateValue(puppet, "handeness", provider.handeness);
+
+            if (puppetPresent && !overridePresentValues)
+            {
+                Debug.Log("HandPuppet found, skipping AttachPuppet.");
+                return puppet;
+            }
+
+            SetPrivateValue(puppet, "gripPoint", provider.gripPoint);
+            SetPrivateValue(puppet, "autoAdjustScale", false);
 
 
             HandMap handMap = new HandMap();
@@ -185,7 +240,6 @@ namespace HandPosing.Editor
                 handMap.rotationOffset = -handMap.rotationOffset;
             }
             SetPrivateValue(puppet, "controllerOffset", handMap);
-
             SetPrivateValue(puppet, "boneMaps", AutoAsignBones(handInstance));
 
             return puppet;
@@ -193,48 +247,57 @@ namespace HandPosing.Editor
 
         private void AttachGrabber(GameObject handInstance, HandTrackingProviders provider)
         {
-            GrabberHybridOVR grabber = AddMissingComponent<GrabberHybridOVR>(handInstance);
-            SetPrivateValue(grabber, "gripTransform", provider.gripPoint);
-
-            Collider[] colliders = GetPrivateValue<Collider[]>(grabber, "grabVolumes");
-            if (colliders == null
-                || colliders.Length == 0)
+            if (!overridePresentValues)
             {
-                GameObject grabVolume = new GameObject("GrabVolume");
-                grabVolume.transform.SetParent(grabber.transform);
-                grabVolume.transform.SetPositionAndRotation(provider.gripPoint.position, provider.gripPoint.rotation);
-                CapsuleCollider capsule = grabVolume.AddComponent<CapsuleCollider>();
-                float capsuleSize = 0.04f;
-                capsule.direction = 0;
-                capsule.center = new Vector3(0f, capsuleSize , 0f);
-                capsule.height = capsuleSize * 3;
-                capsule.radius = capsuleSize;
-                capsule.isTrigger = true;
-                SetPrivateValue(grabber, "grabVolumes", new Collider[] { capsule });
+                if (handInstance.GetComponentInChildren<IGrabNotifier>() != null)
+                {
+                    Debug.Log("Grabber implementing IGrabNotifier found, skipping AttachGrabber.");
+                    BaseGrabber baseGrabber = handInstance.GetComponentInChildren<BaseGrabber>();
+                    if (baseGrabber != null)
+                    {
+                        SetPrivateValue(baseGrabber, "updateNotifier", provider.updateNotifier);
+                    }
+                    if (baseGrabber is GrabberHybridOVR)
+                    {
+                        UpdateFlexInterfaces(baseGrabber as GrabberHybridOVR, provider, false);
+                    }
+                    return;
+                }
+                else
+                {
+                    Debug.LogWarning("No Grabber implementing IGrabNotifier present, adding one");
+                }
             }
 
-
-            List<FlexInterface> flexInterfaces = AddFlexInterfaces(handInstance, provider);
-            Component[] serializableFlexInterfaces = flexInterfaces.Select(fi => (Component)fi).ToArray();
-            SetPrivateValue(grabber, "flexInterfaces", serializableFlexInterfaces);
+            TryAddMissingComponent(handInstance, out GrabberHybridOVR grabber);
             SetPrivateValue(grabber, "updateNotifier", provider.updateNotifier);
+            SetPrivateValue(grabber, "gripTransform", provider.gripPoint);
+
+            AttachCapsuleTriggers(grabber, provider);
+            UpdateFlexInterfaces(grabber, provider, true);
         }
 
         private Snapper AttachSnapper(GameObject handInstance)
         {
-            Snapper snapper = AddMissingComponent<Snapper>(handInstance);
+            TryAddMissingComponent<Snapper>(handInstance, out Snapper snapper);
             return snapper;
         }
 
 
         private AnimatedHandOVR AttachAnimator(GameObject handInstance, HandPuppet puppet, HandTrackingProviders provider)
         {
-            AnimatedHandOVR animatedHand = AddMissingComponent<AnimatedHandOVR>(handInstance);
+            bool animatedHandPresent = TryAddMissingComponent(handInstance, out AnimatedHandOVR animatedHand);
+            if (animatedHandPresent && !overridePresentValues)
+            {
+                Debug.Log("AnimatedHandOVR found, skipping AttachAnimator.");
+                return animatedHand;
+            }
+
             SetPrivateValue(animatedHand, "m_controller", provider.handeness == Handeness.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
-            //TODO: Should go into Reset() ?
+
             Animator animator = animatedHand.GetComponentInChildren<Animator>();
             SetPrivateValue(animatedHand, "m_animator", animator);
-            SetPrivateValue(animatedHand, "m_defaultGrabPose", null); //TODO: set in the wizard?
+            SetPrivateValue(animatedHand, "m_defaultGrabPose", null);
 
 
             var onUsingHands = GetPrivateValue<UnityEngine.Events.UnityEvent>(puppet, "OnUsingHands");
@@ -244,33 +307,91 @@ namespace HandPosing.Editor
             return animatedHand;
         }
 
+        private void AttachCapsuleTriggers(BaseGrabber grabber, HandTrackingProviders provider)
+        {
+            Collider[] colliders = GetPrivateValue<Collider[]>(grabber, "grabVolumes");
+            if (colliders == null
+                || colliders.Length == 0
+                || colliders.All(c => c == null))
+            {
+                Debug.LogWarning($"No grab colliders found on {grabber.name}, adding some but please adjust manually if needed.", grabber.gameObject);
+                GameObject grabVolume = new GameObject("GrabVolume");
+                grabVolume.transform.SetParent(grabber.transform, false);
+                if (provider.gripPoint != null)
+                {
+                    grabVolume.transform.SetPositionAndRotation(provider.gripPoint.position, provider.gripPoint.rotation);
+                }
+                else
+                {
+                    Debug.LogError($"No Grip Transform present when adding Grab Volumes on {grabber.name}, please adjust manually.", grabber.gameObject);
+                }
 
-        private List<FlexInterface> AddFlexInterfaces(GameObject handInstance, HandTrackingProviders provider)
+                CapsuleCollider capsule = grabVolume.AddComponent<CapsuleCollider>();
+                float capsuleSize = 0.04f;
+                capsule.direction = 0;
+                capsule.center = new Vector3(0f, -capsuleSize, 0f);
+                capsule.height = capsuleSize * 3;
+                capsule.radius = capsuleSize;
+                capsule.isTrigger = true;
+                SetPrivateValue(grabber, "grabVolumes", new Collider[] { capsule });
+            }
+        }
+
+
+        private void UpdateFlexInterfaces(GrabberHybridOVR grabber, HandTrackingProviders provider, bool addMissing)
         {
             List<FlexInterface> flexInterfaces = new List<FlexInterface>();
-            if (controllerSupport)
+            if (controllerSupport && addMissing)
             {
-                ControllerFlex controllerFlex = AddMissingComponent<ControllerFlex>(handInstance);
+                TryAddMissingComponent(grabber.gameObject, out ControllerFlex controllerFlex);
                 SetPrivateValue(controllerFlex, "controller", provider.handeness == Handeness.Left ? OVRInput.Controller.LTouch : OVRInput.Controller.RTouch);
                 flexInterfaces.Add(controllerFlex);
             }
 
-            PinchTriggerFlex pinchFlex = AddMissingComponent<PinchTriggerFlex>(handInstance);
-            SetPrivateValue(pinchFlex, "flexHand", provider.ovrHand);
+            PinchTriggerFlex pinchFlex = null;
+            if (addMissing)
+            {
+                TryAddMissingComponent(grabber.gameObject, out pinchFlex);
+            }
+            else
+            {
+                pinchFlex = grabber.GetComponentInChildren<PinchTriggerFlex>();
+            }
+            if (pinchFlex != null)
+            {
+                SetPrivateValue(pinchFlex, "flexHand", provider.ovrHand);
+            }
 
-            SphereGrabFlex sphereFlex = AddMissingComponent<SphereGrabFlex>(handInstance);
-            SetPrivateValue(sphereFlex, "flexHand", provider.ovrHand);
-            SetPrivateValue(sphereFlex, "skeleton", provider.ovrSkeleton);
-            sphereFlex.SetVolumeOffset(provider.gripPoint);
-            //TODO pose volume offset should be the Grip point?
+            SphereGrabFlex sphereFlex = null;
+            if (addMissing)
+            {
+                if (!TryAddMissingComponent(grabber.gameObject, out sphereFlex))
+                {
+                    sphereFlex.SetVolumeOffset(provider.gripPoint);
+                }
+            }
+            else
+            {
+                sphereFlex = grabber.GetComponentInChildren<SphereGrabFlex>();
+            }
 
+            if (sphereFlex != null)
+            {
+                SetPrivateValue(sphereFlex, "flexHand", provider.ovrHand);
+                SetPrivateValue(sphereFlex, "skeleton", provider.ovrSkeleton);
+            }
 
-            SphereGrabPinchFlex sphereAndPinchFlex = AddMissingComponent<SphereGrabPinchFlex>(handInstance);
-            //populated on Reset()
+            if (addMissing)
+            {
+                TryAddMissingComponent(grabber.gameObject, out SphereGrabPinchFlex sphereAndPinchFlex);
+                flexInterfaces.Add(sphereAndPinchFlex);
+            }
 
-            flexInterfaces.Add(sphereAndPinchFlex);
-
-            return flexInterfaces;
+            if (addMissing)
+            {
+                Component[] serializableFlexInterfaces = flexInterfaces.Select(fi => (Component)fi).ToArray();
+                SetPrivateValue(grabber, "flexInterfaces", serializableFlexInterfaces);
+            }
         }
 
         private List<BoneMap> AutoAsignBones(GameObject handInstance)
@@ -293,7 +414,7 @@ namespace HandPosing.Editor
                 {
                     string boneName = match.Groups[1].Value.ToLower();
                     string boneNumber = match.Groups[2].Value;
-                    Transform skinnedBone = DeepFindChildContaining(root, "col", "{0}{1}", boneName, boneNumber);
+                    Transform skinnedBone = DeepFindChildContaining(root, "col", boneName, boneNumber);
 
                     if (skinnedBone != null)
                     {
@@ -310,18 +431,28 @@ namespace HandPosing.Editor
         }
 
         #region utilities
-        private static T AddMissingComponent<T>(GameObject go) where T : Component
+
+        private static bool TryAddMissingComponent<T>(GameObject go, out T comp) where T : Component
         {
-            if (go.TryGetComponent<T>(out T comp))
+            comp = go.GetComponentInChildren<T>();
+            if (comp == null)
             {
-                return comp;
+                comp = go.AddComponent<T>();
+                return false;
             }
-            else
-            {
-                return go.AddComponent<T>();
-            }
+            return true;
+
         }
 
+        private static T AddMissingComponent<T>(GameObject go) where T : Component
+        {
+            T comp = go.GetComponentInChildren<T>();
+            if (comp == null)
+            {
+                comp = go.AddComponent<T>();
+            }
+            return comp;
+        }
 
         private static void SetPrivateValue(object instance, string fieldName, object value)
         {
@@ -349,12 +480,7 @@ namespace HandPosing.Editor
             return fieldData;
         }
 
-        private Transform DeepFindChildContaining(Transform root, string name)
-        {
-            return DeepFindChildContaining(root, null, null, name);
-        }
-
-        private Transform DeepFindChildContaining(Transform root, string ignorePattern, string format, params string[] args)
+        private Transform DeepFindChildContaining(Transform root, string ignorePattern, params string[] args)
         {
             if (root == null)
             {
@@ -369,19 +495,8 @@ namespace HandPosing.Editor
                 bool shouldCheck = string.IsNullOrEmpty(ignorePattern) || !childName.Contains(ignorePattern);
                 if (shouldCheck)
                 {
-                    Transform result = null;
-                    if (string.IsNullOrEmpty(format))
-                    {
-                        result = childName.Contains(args[0]) ? child : DeepFindChildContaining(child, ignorePattern, format, args);
-                    }
-                    else
-                    {
-                        if (childName.Contains(args[0]))
-                        {
-                            string fullName = string.Format(format, args);
-                            result = childName.Contains(fullName) ? child : DeepFindChildContaining(child, ignorePattern, format, args);
-                        }
-                    }
+                    bool containsAllArgs = args.All(a => childName.Contains(a));
+                    Transform result = containsAllArgs ? child : DeepFindChildContaining(child, ignorePattern, args);
                     if (result != null)
                     {
                         return result;
