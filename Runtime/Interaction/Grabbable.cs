@@ -27,10 +27,10 @@ namespace HandPosing.Interaction
         /// </summary>
         [SerializeField]
         [Tooltip("Not mandatory. Colliders eligible for grabbing.")]
-        private Collider[] _grabPoints = null;
+        protected Collider[] _grabPoints = null;
 
-        private bool _isKinematic = false;
-        private HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
+        protected bool _isKinematic = false;
+        protected HashSet<BaseGrabber> _grabbedBy = new HashSet<BaseGrabber>();
         protected Rigidbody _body;
 
         public Rigidbody Body
