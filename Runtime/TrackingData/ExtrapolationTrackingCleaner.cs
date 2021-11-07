@@ -41,6 +41,7 @@ namespace HandPosing.TrackingData
                 rotation = wrapee.Hand.rotation,
                 position = wrapee.Hand.position
             };
+            OnInitialized?.Invoke();
         }
 
         private float? _startHighConfidenceTime;
@@ -96,6 +97,7 @@ namespace HandPosing.TrackingData
                     _cleanFingers[i] = rawBone;
                 }
             }
+            OnUpdated?.Invoke(deltaTime);
         }
 
         private void UpdateVelocity(BonePose from, BonePose to, float deltaTime)
